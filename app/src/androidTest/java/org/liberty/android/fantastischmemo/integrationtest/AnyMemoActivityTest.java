@@ -39,14 +39,14 @@ public class AnyMemoActivityTest {
         testHelper.markNotFirstTime();
     }
 
-    @Test
+    /*@Test
     @LargeTest
     public void testOpenActivityWithSampleDB() {
         onView(allOf(withText(TestHelper.SAMPLE_DB_NAME), withId(R.id.recent_item_filename)))
                 .check(matches(isDisplayed()));
     }
 
-    /*@Test
+    @Test
     @LargeTest
     public void testOpenStudyActivity() {
         onView(allOf(withText(TestHelper.SAMPLE_DB_NAME), withId(R.id.recent_item_filename)))
