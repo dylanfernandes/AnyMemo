@@ -46,7 +46,7 @@ public class AnyMemoActivityTest {
                 .check(matches(isDisplayed()));
     }
 
-    @Test
+    /*@Test
     @LargeTest
     public void testOpenStudyActivity() {
         onView(allOf(withText(TestHelper.SAMPLE_DB_NAME), withId(R.id.recent_item_filename)))
@@ -67,7 +67,7 @@ public class AnyMemoActivityTest {
         onView(allOf(withText(TestHelper.SAMPLE_DB_NAME), withId(R.id.card_text_view)))
                 .check(matches(isDisplayed()));
         pressBack();
-    }
+    }*/
 
     @After
     public void tearDown() throws Exception {
