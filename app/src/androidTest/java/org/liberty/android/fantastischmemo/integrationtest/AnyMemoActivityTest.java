@@ -39,6 +39,9 @@ public class AnyMemoActivityTest {
         testHelper.markNotFirstTime();
     }
 
+    @Test
+    public void test() {}
+
     /*@Test
     @LargeTest
     public void testOpenActivityWithSampleDB() {
