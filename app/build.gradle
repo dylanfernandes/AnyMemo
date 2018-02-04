@@ -8,7 +8,7 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         versionCode 227
@@ -41,17 +41,20 @@ android {
             proguardFile 'proguard.cfg'
         }
     }
-
+    flavorDimensions "free", "pro", "dev"
     productFlavors {
         free {
             applicationId "org.liberty.android.fantastischmemo"
+            dimension "free"
         }
         pro {
             applicationId "org.liberty.android.fantastischmemopro"
+            dimension "pro"
         }
         dev {
             applicationId "org.liberty.android.fantastischmemodev"
             minSdkVersion 21
+            dimension "dev"
         }
     }
 
