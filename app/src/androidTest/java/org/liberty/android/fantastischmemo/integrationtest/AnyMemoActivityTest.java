@@ -42,36 +42,6 @@ public class AnyMemoActivityTest {
     @Test
     public void test() {}
 
-    /*@Test
-    @LargeTest
-    public void testOpenActivityWithSampleDB() {
-        onView(allOf(withText(TestHelper.SAMPLE_DB_NAME), withId(R.id.recent_item_filename)))
-                .check(matches(isDisplayed()));
-    }
-
-    @Test
-    @LargeTest
-    public void testOpenStudyActivity() {
-        onView(allOf(withText(TestHelper.SAMPLE_DB_NAME), withId(R.id.recent_item_filename)))
-                .perform(click());
-        intended(hasComponent(new ComponentName(InstrumentationRegistry.getTargetContext(), StudyActivity.class)));
-        onView(allOf(withText(TestHelper.SAMPLE_DB_NAME), withId(R.id.card_text_view)))
-                .check(matches(isDisplayed()));
-        pressBack();
-    }
-
-    @Test
-    @LargeTest
-    public void testOpenStudyActivityFromAction() {
-        onView(allOf(withText(TestHelper.SAMPLE_DB_NAME), withId(R.id.recent_item_filename)))
-                .perform(longClick());
-        onView(withText(R.string.study_text)).perform(click());
-        intended(hasComponent(new ComponentName(InstrumentationRegistry.getTargetContext(), StudyActivity.class)));
-        onView(allOf(withText(TestHelper.SAMPLE_DB_NAME), withId(R.id.card_text_view)))
-                .check(matches(isDisplayed()));
-        pressBack();
-    }*/
-
     @After
     public void tearDown() throws Exception {
         Thread.sleep(2000);
