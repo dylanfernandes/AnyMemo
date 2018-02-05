@@ -30,7 +30,10 @@
                 <android.support.design.widget.TabLayout
                     android:id="@+id/tabs"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:longClickable="true" />
+
+
 
             </android.support.design.widget.AppBarLayout>
 
@@ -49,7 +52,8 @@
                 app:layout_anchorGravity="bottom|end"
                 app:layout_anchor="@id/viewpager"
                 android:layout_margin="16dp"
-                android:clickable="true"/>
+                android:clickable="true"
+                android:tooltipText="add database"/>
         </android.support.design.widget.CoordinatorLayout>
 
         <android.support.design.widget.NavigationView
