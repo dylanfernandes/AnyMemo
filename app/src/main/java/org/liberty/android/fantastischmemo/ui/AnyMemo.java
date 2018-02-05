@@ -27,6 +27,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -42,6 +43,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -173,9 +175,13 @@ public class AnyMemo extends BaseActivity {
         final TabLayout tabLayout = binding.tabs;
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(0).setIcon(R.drawable.clock);
+        tabLayout.getTabAt(0).setContentDescription("recent selections");
         tabLayout.getTabAt(1).setIcon(R.drawable.cabinet);
+        tabLayout.getTabAt(1).setContentDescription("access folders");
         tabLayout.getTabAt(2).setIcon(R.drawable.download_tab);
+        tabLayout.getTabAt(2).setContentDescription("download deck");
         tabLayout.getTabAt(3).setIcon(R.drawable.misc);
+        tabLayout.getTabAt(3).setContentDescription("miscellaneous");
 
         final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
@@ -209,6 +215,7 @@ public class AnyMemo extends BaseActivity {
                 }
             }
         );
+        
 
         // Change the selected navigation view
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
