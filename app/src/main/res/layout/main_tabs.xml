@@ -52,8 +52,7 @@
                 app:layout_anchorGravity="bottom|end"
                 app:layout_anchor="@id/viewpager"
                 android:layout_margin="16dp"
-                android:clickable="true"
-                android:tooltipText="add database"/>
+                android:clickable="true"/>
         </android.support.design.widget.CoordinatorLayout>
 
         <android.support.design.widget.NavigationView
