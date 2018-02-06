@@ -185,6 +185,7 @@ public class CardEditor extends BaseActivity {
         switch (item.getItemId()) {
 
             case R.id.save:
+                try
             {
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.warning_text)
@@ -201,7 +202,9 @@ public class CardEditor extends BaseActivity {
                         .setNegativeButton(R.string.cancel_text, null)
                         .show();
                 return true;
-            }
+            } catch (Exception e){
+                    e.printStackTrace();
+                }
 
             case R.id.editor_menu_br:
                 if(focusView == questionEdit || focusView ==answerEdit || focusView == noteEdit){
@@ -507,6 +510,7 @@ public class CardEditor extends BaseActivity {
             originalAnswer = currentCard.getAnswer();
             originalNote = currentCard.getNote();
 
+            idEdit.setText("" + currentCard.getId());
             questionEdit.setText(originalQuestion);
             answerEdit.setText(originalAnswer);
             noteEdit.setText(originalNote);
@@ -584,6 +588,8 @@ public class CardEditor extends BaseActivity {
             }
             assert currentCard != null : "Try to edit null card!";
             categoryDao.refresh(currentCard.getCategory());
+            learningDataDao.refresh(currentCard.getLearningData());
+
 
             return null;
         }
@@ -647,24 +653,10 @@ public class CardEditor extends BaseActivity {
             String qText = questionEdit.getText().toString();
             String aText = answerEdit.getText().toString();
             String nText = noteEdit.getText().toString();
-
-            currentCard.setId(Integer.parseInt(idEdit.getText().toString()));
+            
             currentCard.setQuestion(qText);
             currentCard.setAnswer(aText);
             currentCard.setNote(nText);
-            currentCard.getLearningData().setGrade(Integer.parseInt(gradeEdit.getText().toString()));
-            currentCard.getLearningData().setEasiness(Float.parseFloat(easinessEdit.getText().toString()));
-            currentCard.getLearningData().setAcqReps(Integer.parseInt(acqRepsEdit.getText().toString()));
-            currentCard.getLearningData().setRetReps(Integer.parseInt(retRepsEdit.getText().toString()));
-            currentCard.getLearningData().setLapses(Integer.parseInt(lapsesEdit.getText().toString()));
-            currentCard.getLearningData().setRetRepsSinceLapse(Integer.parseInt(retRepsEdit.getText().toString()));
-            currentCard.getLearningData().setAcqRepsSinceLapse(Integer.parseInt(acqRepsEdit.getText().toString()));
-            try {
-                currentCard.getLearningData().setLastLearnDate(ISO_TIME_FORMAT.parse(lastLearnDateEdit.getText().toString()));
-                currentCard.getLearningData().setNextLearnDate(ISO_TIME_FORMAT.parse(nextLearnDateEdit.getText().toString()));
-            } catch (ParseException e) {
-                exception = Optional.of(e);
-            }
 
             assert currentCard != null : "Current card shouldn't be null";
         }
