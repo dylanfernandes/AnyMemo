@@ -175,13 +175,13 @@ public class AnyMemo extends BaseActivity {
         final TabLayout tabLayout = binding.tabs;
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(0).setIcon(R.drawable.clock);
-        tabLayout.getTabAt(0).setContentDescription("recent selections");
+        tabLayout.getTabAt(0).setContentDescription("Recent");
         tabLayout.getTabAt(1).setIcon(R.drawable.cabinet);
-        tabLayout.getTabAt(1).setContentDescription("access folders");
+        tabLayout.getTabAt(1).setContentDescription("Open");
         tabLayout.getTabAt(2).setIcon(R.drawable.download_tab);
-        tabLayout.getTabAt(2).setContentDescription("download deck");
+        tabLayout.getTabAt(2).setContentDescription("Download");
         tabLayout.getTabAt(3).setIcon(R.drawable.misc);
-        tabLayout.getTabAt(3).setContentDescription("miscellaneous");
+        tabLayout.getTabAt(3).setContentDescription("Misc");
 
         final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
