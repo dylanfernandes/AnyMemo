@@ -243,13 +243,6 @@ public class CardListActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    private void gotoDetailActivity(Card card) {
-        Intent intent = new Intent(this, DetailScreen.class);
-        intent.putExtra(DetailScreen.EXTRA_DBPATH, dbPath);
-        intent.putExtra(DetailScreen.EXTRA_CARD_ID, card.getId());
-        startActivity(intent);
-    }
-
     private void gotoPreviewEditActivity(Card card) {
         Intent intent = new Intent(this, PreviewEditActivity.class);
         intent.putExtra(PreviewEditActivity.EXTRA_DBPATH, dbPath);
