@@ -224,9 +224,6 @@ public class CardListActivity extends BaseActivity {
                 case R.id.edit:
                     gotoCardEditorActivity(card);
                     break;
-                case R.id.detail:
-                    gotoDetailActivity(card);
-                    break;
 
                 case R.id.preview_edit:
                     gotoPreviewEditActivity(card);
