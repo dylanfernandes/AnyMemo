@@ -3,10 +3,7 @@
     <item android:id="@+id/edit"
         android:title="@string/edit_text" />
 
-    <item android:id="@+id/detail"
-        android:title="@string/detail_menu_text" />
-
     <item android:id="@+id/preview_edit"
-        android:title="@string/edit_button_text" />
+        android:title="@string/memo_edit_dialog_title" />
 </menu>
 

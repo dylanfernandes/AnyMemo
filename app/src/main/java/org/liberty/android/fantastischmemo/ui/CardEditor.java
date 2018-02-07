@@ -1,21 +1,16 @@
 /*
 Copyright (C) 2012 Haowen Ning
-
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
 of the License, or (at your option) any later version.
-
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
 See the GNU General Public License for more details.
-
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
 */
 package org.liberty.android.fantastischmemo.ui;
 
@@ -130,24 +125,24 @@ public class CardEditor extends BaseActivity {
         String nText = noteEdit.getText().toString();
         if (!isEditNew && (!qText.equals(originalQuestion) || !aText.equals(originalAnswer) || !nText.equals(originalNote))) {
             new AlertDialog.Builder(this)
-                .setTitle(R.string.warning_text)
-                .setMessage(R.string.edit_dialog_unsave_warning)
-                .setPositiveButton(R.string.yes_text, new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface  d, int which){
-                        SaveCardTask task = new SaveCardTask();
-                        task.execute((Void)null);
-                    }
-                })
-            .setNeutralButton(R.string.no_text, new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface  d, int which){
-                    Intent resultIntent = new Intent();
-                    setResult(Activity.RESULT_CANCELED, resultIntent);
-                    finish();
-                }
-            })
-            .setNegativeButton(R.string.cancel_text, null)
-            .create()
-            .show();
+                    .setTitle(R.string.warning_text)
+                    .setMessage(R.string.edit_dialog_unsave_warning)
+                    .setPositiveButton(R.string.yes_text, new DialogInterface.OnClickListener(){
+                        public void onClick(DialogInterface  d, int which){
+                            SaveCardTask task = new SaveCardTask();
+                            task.execute((Void)null);
+                        }
+                    })
+                    .setNeutralButton(R.string.no_text, new DialogInterface.OnClickListener(){
+                        public void onClick(DialogInterface  d, int which){
+                            Intent resultIntent = new Intent();
+                            setResult(Activity.RESULT_CANCELED, resultIntent);
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel_text, null)
+                    .create()
+                    .show();
 
         }
         else{
@@ -239,11 +234,11 @@ public class CardEditor extends BaseActivity {
 
     private void showConfirmDialog(String msg, DialogInterface.OnClickListener positiveClickListener){
         new AlertDialog.Builder(this)
-            .setMessage(msg)
-            .setPositiveButton(getString(R.string.yes_text), positiveClickListener)
-            .setNegativeButton(getString(R.string.no_text), null)
-            .create()
-            .show();
+                .setMessage(msg)
+                .setPositiveButton(getString(R.string.yes_text), positiveClickListener)
+                .setNegativeButton(getString(R.string.no_text), null)
+                .create()
+                .show();
 
     }
 
@@ -268,17 +263,17 @@ public class CardEditor extends BaseActivity {
     }
 
     private void addNewAudio(){
-         if(audioPreviouslyExists()){
-             //if there is audio previously defined,show alert
-             DialogInterface.OnClickListener positiveClickListener = new DialogInterface.OnClickListener() {
-                 public void onClick(DialogInterface dialog, int which) {
-                     startAudioRecorderWithPermissionCheck();
-                 }
-             };
-             showConfirmDialog(getString(R.string.override_audio_warning_text), positiveClickListener);
-         } else {
-             startAudioRecorderWithPermissionCheck();
-         }
+        if(audioPreviouslyExists()){
+            //if there is audio previously defined,show alert
+            DialogInterface.OnClickListener positiveClickListener = new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    startAudioRecorderWithPermissionCheck();
+                }
+            };
+            showConfirmDialog(getString(R.string.override_audio_warning_text), positiveClickListener);
+        } else {
+            startAudioRecorderWithPermissionCheck();
+        }
     }
 
     private void removeAudio(){
@@ -314,32 +309,32 @@ public class CardEditor extends BaseActivity {
     }
 
     private void startAudioRecorder(){
-         removeAudio();
-         View focusView = getCurrentFocus();
-         String audioFilename = AMEnv.DEFAULT_AUDIO_PATH + dbName;
-         new File(audioFilename).mkdirs();
-         AudioRecorderFragment recorder = new AudioRecorderFragment();
-         if (focusView == questionEdit) {
-             audioFilename +=  "/"+ currentCardId + "_q.3gp";
-         } else if (focusView == answerEdit) {
-             audioFilename +=  "/"+ currentCardId + "_a.3gp";
-         } else {
-             return;
-         }
-         Bundle b = new Bundle();
-         b.putString(AudioRecorderFragment.EXTRA_AUDIO_FILENAME, audioFilename);
+        removeAudio();
+        View focusView = getCurrentFocus();
+        String audioFilename = AMEnv.DEFAULT_AUDIO_PATH + dbName;
+        new File(audioFilename).mkdirs();
+        AudioRecorderFragment recorder = new AudioRecorderFragment();
+        if (focusView == questionEdit) {
+            audioFilename +=  "/"+ currentCardId + "_q.3gp";
+        } else if (focusView == answerEdit) {
+            audioFilename +=  "/"+ currentCardId + "_a.3gp";
+        } else {
+            return;
+        }
+        Bundle b = new Bundle();
+        b.putString(AudioRecorderFragment.EXTRA_AUDIO_FILENAME, audioFilename);
 
-         recorder.setAudioRecorderResultListener(new AudioRecorderResultListener() {
-             public void onReceiveAudio() {
-                 View focusView = getCurrentFocus();
-                 if(focusView == questionEdit){
-                     addTextToView((EditText) focusView, "<audio src=\"" + currentCardId + "_q.3gp\" />");
-                 } else if (focusView == answerEdit){
-                         addTextToView((EditText) focusView, "<audio src=\"" + currentCardId + "_a.3gp\" />");
-                 }
-             }
-         });
-         recorder.setArguments(b);
+        recorder.setAudioRecorderResultListener(new AudioRecorderResultListener() {
+            public void onReceiveAudio() {
+                View focusView = getCurrentFocus();
+                if(focusView == questionEdit){
+                    addTextToView((EditText) focusView, "<audio src=\"" + currentCardId + "_q.3gp\" />");
+                } else if (focusView == answerEdit){
+                    addTextToView((EditText) focusView, "<audio src=\"" + currentCardId + "_a.3gp\" />");
+                }
+            }
+        });
+        recorder.setArguments(b);
         getSupportFragmentManager().beginTransaction()
                 .add(recorder, "AudioRecorderDialog")
                 .commitAllowingStateLoss();
@@ -392,7 +387,7 @@ public class CardEditor extends BaseActivity {
                         }
                     }
                 }
-            break;
+                break;
             case ACTIVITY_AUDIO_FILE:
                 if(resultCode == Activity.RESULT_OK){
                     View focusView = getCurrentFocus();
@@ -416,7 +411,7 @@ public class CardEditor extends BaseActivity {
                         }
                     }
                 }
-            break;
+                break;
         }
     }
 
@@ -519,7 +514,7 @@ public class CardEditor extends BaseActivity {
         @Override
         public Void doInBackground(Void... params) {
             helper =
-                AnyMemoDBOpenHelperManager.getHelper(CardEditor.this, dbPath);
+                    AnyMemoDBOpenHelperManager.getHelper(CardEditor.this, dbPath);
 
             cardDao = helper.getCardDao();
             categoryDao = helper.getCategoryDao();
@@ -568,17 +563,17 @@ public class CardEditor extends BaseActivity {
     }
 
     private View.OnClickListener categoryButtonClickListener =
-        new View.OnClickListener() {
-            public void onClick(View v) {
-                CategoryEditorFragment df = new CategoryEditorFragment();
-                df.setResultListener(categoryResultListener);
-                Bundle b = new Bundle();
-                b.putString(CategoryEditorFragment.EXTRA_DBPATH, dbPath);
-                b.putInt(CategoryEditorFragment.EXTRA_CATEGORY_ID, currentCard.getCategory().getId());
-                df.setArguments(b);
-                df.show(getSupportFragmentManager(), "CategoryEditDialog");
-            }
-        };
+            new View.OnClickListener() {
+                public void onClick(View v) {
+                    CategoryEditorFragment df = new CategoryEditorFragment();
+                    df.setResultListener(categoryResultListener);
+                    Bundle b = new Bundle();
+                    b.putString(CategoryEditorFragment.EXTRA_DBPATH, dbPath);
+                    b.putInt(CategoryEditorFragment.EXTRA_CATEGORY_ID, currentCard.getCategory().getId());
+                    df.setArguments(b);
+                    df.show(getSupportFragmentManager(), "CategoryEditDialog");
+                }
+            };
 
 
 
@@ -639,10 +634,10 @@ public class CardEditor extends BaseActivity {
 
     // When a category is selected in category fragment.
     private CategoryEditorResultListener categoryResultListener =
-        new CategoryEditorResultListener() {
-            public void onReceiveCategory(Category c) {
-                currentCard.setCategory(c);
-                updateCategoryView();
-            }
-        };
+            new CategoryEditorResultListener() {
+                public void onReceiveCategory(Category c) {
+                    currentCard.setCategory(c);
+                    updateCategoryView();
+                }
+            };
 }
