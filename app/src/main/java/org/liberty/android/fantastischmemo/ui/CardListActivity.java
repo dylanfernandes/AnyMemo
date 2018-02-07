@@ -126,13 +126,13 @@ public class CardListActivity extends BaseActivity {
 
         String[] imageSearchPaths = {
             /* Relative path */
-            "",
+                "",
             /* Relative path with db name */
-            "" + FilenameUtils.getName(dbPath),
+                "" + FilenameUtils.getName(dbPath),
             /* Try the image in /sdcard/anymemo/images/dbname/ */
-            AMEnv.DEFAULT_IMAGE_PATH + FilenameUtils.getName(dbPath),
+                AMEnv.DEFAULT_IMAGE_PATH + FilenameUtils.getName(dbPath),
             /* Try the image in /sdcard/anymemo/images/ */
-            AMEnv.DEFAULT_IMAGE_PATH,
+                AMEnv.DEFAULT_IMAGE_PATH,
         };
 
         cardTextUtil = new CardTextUtil(appComponents(), imageSearchPaths);
@@ -191,18 +191,18 @@ public class CardListActivity extends BaseActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                case R.id.mark_as_learned_menu:
-                    markAsLearned(card);
-                    break;
-                case R.id.mark_as_forgotten_menu:
-                    markAsForgotten(card);
-                    break;
-                case R.id.mark_as_new_menu:
-                    markAsNew(card);
-                    break;
-                case R.id.mark_as_learned_forever_menu:
-                    markAsLearnedForever(card);
-                    break;
+                    case R.id.mark_as_learned_menu:
+                        markAsLearned(card);
+                        break;
+                    case R.id.mark_as_forgotten_menu:
+                        markAsForgotten(card);
+                        break;
+                    case R.id.mark_as_new_menu:
+                        markAsNew(card);
+                        break;
+                    case R.id.mark_as_learned_forever_menu:
+                        markAsLearnedForever(card);
+                        break;
                 }
                 return true;
             }
@@ -211,7 +211,7 @@ public class CardListActivity extends BaseActivity {
     }
 
     private void showListItemLongClickPopup(final View childView,
-            final Card card) {
+                                            final Card card) {
         View view = childView.findViewById(R.id.item_question);
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
@@ -221,13 +221,13 @@ public class CardListActivity extends BaseActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                case R.id.edit:
-                    gotoCardEditorActivity(card);
-                    break;
+                    case R.id.edit:
+                        gotoCardEditorActivity(card);
+                        break;
 
-                case R.id.preview_edit:
-                    gotoPreviewEditActivity(card);
-                    break;
+                    case R.id.preview_edit:
+                        gotoPreviewEditActivity(card);
+                        break;
 
                 }
                 return true;
@@ -345,36 +345,36 @@ public class CardListActivity extends BaseActivity {
     private void sortList(SortMethod sort) {
         //Handle sort method
         switch (sort) {
-        case ORDINAL:
-            cardListAdapter.sort(new Comparator<CardWrapper>() {
-                @Override
-                public int compare(CardWrapper c1, CardWrapper c2) {
-                    return c1.getCard().getOrdinal()
-                            - c2.getCard().getOrdinal();
-                };
-            });
-            break;
-        case QUESTION:
-            cardListAdapter.sort(new Comparator<CardWrapper>() {
-                @Override
-                public int compare(CardWrapper c1, CardWrapper c2) {
-                    return c1.getCard().getQuestion()
-                            .compareTo(c2.getCard().getQuestion());
-                };
-            });
-            break;
-        case ANSWER:
-            cardListAdapter.sort(new Comparator<CardWrapper>() {
-                @Override
-                public int compare(CardWrapper c1, CardWrapper c2) {
-                    return c1.getCard().getAnswer()
-                            .compareTo(c2.getCard().getAnswer());
-                };
-            });
-            break;
-        default:
-            throw new AssertionError(
-                    "This case will not happen! Or the system has carshed.");
+            case ORDINAL:
+                cardListAdapter.sort(new Comparator<CardWrapper>() {
+                    @Override
+                    public int compare(CardWrapper c1, CardWrapper c2) {
+                        return c1.getCard().getOrdinal()
+                                - c2.getCard().getOrdinal();
+                    };
+                });
+                break;
+            case QUESTION:
+                cardListAdapter.sort(new Comparator<CardWrapper>() {
+                    @Override
+                    public int compare(CardWrapper c1, CardWrapper c2) {
+                        return c1.getCard().getQuestion()
+                                .compareTo(c2.getCard().getQuestion());
+                    };
+                });
+                break;
+            case ANSWER:
+                cardListAdapter.sort(new Comparator<CardWrapper>() {
+                    @Override
+                    public int compare(CardWrapper c1, CardWrapper c2) {
+                        return c1.getCard().getAnswer()
+                                .compareTo(c2.getCard().getAnswer());
+                    };
+                });
+                break;
+            default:
+                throw new AssertionError(
+                        "This case will not happen! Or the system has carshed.");
         }
     }
 
@@ -401,21 +401,21 @@ public class CardListActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case R.id.sort:
-            showSortListDialog();
-            return true;
-        case R.id.show_hide_answers:
-            showHideAnswers();
-            return true;
-        default:
-            return super.onOptionsItemSelected(item);
+            case R.id.sort:
+                showSortListDialog();
+                return true;
+            case R.id.show_hide_answers:
+                showHideAnswers();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
     private OnItemClickListener listItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parentView, View childView,
-                int position, long id) {
+                                int position, long id) {
             CardWrapper cardWrapper = cardListAdapter.getItem(position);
             if (!cardWrapper.isAnswerVisible()) {
                 cardWrapper.setAnswerVisible(true);
@@ -430,7 +430,7 @@ public class CardListActivity extends BaseActivity {
 
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view,
-                int position, long id) {
+                                       int position, long id) {
             showListItemLongClickPopup(view,
                     cardListAdapter.getCardItem(position));
             return true;
@@ -539,7 +539,7 @@ public class CardListActivity extends BaseActivity {
 
                         for (CardWrapper cardWrapper : cardList) {
                             Card card = cardWrapper.getCard();
-                            if (card.getQuestion().toLowerCase().contains(searchTerm.toString().toLowerCase()) || 
+                            if (card.getQuestion().toLowerCase().contains(searchTerm.toString().toLowerCase()) ||
                                     card.getAnswer() .toLowerCase().contains(searchTerm.toString().toLowerCase())) {
                                 resultList.add(cardWrapper);
                             }
@@ -554,7 +554,7 @@ public class CardListActivity extends BaseActivity {
 
                 @Override
                 protected void publishResults(CharSequence constraint,
-                        FilterResults results) {
+                                              FilterResults results) {
                     //noinspection unchecked
                     cardList.clear();
 
@@ -610,9 +610,9 @@ public class CardListActivity extends BaseActivity {
             LoaderManager.LoaderCallbacks<List<CardWrapper>> {
         @Override
         public Loader<List<CardWrapper>> onCreateLoader(int arg0, Bundle arg1) {
-             CardWrapperListLoader loader = new CardWrapperListLoader(CardListActivity.this, dbPath, initialAnswerVisible);
-             loader.forceLoad();
-             return loader;
+            CardWrapperListLoader loader = new CardWrapperListLoader(CardListActivity.this, dbPath, initialAnswerVisible);
+            loader.forceLoad();
+            return loader;
         }
 
         @Override

@@ -4,6 +4,6 @@
         android:title="@string/edit_text" />
 
     <item android:id="@+id/preview_edit"
-        android:title="Preview" />
+        android:title="@string/memo_edit_dialog_title" />
 </menu>
 
