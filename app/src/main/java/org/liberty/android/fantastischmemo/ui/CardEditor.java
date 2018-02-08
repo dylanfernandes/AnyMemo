@@ -653,7 +653,7 @@ public class CardEditor extends BaseActivity {
             String qText = questionEdit.getText().toString();
             String aText = answerEdit.getText().toString();
             String nText = noteEdit.getText().toString();
-            
+
             currentCard.setQuestion(qText);
             currentCard.setAnswer(aText);
             currentCard.setNote(nText);
