@@ -43,6 +43,8 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.common.base.Optional;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.liberty.android.fantastischmemo.R;
@@ -59,8 +61,12 @@ import org.liberty.android.fantastischmemo.entity.Category;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.ui.AudioRecorderFragment.AudioRecorderResultListener;
 import org.liberty.android.fantastischmemo.ui.CategoryEditorFragment.CategoryEditorResultListener;
+import org.liberty.android.fantastischmemo.utils.AMGUIUtility;
 
 import java.io.File;
+import java.text.ParseException;
+
+import static org.apache.commons.lang3.time.DateFormatUtils.ISO_TIME_FORMAT;
 
 public class CardEditor extends BaseActivity {
     private final int ACTIVITY_IMAGE_FILE = 1;
@@ -73,10 +79,20 @@ public class CardEditor extends BaseActivity {
     Card prevCard = null;
     private Integer prevOrdinal = null;
     private Integer currentCardId;
+    private EditText idEdit;
     private EditText questionEdit;
     private EditText answerEdit;
-    private Button categoryButton;
     private EditText noteEdit;
+    private EditText lastLearnDateEdit;
+    private EditText nextLearnDateEdit;
+    private EditText gradeEdit;
+    private EditText easinessEdit;
+    private EditText acqRepsEdit;
+    private EditText retRepsEdit;
+    private EditText lapsesEdit;
+    private EditText acqRepsSinceLapseEdit;
+    private EditText retRepsSinceLapseEdit;
+    private Button categoryButton;
     private RadioGroup addRadio;
     private boolean addBack = true;
     private boolean isEditNew = false;
@@ -148,7 +164,6 @@ public class CardEditor extends BaseActivity {
             .setNegativeButton(R.string.cancel_text, null)
             .create()
             .show();
-
         }
         else{
             Intent resultIntent = new Intent();
@@ -170,9 +185,26 @@ public class CardEditor extends BaseActivity {
         switch (item.getItemId()) {
 
             case R.id.save:
-                SaveCardTask task = new SaveCardTask();
-                task.execute((Void)null);
+                try
+            {
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.warning_text)
+                        .setMessage(R.string.item_update_warning)
+                        .setPositiveButton(R.string.ok_text,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface arg0, int arg1) {
+
+                                        SaveCardTask task = new SaveCardTask();
+                                        task.execute((Void) null);
+
+                                    }
+                                })
+                        .setNegativeButton(R.string.cancel_text, null)
+                        .show();
                 return true;
+            } catch (Exception e){
+                    e.printStackTrace();
+                }
 
             case R.id.editor_menu_br:
                 if(focusView == questionEdit || focusView ==answerEdit || focusView == noteEdit){
@@ -477,9 +509,21 @@ public class CardEditor extends BaseActivity {
             originalQuestion = currentCard.getQuestion();
             originalAnswer = currentCard.getAnswer();
             originalNote = currentCard.getNote();
+
+            idEdit.setText("" + currentCard.getId());
             questionEdit.setText(originalQuestion);
             answerEdit.setText(originalAnswer);
             noteEdit.setText(originalNote);
+            lastLearnDateEdit.setText(ISO_TIME_FORMAT.format(currentCard.getLearningData().getLastLearnDate()));
+            nextLearnDateEdit.setText(ISO_TIME_FORMAT.format(currentCard.getLearningData().getNextLearnDate()));
+            gradeEdit.setText("" + currentCard.getLearningData().getGrade());
+            easinessEdit.setText("" + currentCard.getLearningData().getEasiness());
+
+            acqRepsEdit.setText("" + currentCard.getLearningData().getAcqReps());
+            retRepsEdit.setText("" + currentCard.getLearningData().getRetReps());
+            lapsesEdit.setText("" + currentCard.getLearningData().getLapses());
+            acqRepsSinceLapseEdit.setText("" + currentCard.getLearningData().getAcqRepsSinceLapse());
+            retRepsSinceLapseEdit.setText("" + currentCard.getLearningData().getRetRepsSinceLapse());
         }
     }
 
@@ -544,6 +588,8 @@ public class CardEditor extends BaseActivity {
             }
             assert currentCard != null : "Try to edit null card!";
             categoryDao.refresh(currentCard.getCategory());
+            learningDataDao.refresh(currentCard.getLearningData());
+
 
             return null;
         }
@@ -551,11 +597,21 @@ public class CardEditor extends BaseActivity {
         @Override
         public void onPostExecute(Void result){
             // It means empty set
+            idEdit = (EditText)findViewById(R.id.entry__id);
             questionEdit = (EditText)findViewById(R.id.edit_dialog_question_entry);
             answerEdit = (EditText)findViewById(R.id.edit_dialog_answer_entry);
             categoryButton = (Button)findViewById(R.id.edit_dialog_category_button);
             noteEdit = (EditText)findViewById(R.id.edit_dialog_note_entry);
             addRadio = (RadioGroup)findViewById(R.id.add_radio);
+            lastLearnDateEdit = (EditText)findViewById(R.id.entry_last_learn_date);
+            nextLearnDateEdit = (EditText)findViewById(R.id.entry_next_learn_date);
+            gradeEdit = (EditText)findViewById(R.id.entry_grade);
+            easinessEdit = (EditText)findViewById(R.id.entry_easiness);
+            acqRepsEdit = (EditText)findViewById(R.id.entry_acq_reps);
+            retRepsEdit = (EditText)findViewById(R.id.entry_ret_reps);
+            lapsesEdit = (EditText)findViewById(R.id.entry_lapses);
+            acqRepsSinceLapseEdit = (EditText)findViewById(R.id.entry_acq_reps_since_lapse);
+            retRepsSinceLapseEdit = (EditText)findViewById(R.id.entry_ret_reps_since_lapse);
 
             categoryButton.setOnClickListener(categoryButtonClickListener);
 
@@ -584,8 +640,9 @@ public class CardEditor extends BaseActivity {
 
     private class SaveCardTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
+        private Optional<ParseException> exception = Optional.absent();
         @Override
-        public void onPreExecute() {
+        public void onPreExecute(){
             progressDialog = new ProgressDialog(CardEditor.this);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setTitle(getString(R.string.loading_please_wait));
@@ -596,6 +653,7 @@ public class CardEditor extends BaseActivity {
             String qText = questionEdit.getText().toString();
             String aText = answerEdit.getText().toString();
             String nText = noteEdit.getText().toString();
+
             currentCard.setQuestion(qText);
             currentCard.setAnswer(aText);
             currentCard.setNote(nText);
@@ -622,6 +680,7 @@ public class CardEditor extends BaseActivity {
                 cardDao.create(currentCard);
             } else {
                 cardDao.update(currentCard);
+                learningDataDao.update(currentCard.getLearningData());
             }
 
             return null;
@@ -630,10 +689,14 @@ public class CardEditor extends BaseActivity {
         @Override
         public void onPostExecute(Void result){
             progressDialog.dismiss();
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra(EXTRA_RESULT_CARD_ID, currentCard.getId());
-            setResult(Activity.RESULT_OK, resultIntent);
-            finish();
+            if (exception.isPresent()) {
+                AMGUIUtility.displayException(CardEditor.this, getString(R.string.warning_text), getString(R.string.exception_message), exception.get());
+            } else {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(EXTRA_RESULT_CARD_ID, currentCard.getId());
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
+            }
         }
     }
 
