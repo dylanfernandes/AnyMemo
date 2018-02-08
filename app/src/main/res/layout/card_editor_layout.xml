@@ -89,46 +89,6 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"/>
             <TextView
-                android:text="question"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:padding="3dip"/>
-            <EditText
-                android:id="@+id/entry_question"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:inputType="textMultiLine" />
-            <TextView
-                android:text="answer"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:padding="3dip"/>
-            <EditText
-                android:id="@+id/entry_answer"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:inputType="textMultiLine" />
-            <TextView
-                android:text="note"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:padding="3dip"/>
-            <EditText
-                android:id="@+id/entry_note"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:inputType="textMultiLine"/>
-            <TextView
-                android:text="category"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:padding="3dip"/>
-            <EditText
-                android:id="@+id/entry_category"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:editable="false"/>
-            <TextView
                 android:text="@string/entry_last_learn_date"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
