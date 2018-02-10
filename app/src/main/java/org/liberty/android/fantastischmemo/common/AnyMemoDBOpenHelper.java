@@ -158,12 +158,14 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
             database.execSQL("update cards "
                     + " set category_id = 1"
                     + " where category_id is null");
+            oldVersion = 2;
         }
         if (oldVersion <= 3) {
             database.execSQL("update settings set questionTextColor = ? where questionTextColor = ?", new Object[] {null, 0xFFBEBEBE});
             database.execSQL("update settings set answerTextColor = ? where answerTextColor = ?", new Object[] {null, 0xFFBEBEBE} );
             database.execSQL("update settings set questionBackgroundColor = ? where questionBackgroundColor = ?", new Object[] {null, 0xFF000000});
             database.execSQL("update settings set answerBackgroundColor = ? where answerBackgroundColor = ?", new Object[] {null, 0xFF000000});
+            oldVersion = 3;
         }
         if (oldVersion <= 4) {
             try {
@@ -171,8 +173,23 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 database.execSQL("update learning_data set firstLearnDate='2010-01-01 00:00:00.000000'");
             } catch (android.database.SQLException e) {
                 Log.e(TAG, "Upgrading failed, the column firstLearnData might already exists.", e);
+            } finally {
+                oldVersion = 4;
+            }
+
+        }
+        if (oldVersion <= 5) {
+            try {
+                TableUtils.createTable(connectionSource, Tag.class);
+                TableUtils.createTable(connectionSource, DeckTag.class);
+                database.execSQL("alter table cards add column deck_id INTEGER");
+            } catch (SQLException e) {
+                Log.e(TAG, "Upgrading failed, the tags and decktags tables might already exists.", e);
+            } finally {
+                oldVersion = 5;
             }
         }
+        database.setVersion(oldVersion);
     }
 
     @Override

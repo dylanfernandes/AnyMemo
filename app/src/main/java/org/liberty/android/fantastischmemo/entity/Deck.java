@@ -1,7 +1,9 @@
 package org.liberty.android.fantastischmemo.entity;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.liberty.android.fantastischmemo.dao.DeckDaoImpl;
@@ -18,6 +20,9 @@ public class Deck {
 
     @DatabaseField(defaultValue = "", width = 8192)
     private String description;
+
+    @ForeignCollectionField
+    private ForeignCollection<Card> cards;
 
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType=DataType.DATE_STRING)
     private Date creationDate;
@@ -66,4 +71,9 @@ public class Deck {
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
+
+    public ForeignCollection<Card> getCards() {
+        return cards;
+    }
+
 }

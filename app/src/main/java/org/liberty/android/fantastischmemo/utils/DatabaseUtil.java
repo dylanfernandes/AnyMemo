@@ -1,6 +1,7 @@
 package org.liberty.android.fantastischmemo.utils;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
@@ -89,6 +90,20 @@ public class DatabaseUtil {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        } finally {
+            if (helper != null) {
+                AnyMemoDBOpenHelperManager.releaseHelper(helper);
+            }
+        }
+    }
+
+    public void setupDatabase(String dbPath) {
+        AnyMemoDBOpenHelper helper = null;
+        try {
+            helper = AnyMemoDBOpenHelperManager.getHelper(mContext, dbPath);
+            helper.getWritableDatabase(); //If new database, calls onCreate method to make new database. If database already exists, calls onUpgrade method instead.
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             if (helper != null) {
                 AnyMemoDBOpenHelperManager.releaseHelper(helper);

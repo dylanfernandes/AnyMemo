@@ -17,7 +17,7 @@ public class Tag {
     @DatabaseField
     private String name;
 
-    Tag(){
+    public Tag(){
         //empty constructor for ormlite
     }
 

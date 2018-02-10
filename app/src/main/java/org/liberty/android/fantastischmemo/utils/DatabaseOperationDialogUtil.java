@@ -26,14 +26,17 @@ public class DatabaseOperationDialogUtil {
     private final Activity activity;
     private final AMFileUtil amFileUtil;
     private final RecentListUtil recentListUtil;
+    private final DatabaseUtil databaseUtil;
 
     @Inject
     public DatabaseOperationDialogUtil(@NonNull final Activity activity,
                                        @NonNull final AMFileUtil amFileUtil,
-                                       @NonNull final RecentListUtil recentListUtil) {
+                                       @NonNull final RecentListUtil recentListUtil,
+                                       @NonNull final DatabaseUtil databaseUtil) {
         this.activity = activity;
         this.amFileUtil = amFileUtil;
         this.recentListUtil = recentListUtil;
+        this.databaseUtil = databaseUtil;
     }
 
     public Maybe<File> showCreateDbDialog(@NonNull final String directoryPath) {
@@ -57,8 +60,7 @@ public class DatabaseOperationDialogUtil {
                                     if (newDbFile.exists()) {
                                         amFileUtil.deleteFileWithBackup(newDbFile.getAbsolutePath());
                                     }
-
-                                    amFileUtil.createDbFileWithDefaultSettings(newDbFile);
+                                    databaseUtil.setupDatabase(newDbFile.toString());
                                     emitter.onSuccess(newDbFile);
                                 } catch(IOException e){
                                     Log.e(TAG, "Fail to create file", e);
