@@ -11,12 +11,12 @@
         android:layout_height="wrap_content"
         android:textSize="30dp"
         android:gravity="center"
-        android:text="Tags For Decks" />
+        android:text="@string/tags_for_deck_header" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Existing Tags"
+        android:text="@string/existing_tags"
         android:textSize="20dp"
         android:id="@+id/existing_tag_text"
         android:layout_marginTop="30dp"/>
@@ -70,7 +70,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tags Assigned to this deck"
+                android:text="@string/tags_assigned_to_deck"
                 android:textSize="20dp"
                 android:id="@+id/assigned_tag_text"
                 android:layout_marginTop="60dp"/>

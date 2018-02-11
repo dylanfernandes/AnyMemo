@@ -468,4 +468,7 @@
     <string name="google_sign_in_not_successful_error_text">Google sign in is not successful</string>
     <string name="google_sign_in_empty_error_text">Google sign in result is empty</string>
     <string name="google_sign_in_account_empty_result">Unable to get Google account</string>
+    <string name="tags_for_deck_header">Tags For Decks</string>
+    <string name="existing_tags">Existing Tags</string>
+    <string name="tags_assigned_to_deck">Tags Assigned to this deck</string>
 </resources>
