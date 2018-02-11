@@ -1,7 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/openmenu_clear"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:anymemo="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_filter"
+        android:title="@string/filter_text"
+        android:icon="@drawable/ic_menu_filter"
+        anymemo:showAsAction="ifRoom">
+        <menu>
+            <group
+                android:id="@+id/filter_list"
+                android:checkableBehavior="all">
+                <item
+                    android:id="@+id/filter_test1"
+                    android:title="lorem"/>
+                <item
+                    android:id="@+id/filter_test2"
+                    android:title="ipsum"/>
+            </group>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/openmenu_clear"
         android:icon="@drawable/ic_menu_delete"
         android:title="@string/clear_recent_list"/>
 </menu>
