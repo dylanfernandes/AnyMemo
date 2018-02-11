@@ -509,16 +509,18 @@ public class CardEditor extends BaseActivity {
             answerEdit.setText(originalAnswer);
             noteEdit.setText(originalNote);
 
+            LearningData learningData = currentCard.getLearningData();
+            
             idEntry.setText("" + currentCard.getId());
-            lastLearnDateEntry.setText(ISO_TIME_FORMAT.format(currentCard.getLearningData().getLastLearnDate()));
-            nextLearnDateEntry.setText(ISO_TIME_FORMAT.format(currentCard.getLearningData().getNextLearnDate()));
-            gradeEntry.setText("" + currentCard.getLearningData().getGrade());
-            easinessEntry.setText("" + currentCard.getLearningData().getEasiness());
-            acqRepsEntry.setText("" + currentCard.getLearningData().getAcqReps());
-            retRepsEntry.setText("" + currentCard.getLearningData().getRetReps());
-            lapsesEntry.setText("" + currentCard.getLearningData().getLapses());
-            acqRepsSinceLapseEntry.setText("" + currentCard.getLearningData().getAcqRepsSinceLapse());
-            retRepsSinceLapseEntry.setText("" + currentCard.getLearningData().getRetRepsSinceLapse());
+            lastLearnDateEntry.setText(ISO_TIME_FORMAT.format(learningData.getLastLearnDate()));
+            nextLearnDateEntry.setText(ISO_TIME_FORMAT.format(learningData.getNextLearnDate()));
+            gradeEntry.setText("" + learningData.getGrade());
+            easinessEntry.setText("" + learningData.getEasiness());
+            acqRepsEntry.setText("" + learningData.getAcqReps());
+            retRepsEntry.setText("" + learningData.getRetReps());
+            lapsesEntry.setText("" + learningData.getLapses());
+            acqRepsSinceLapseEntry.setText("" + learningData.getAcqRepsSinceLapse());
+            retRepsSinceLapseEntry.setText("" + learningData.getRetRepsSinceLapse());
         }
     }
 
