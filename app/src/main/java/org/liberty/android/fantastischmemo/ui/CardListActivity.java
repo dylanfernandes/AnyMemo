@@ -224,9 +224,6 @@ public class CardListActivity extends BaseActivity {
                 case R.id.edit:
                     gotoCardEditorActivity(card);
                     break;
-                case R.id.detail:
-                    gotoDetailActivity(card);
-                    break;
 
                 case R.id.preview_edit:
                     gotoPreviewEditActivity(card);
@@ -243,13 +240,6 @@ public class CardListActivity extends BaseActivity {
         Intent intent = new Intent(this, CardEditor.class);
         intent.putExtra(CardEditor.EXTRA_DBPATH, dbPath);
         intent.putExtra(CardEditor.EXTRA_CARD_ID, card.getId());
-        startActivity(intent);
-    }
-
-    private void gotoDetailActivity(Card card) {
-        Intent intent = new Intent(this, DetailScreen.class);
-        intent.putExtra(DetailScreen.EXTRA_DBPATH, dbPath);
-        intent.putExtra(DetailScreen.EXTRA_CARD_ID, card.getId());
         startActivity(intent);
     }
 

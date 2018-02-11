@@ -20,6 +20,7 @@
     <string name="about_button_text">About</string>
     <string name="help_button_text">Help</string>
     <string name="edit_button_text">Preview/edit</string>
+    <string name="preview_button_text">Preview</string>
     <string name="copyclipboard">Copy to clipboard</string>
     <string name="copyclipboard_summary">Automatically copy card content to clipboard.</string>
     <string name="memo_show_answer">Show answer</string>
