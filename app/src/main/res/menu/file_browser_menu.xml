@@ -14,10 +14,10 @@
 				android:checkableBehavior="all">
 				<item
 					android:id="@+id/filter_test1"
-					android:title="lorem"/>
+					android:title="English_Hiragana"/>
 				<item
 					android:id="@+id/filter_test2"
-					android:title="ipsum"/>
+					android:title="French (Body parts)"/>
 			</group>
 		</menu>
 	</item>
