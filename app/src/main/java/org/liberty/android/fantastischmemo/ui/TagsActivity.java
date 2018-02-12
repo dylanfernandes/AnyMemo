@@ -21,7 +21,7 @@ public class TagsActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.create_delete_tags_dialog);
+        setContentView(R.layout.edit_tags_layout);
 
         RecyclerView tagsRecyclerView = (RecyclerView) findViewById(R.id.tags_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
