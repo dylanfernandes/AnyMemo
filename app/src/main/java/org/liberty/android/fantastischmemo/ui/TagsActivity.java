@@ -29,18 +29,11 @@ public class TagsActivity extends BaseActivity {
         tagsRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
         List<String> tags = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 50; i++) {
             tags.add("Some Tag Name " + (i + 1));
         }
 
         tagsRecyclerView.setAdapter(new TagsAdapter(tags));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.edit_tags_menu, menu);
-        return super.onCreateOptionsMenu(menu);
     }
 
     class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagsViewHolder> {
