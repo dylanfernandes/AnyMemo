@@ -5,71 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Please enter a new tag name below!" />
-
-    <EditText
-        android:id="@+id/tag_name_entry"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text|textFilter"
-        android:textSize="22.5sp" />
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/button_new"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/new_text"
-            android:layout_weight="1"
-            android:layout_marginLeft="2dip"
-            android:layout_marginRight="2dip" />
-
-        <Button
-            android:id="@+id/button_edit"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dip"
-            android:layout_marginRight="2dip"
-            android:layout_weight="1"
-            android:text="Edit" />
-    </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <android.support.v4.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="340dp"
-            android:fillViewport="true">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-        </android.support.v4.widget.NestedScrollView>
-
-        <LinearLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/tags_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dip"
-                android:layout_marginRight="2dip"
-                android:layout_weight="1"
-                android:text="Delete" />
-        </LinearLayout>
+            android:scrollbars="vertical" />
 
     </LinearLayout>
 

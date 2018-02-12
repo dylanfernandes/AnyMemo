@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -444,6 +445,9 @@ public class FileBrowserFragment extends BaseDialogFragment {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             if (which == 0) {
+                                                Intent intent = new Intent(fragment.getActivity(), TagsActivity.class);
+                                                fragment.startActivity(intent);
+                                            } else if (which == 1) {
                                                 fragment.disposables.add(fragment.activityComponents().databaseOperationDialogUtil().showDeleteDbDialog(clickedFile)
                                                         .observeOn(AndroidSchedulers.mainThread())
                                                         .subscribe(new Consumer<File>() {
@@ -452,7 +456,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
                                                                 fragment.browseTo(file.getParentFile());
                                                             }
                                                         }));
-                                            } else if (which == 1) {
+                                            } else if (which == 2) {
                                                 fragment.disposables.add(fragment.activityComponents().databaseOperationDialogUtil().showCloneDbDialog(clickedFile)
                                                         .observeOn(AndroidSchedulers.mainThread())
                                                         .subscribe(new Consumer<File>() {
@@ -461,7 +465,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
                                                                 fragment.browseTo(file.getParentFile());
                                                             }
                                                         }));
-                                            } else if (which == 2) {
+                                            } else if (which == 3) {
                                                 fragment.disposables.add(fragment.activityComponents().databaseOperationDialogUtil().showRenameDbDialog(clickedFile)
                                                         .observeOn(AndroidSchedulers.mainThread())
                                                         .subscribe(new Consumer<File>() {

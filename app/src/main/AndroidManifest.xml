@@ -136,6 +136,8 @@
             android:name=".ui.QuizActivity" />
         <activity 
             android:name=".ui.CardPlayerActivity" />
+        <activity
+            android:name=".ui.TagsActivity" />
         <receiver
             android:name=".receiver.AlarmReceiver"
             android:process=":remote" />
