@@ -41,6 +41,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.commons.io.FileUtils;
@@ -75,6 +76,7 @@ public class CardEditor extends BaseActivity {
     private Integer currentCardId;
     private EditText questionEdit;
     private EditText answerEdit;
+    private TextView categoryText;
     private Button categoryButton;
     private EditText noteEdit;
     private RadioGroup addRadio;
@@ -487,9 +489,9 @@ public class CardEditor extends BaseActivity {
         /* Retain the last category when editing new */
         String categoryName = currentCard.getCategory().getName();
         if (categoryName.equals("")) {
-            categoryButton.setText(R.string.uncategorized_text);
+            categoryText.setText(R.string.uncategorized_text);
         } else {
-            categoryButton.setText(categoryName);
+            categoryText.setText(categoryName);
         }
     }
 
@@ -554,6 +556,7 @@ public class CardEditor extends BaseActivity {
             questionEdit = (EditText)findViewById(R.id.edit_dialog_question_entry);
             answerEdit = (EditText)findViewById(R.id.edit_dialog_answer_entry);
             categoryButton = (Button)findViewById(R.id.edit_dialog_category_button);
+            categoryText = (TextView)findViewById(R.id.edit_dialog_category_entry);
             noteEdit = (EditText)findViewById(R.id.edit_dialog_note_entry);
             addRadio = (RadioGroup)findViewById(R.id.add_radio);
 
