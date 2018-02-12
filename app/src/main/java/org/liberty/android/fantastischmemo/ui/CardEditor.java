@@ -62,6 +62,7 @@ import org.liberty.android.fantastischmemo.ui.AudioRecorderFragment.AudioRecorde
 import org.liberty.android.fantastischmemo.ui.CategoryEditorFragment.CategoryEditorResultListener;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 
 public class CardEditor extends BaseActivity {
     private final int ACTIVITY_IMAGE_FILE = 1;
@@ -80,6 +81,16 @@ public class CardEditor extends BaseActivity {
     private Button categoryButton;
     private EditText noteEdit;
     private RadioGroup addRadio;
+    private EditText idEntry;
+    private EditText lastLearnDateEntry;
+    private EditText nextLearnDateEntry;
+    private EditText gradeEntry;
+    private EditText easinessEntry;
+    private EditText acqRepsEntry;
+    private EditText retRepsEntry;
+    private EditText lapsesEntry;
+    private EditText acqRepsSinceLapseEntry;
+    private EditText retRepsSinceLapseEntry;
     private boolean addBack = true;
     private boolean isEditNew = false;
     private String dbName = null;
@@ -98,6 +109,9 @@ public class CardEditor extends BaseActivity {
     public static String EXTRA_CARD_ID = "id";
     public static String EXTRA_RESULT_CARD_ID= "result_card_id";
     public static String EXTRA_IS_EDIT_NEW = "is_edit_new";
+
+    private static final SimpleDateFormat ISO_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+
 
 
     @Override
@@ -172,9 +186,23 @@ public class CardEditor extends BaseActivity {
         switch (item.getItemId()) {
 
             case R.id.save:
-                SaveCardTask task = new SaveCardTask();
-                task.execute((Void)null);
+            {
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.warning_text)
+                        .setMessage(R.string.item_update_warning)
+                        .setPositiveButton(R.string.ok_text,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface arg0, int arg1) {
+
+                                        SaveCardTask task = new SaveCardTask();
+                                        task.execute((Void)null);
+
+                                    }
+                                })
+                        .setNegativeButton(R.string.cancel_text, null)
+                        .show();
                 return true;
+            }
 
             case R.id.editor_menu_br:
                 if(focusView == questionEdit || focusView ==answerEdit || focusView == noteEdit){
@@ -482,6 +510,19 @@ public class CardEditor extends BaseActivity {
             questionEdit.setText(originalQuestion);
             answerEdit.setText(originalAnswer);
             noteEdit.setText(originalNote);
+
+            LearningData learningData = currentCard.getLearningData();
+            
+            idEntry.setText("" + currentCard.getId());
+            lastLearnDateEntry.setText(ISO_TIME_FORMAT.format(learningData.getLastLearnDate()));
+            nextLearnDateEntry.setText(ISO_TIME_FORMAT.format(learningData.getNextLearnDate()));
+            gradeEntry.setText("" + learningData.getGrade());
+            easinessEntry.setText("" + learningData.getEasiness());
+            acqRepsEntry.setText("" + learningData.getAcqReps());
+            retRepsEntry.setText("" + learningData.getRetReps());
+            lapsesEntry.setText("" + learningData.getLapses());
+            acqRepsSinceLapseEntry.setText("" + learningData.getAcqRepsSinceLapse());
+            retRepsSinceLapseEntry.setText("" + learningData.getRetRepsSinceLapse());
         }
     }
 
@@ -546,6 +587,7 @@ public class CardEditor extends BaseActivity {
             }
             assert currentCard != null : "Try to edit null card!";
             categoryDao.refresh(currentCard.getCategory());
+            learningDataDao.refresh(currentCard.getLearningData());
 
             return null;
         }
@@ -559,6 +601,16 @@ public class CardEditor extends BaseActivity {
             categoryText = (TextView)findViewById(R.id.edit_dialog_category_entry);
             noteEdit = (EditText)findViewById(R.id.edit_dialog_note_entry);
             addRadio = (RadioGroup)findViewById(R.id.add_radio);
+            idEntry = (EditText)findViewById(R.id.entry__id);
+            lastLearnDateEntry = (EditText)findViewById(R.id.entry_last_learn_date);
+            nextLearnDateEntry = (EditText)findViewById(R.id.entry_next_learn_date);
+            gradeEntry = (EditText)findViewById(R.id.entry_grade);
+            easinessEntry = (EditText)findViewById(R.id.entry_easiness);
+            acqRepsEntry = (EditText)findViewById(R.id.entry_acq_reps);
+            retRepsEntry = (EditText)findViewById(R.id.entry_ret_reps);
+            lapsesEntry = (EditText)findViewById(R.id.entry_lapses);
+            acqRepsSinceLapseEntry = (EditText)findViewById(R.id.entry_acq_reps_since_lapse);
+            retRepsSinceLapseEntry = (EditText)findViewById(R.id.entry_ret_reps_since_lapse);
 
             categoryButton.setOnClickListener(categoryButtonClickListener);
 
@@ -625,6 +677,7 @@ public class CardEditor extends BaseActivity {
                 cardDao.create(currentCard);
             } else {
                 cardDao.update(currentCard);
+                learningDataDao.update(currentCard.getLearningData());
             }
 
             return null;
