@@ -161,14 +161,18 @@ public class RecentListFragment extends BaseFragment {
         inflater.inflate(R.menu.open_screen_menu, menu);
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case R.id.openmenu_clear:
-            recentListUtil.clearRecentList();
-            onResume();
-            return true;
+            case R.id.openmenu_clear:
+                recentListUtil.clearRecentList();
+                onResume();
+                return true;
+            case R.id.filter_test1:
+            case R.id.filter_test2:
+                item.setChecked(!item.isChecked());
+                return false;
         }
-
         return false;
     }
 
