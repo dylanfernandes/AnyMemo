@@ -20,6 +20,7 @@
     <string name="about_button_text">About</string>
     <string name="help_button_text">Help</string>
     <string name="edit_button_text">Preview/edit</string>
+    <string name="preview_button_text">Preview</string>
     <string name="copyclipboard">Copy to clipboard</string>
     <string name="copyclipboard_summary">Automatically copy card content to clipboard.</string>
     <string name="memo_show_answer">Show answer</string>
@@ -468,4 +469,7 @@
     <string name="google_sign_in_not_successful_error_text">Google sign in is not successful</string>
     <string name="google_sign_in_empty_error_text">Google sign in result is empty</string>
     <string name="google_sign_in_account_empty_result">Unable to get Google account</string>
+    <string name="tags_for_deck_header">Tags For Decks</string>
+    <string name="existing_tags">Existing Tags</string>
+    <string name="tags_assigned_to_deck">Tags Assigned to this deck</string>
 </resources>
