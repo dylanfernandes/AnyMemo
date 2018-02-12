@@ -13,7 +13,6 @@ import com.j256.ormlite.table.TableUtils;
 import org.liberty.android.fantastischmemo.dao.CardDao;
 import org.liberty.android.fantastischmemo.dao.CategoryDao;
 import org.liberty.android.fantastischmemo.dao.DeckDao;
-import org.liberty.android.fantastischmemo.dao.DeckTagDao;
 import org.liberty.android.fantastischmemo.dao.FilterDao;
 import org.liberty.android.fantastischmemo.dao.LearningDataDao;
 import org.liberty.android.fantastischmemo.dao.SettingDao;
@@ -21,7 +20,6 @@ import org.liberty.android.fantastischmemo.dao.TagDao;
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
 import org.liberty.android.fantastischmemo.entity.Deck;
-import org.liberty.android.fantastischmemo.entity.DeckTag;
 import org.liberty.android.fantastischmemo.entity.Filter;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.entity.Setting;
@@ -51,8 +49,6 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private TagDao tagDao = null;
 
-    private DeckTagDao deckTagDao = null;
-
     private boolean isReleased = false;
 
     @Override
@@ -68,7 +64,6 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Category.class);
             TableUtils.createTable(connectionSource, LearningData.class);
             TableUtils.createTable(connectionSource, Tag.class);
-            TableUtils.createTable(connectionSource, DeckTag.class);
 
             getSettingDao().create(new Setting());
             getCategoryDao().create(new Category());
@@ -181,10 +176,8 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         if (oldVersion <= 5) {
             try {
                 TableUtils.createTable(connectionSource, Tag.class);
-                TableUtils.createTable(connectionSource, DeckTag.class);
-                database.execSQL("alter table cards add column deck_id INTEGER");
             } catch (SQLException e) {
-                Log.e(TAG, "Upgrading failed, the tags and decktags tables might already exists.", e);
+                Log.e(TAG, "Upgrading failed, the tags table might already exist.", e);
             } finally {
                 oldVersion = 5;
             }
@@ -285,17 +278,6 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 tagDao = getDao(Tag.class);
             }
             return tagDao;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public synchronized DeckTagDao getDeckTagDao() {
-        try {
-            if (deckTagDao == null) {
-                deckTagDao = getDao(DeckTag.class);
-            }
-            return deckTagDao;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

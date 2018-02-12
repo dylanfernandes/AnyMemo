@@ -34,9 +34,6 @@ public class Card implements VersionableDomainObject {
     @DatabaseField(foreign = true)
     private LearningData learningData;
 
-    @DatabaseField(foreign = true)
-    private Deck deck;
-
     @DatabaseField(defaultValue = "0")
     private Integer cardType = 0;
 
@@ -151,14 +148,6 @@ public class Card implements VersionableDomainObject {
 	public void setLearningData(LearningData learningData) {
 		this.learningData = learningData;
 	}
-
-    public Deck getDeck() {
-        return deck;
-    }
-
-    public void setDeck(Deck deck) {
-        this.deck = deck;
-    }
 
     @Override
     public String toString() {
