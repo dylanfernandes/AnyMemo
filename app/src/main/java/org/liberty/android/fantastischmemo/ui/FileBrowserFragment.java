@@ -49,6 +49,8 @@ import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
 import org.liberty.android.fantastischmemo.common.BaseDialogFragment;
+import org.liberty.android.fantastischmemo.entity.DeckMap;
+import org.liberty.android.fantastischmemo.entity.DeckMock;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 
@@ -407,6 +409,8 @@ public class FileBrowserFragment extends BaseDialogFragment {
             }
 
             holder.setText(displayFileName);
+            DeckMap deckMap = DeckMap.getInstance();
+            final DeckMock deckMock = deckMap.findOrCreate(new DeckMock(displayFileName, fragment.currentDirectory.getAbsolutePath() + selectedFileName));
 
             // Set click listeners
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -446,6 +450,8 @@ public class FileBrowserFragment extends BaseDialogFragment {
                                         public void onClick(DialogInterface dialog, int which) {
                                             if (which == 0) {
                                                 Intent intent = new Intent(fragment.getActivity(), TagsActivity.class);
+//                                                intent.putExtra("DeckMock", deckMock);
+                                                intent.putExtra("deckPath", deckMock.getDbPath());
                                                 fragment.startActivity(intent);
                                             } else if (which == 1) {
                                                 fragment.disposables.add(fragment.activityComponents().databaseOperationDialogUtil().showDeleteDbDialog(clickedFile)
