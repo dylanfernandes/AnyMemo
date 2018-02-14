@@ -119,6 +119,7 @@ public class TagsActivity extends BaseActivity {
                 public void onClick(final View v) {
                     final EditText input = new EditText(v.getContext());
                     input.setText(tag.getName());
+                    input.setSelection(input.getText().length());
                     new AlertDialog.Builder(v.getContext())
                             .setTitle(v.getContext().getString(R.string.edit_text))
                             .setMessage("Enter new name for tag below.")
