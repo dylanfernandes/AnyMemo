@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,26 +21,31 @@ import android.widget.TextView;
 
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
+import org.liberty.android.fantastischmemo.entity.DeckMap;
+import org.liberty.android.fantastischmemo.entity.DeckMock;
 import org.liberty.android.fantastischmemo.entity.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TagsActivity extends BaseActivity {
+
+    private DeckMock deck;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_tags_layout);
+
+//        deck = getIntent().getParcelableExtra("DeckMock");
+        deck = DeckMap.getInstance().getDecksMap().get(getIntent().getStringExtra("deckPath"));
 
         final RecyclerView tagsRecyclerView = (RecyclerView) findViewById(R.id.tags_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         tagsRecyclerView.setLayoutManager(linearLayoutManager);
         tagsRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
-        final List<Tag> tags = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
-            tags.add(new Tag("Some Tag Name " + (i + 1)));
-        }
+        final List<Tag> tags = loadTags();
 
         final TagsAdapter tagsAdapter = new TagsAdapter(tags);
         tagsRecyclerView.setAdapter(tagsAdapter);
@@ -71,6 +77,19 @@ public class TagsActivity extends BaseActivity {
         });
     }
 
+    public List<Tag> loadTags() {
+//        List<Tag> tags = new ArrayList<>();
+//        for (int i = 0; i < 50; i++) {
+//            tags.add(new Tag("Some Tag Name " + (i + 1)));
+//        }
+//        tags.add(new Tag("Language"));
+//        tags.add(new Tag("French"));
+//        tags.add(new Tag("Body Parts"));
+
+//        return tags;
+        return deck.getTags();
+    }
+
     class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagsViewHolder> {
 
         class TagsViewHolder extends RecyclerView.ViewHolder {
@@ -95,6 +114,7 @@ public class TagsActivity extends BaseActivity {
         }
 
         public void addTag(Tag tag) {
+//            deck.addTag(tag);
             tags.add(tag);
             this.notifyDataSetChanged();
         }
