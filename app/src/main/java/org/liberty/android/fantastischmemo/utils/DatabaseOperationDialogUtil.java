@@ -60,7 +60,7 @@ public class DatabaseOperationDialogUtil {
                                     if (newDbFile.exists()) {
                                         amFileUtil.deleteFileWithBackup(newDbFile.getAbsolutePath());
                                     }
-                                    databaseUtil.setupDatabase(newDbFile.toString());
+                                    databaseUtil.setupDatabase(newDbFile.toString(), value);
                                     emitter.onSuccess(newDbFile);
                                 } catch(IOException e){
                                     Log.e(TAG, "Fail to create file", e);

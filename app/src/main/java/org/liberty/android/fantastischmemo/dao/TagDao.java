@@ -8,4 +8,5 @@ import org.liberty.android.fantastischmemo.entity.Tag;
  */
 
 public interface TagDao extends Dao<Tag, Integer> {
+    Tag createOrReturn(String name);
 }

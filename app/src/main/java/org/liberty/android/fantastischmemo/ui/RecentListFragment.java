@@ -53,6 +53,7 @@ import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseFragment;
 import org.liberty.android.fantastischmemo.dao.CardDao;
+import org.liberty.android.fantastischmemo.dao.TagDao;
 import org.liberty.android.fantastischmemo.ui.helper.SelectableAdapter;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListActionModeUtil;
@@ -279,9 +280,11 @@ public class RecentListFragment extends BaseFragment {
                 }
                 AnyMemoDBOpenHelper helper = AnyMemoDBOpenHelperManager.getHelper(getContext(), ri.dbPath);
                 CardDao dao = helper.getCardDao();
+                TagDao tagDao = helper.getTagDao();
                 ri.dbInfo = context.getString(R.string.stat_total) + dao.getTotalCount(null) + " " +
                         getContext().getString(R.string.stat_new) + dao.getNewCardCount(null) + " " +
-                        getContext().getString(R.string.stat_scheduled)+ dao.getScheduledCardCount(null);
+                        getContext().getString(R.string.stat_scheduled)+ dao.getScheduledCardCount(null) +
+                        " Tags: " + tagDao.queryForAll(); //Quick UI to see tags, this can be removed/changed to a better system
                 ril.set(ri.index, ri);
                 AnyMemoDBOpenHelperManager.releaseHelper(helper);
             } catch (Exception e) {
