@@ -40,6 +40,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -120,6 +121,7 @@ public class CardEditor extends BaseActivity {
         setContentView(R.layout.card_editor_layout);
         initTask = new InitTask();
         initTask.execute((Void)null);
+        setAdvancedOptionsListener(); // Show Advanced Options when button is clicked
     }
 
     @Override
@@ -256,6 +258,27 @@ public class CardEditor extends BaseActivity {
                 return;
             }
         }
+    }
+
+    private void setAdvancedOptionsListener() {
+        final Button advancedOptsButton = (Button) findViewById(R.id.show_advanced_options);
+        advancedOptsButton.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+                new AlertDialog.Builder(CardEditor.this)
+                        .setTitle(R.string.warning_text)
+                        .setMessage(R.string.show_advanced_options_warning)
+                        .setPositiveButton(R.string.yes_text, new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface  d, int which){
+                                LinearLayout advancedOptions = (LinearLayout) findViewById(R.id.advanced_options);
+                                advancedOptions.setVisibility(View.VISIBLE);
+                                advancedOptsButton.setVisibility(View.GONE);
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel_text, null)
+                        .create()
+                        .show();
+            }
+        });
     }
 
     private boolean isViewEligibleToEditAudio(){

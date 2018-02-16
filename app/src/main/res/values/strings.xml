@@ -162,6 +162,7 @@
     <string name="copy_text">Copy</string>
     <string name="paste_text">Paste</string>
     <string name="edit_dialog_unsave_warning">The current card is modified but not saved. Are you sure you want to save and exit?</string>
+    <string name="show_advanced_options_warning">Modifying advanced options can cause errors and should only be performed by advanced users. Proceed?</string>
     <string name="downloader_extract_zip">Extracting... Please wait.</string>
     <string name="allow_orientation_title">Orientation</string>
     <string name="allow_orientation_summary">Automatically change screen orientation. Please restart AnyMemo to take effect.</string>
@@ -278,6 +279,7 @@
     <string name="import_supermemo_2008_xml_text">Import SuperMemo 2008 XML</string>
     <string name="uncategorized_text">Uncategorized</string>
     <string name="edit_text">Edit</string>
+    <string name="advanced_options_title">Advanced Options</string>
     <string name="category_dialog_title">Please select a category or enter a new one</string>
     <string name="ordinal_text_short">Ord</string>
     <string name="total_text">Total</string>
