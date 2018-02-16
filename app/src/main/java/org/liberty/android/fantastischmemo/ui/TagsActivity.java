@@ -36,6 +36,9 @@ public class TagsActivity extends BaseActivity {
     private DeckMap deckMap;
     private DeckMock deck;
     private List<Tag> tags;
+    private RecyclerView tagsRecyclerView;
+    private LinearLayoutManager linearLayoutManager;
+    private TagsAdapter tagsAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,14 +48,14 @@ public class TagsActivity extends BaseActivity {
 //        deck = getIntent().getParcelableExtra("DeckMock");
         deck = DeckMap.getInstance().getDecksMap().get(getIntent().getStringExtra("deckPath"));
 
-        final RecyclerView tagsRecyclerView = (RecyclerView) findViewById(R.id.tags_list);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        tagsRecyclerView = (RecyclerView) findViewById(R.id.tags_list);
+        linearLayoutManager = new LinearLayoutManager(this);
         tagsRecyclerView.setLayoutManager(linearLayoutManager);
         tagsRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
         tags = loadTags();
 
-        final TagsAdapter tagsAdapter = new TagsAdapter(tags);
+        tagsAdapter = new TagsAdapter(tags);
         tagsRecyclerView.setAdapter(tagsAdapter);
 
         FloatingActionButton addTagButton = (FloatingActionButton) findViewById(R.id.add_tag_fab);
@@ -90,18 +93,12 @@ public class TagsActivity extends BaseActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        View focusView = getCurrentFocus();
         switch (item.getItemId()) {
 
             case R.id.tag_search:
             {
-                final RecyclerView tagsRecyclerView = (RecyclerView) findViewById(R.id.tags_list);
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-                tagsRecyclerView.setLayoutManager(linearLayoutManager);
-                tagsRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-
                 tags = loadAllTags();
-                TagsAdapter tagsAdapter = new TagsAdapter(tags);
+                tagsAdapter = new TagsAdapter(tags);
                 tagsRecyclerView.setAdapter(tagsAdapter);
                 return true;
             }
@@ -127,9 +124,7 @@ public class TagsActivity extends BaseActivity {
         HashMap<String, DeckMock> deckList = DeckMap.getInstance().getDecksMap();
 
         for(DeckMock deck : deckList.values()){
-            for(Tag tag: deck.getTags()){
-                tagList.add(tag);
-            }
+            tagList.addAll(deck.getTags());
         }
         return tagList;
     }
