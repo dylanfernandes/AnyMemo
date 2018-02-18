@@ -307,6 +307,11 @@ public class FileBrowserFragment extends BaseDialogFragment {
                 return true;
 
             }
+
+            case R.id.filter_test1:
+            case R.id.filter_test2:
+                item.setChecked(!item.isChecked());
+                return false;
         }
         return false;
     }

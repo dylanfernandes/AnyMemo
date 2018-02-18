@@ -11,6 +11,7 @@ public class DeckMock implements Parcelable {
     private String name;
     private String dbPath;
     private List<Tag> tags;
+    private DeckMap decklist = DeckMap.getInstance();
 
     public DeckMock(String name, String dbPath) {
         this(name, dbPath, new ArrayList<Tag>());
@@ -20,6 +21,7 @@ public class DeckMock implements Parcelable {
         this.name = name;
         this.dbPath = dbPath;
         this.tags = tags;
+        decklist.findOrCreate(this);
     }
 
     public String getName() {

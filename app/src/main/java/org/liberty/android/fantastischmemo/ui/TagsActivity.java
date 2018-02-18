@@ -3,6 +3,7 @@ package org.liberty.android.fantastischmemo.ui;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -26,11 +28,17 @@ import org.liberty.android.fantastischmemo.entity.DeckMock;
 import org.liberty.android.fantastischmemo.entity.Tag;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 public class TagsActivity extends BaseActivity {
-
+    private DeckMap deckMap;
     private DeckMock deck;
+    private List<Tag> tags;
+    private RecyclerView tagsRecyclerView;
+    private LinearLayoutManager linearLayoutManager;
+    private TagsAdapter tagsAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,14 +48,14 @@ public class TagsActivity extends BaseActivity {
 //        deck = getIntent().getParcelableExtra("DeckMock");
         deck = DeckMap.getInstance().getDecksMap().get(getIntent().getStringExtra("deckPath"));
 
-        final RecyclerView tagsRecyclerView = (RecyclerView) findViewById(R.id.tags_list);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        tagsRecyclerView = (RecyclerView) findViewById(R.id.tags_list);
+        linearLayoutManager = new LinearLayoutManager(this);
         tagsRecyclerView.setLayoutManager(linearLayoutManager);
         tagsRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
-        final List<Tag> tags = loadTags();
+        tags = loadTags();
 
-        final TagsAdapter tagsAdapter = new TagsAdapter(tags);
+        tagsAdapter = new TagsAdapter(tags);
         tagsRecyclerView.setAdapter(tagsAdapter);
 
         FloatingActionButton addTagButton = (FloatingActionButton) findViewById(R.id.add_tag_fab);
@@ -77,6 +85,27 @@ public class TagsActivity extends BaseActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.tag_activity_menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.tag_search:
+            {
+                tags = loadAllTags();
+                tagsAdapter = new TagsAdapter(tags);
+                tagsRecyclerView.setAdapter(tagsAdapter);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public List<Tag> loadTags() {
 //        List<Tag> tags = new ArrayList<>();
 //        for (int i = 0; i < 50; i++) {
@@ -88,6 +117,16 @@ public class TagsActivity extends BaseActivity {
 
 //        return tags;
         return deck.getTags();
+    }
+
+    public List<Tag> loadAllTags(){
+        ArrayList<Tag> tagList = new ArrayList<Tag>();
+        HashMap<String, DeckMock> deckList = DeckMap.getInstance().getDecksMap();
+
+        for(DeckMock deck : deckList.values()){
+            tagList.addAll(deck.getTags());
+        }
+        return tagList;
     }
 
     class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagsViewHolder> {
