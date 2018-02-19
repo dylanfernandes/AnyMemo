@@ -48,6 +48,25 @@ public class DeckMock implements Parcelable {
         tags.remove(tag);
     }
 
+    public boolean hasTag(Tag filterTag){
+        for(Tag tag: tags){
+            if(tag.equals(filterTag)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasSetTag(List<Tag> filterTags) {
+        for (Tag tag: tags){
+            for(Tag filter: filterTags){
+                if(tag.equals(filter))
+                    return true;
+            }
+        }
+        return false;
+    }
+
     public List<Tag> getTags() {
         return tags;
     }
