@@ -22,6 +22,10 @@ public class DeckMap {
         decksMap = new HashMap<>();
     }
 
+    public static void resetState() {
+        instance = new DeckMap();
+    }
+
     public HashMap<String, DeckMock> getDecksMap() {
         return decksMap;
     }
