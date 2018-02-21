@@ -39,6 +39,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -105,7 +106,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
 
-    private HashSet<Tag> selectedTags = new HashSet<Tag>();
+    private HashSet<Tag> selectedTags;
 
     public void setOnFileClickListener(OnFileClickListener listener) {
         this.onFileClickListener = listener;
@@ -210,6 +211,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
     @Override
     public void onResume() {
         super.onResume();
+        getActivity().invalidateOptionsMenu();
         browseTo(currentDirectory);
     }
 
@@ -240,6 +242,8 @@ public class FileBrowserFragment extends BaseDialogFragment {
     private void fill(File[] files){
         this.directoryEntries.clear();
 
+        HashMap<String, DeckMock> filteredDecks = DeckMap.getInstance().filterDecksByTags(selectedTags);
+
         if(this.currentDirectory.getParent() != null){
             this.directoryEntries.add(UP_ONE_LEVEL_DIR);
         }
@@ -258,7 +262,19 @@ public class FileBrowserFragment extends BaseDialogFragment {
                 else{
                     for(String fileExtension : fileExtensions){
                         if(file.getName().toLowerCase().endsWith(fileExtension.toLowerCase())){
-                                this.directoryEntries.add(file.getAbsolutePath().substring(currentPathStringLength));
+                            String filepath = file.getAbsolutePath();
+                            // If there is a filter by tags on the decks
+                            if(filteredDecks.size() > 0) {
+                                // If file is a deck, check if it is allowed to be displayed
+                                if(file.getAbsolutePath().endsWith(".db")) {
+                                    if(filteredDecks.containsKey(filepath))
+                                        this.directoryEntries.add(filepath.substring(currentPathStringLength));
+                                }
+                                else  // If not a file then just add it
+                                    this.directoryEntries.add(filepath.substring(currentPathStringLength));
+                            }
+                            else  // No filter on decks
+                                this.directoryEntries.add(filepath.substring(currentPathStringLength));
                         }
                     }
                 }
@@ -293,6 +309,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
         filterWrapper.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
         filter.clear();
+        selectedTags = new HashSet<>();
         HashSet<Tag> tags = DeckMap.getInstance().getAllTags();
         tagCount = 0;
         for (Tag tag : tags) {
@@ -346,14 +363,8 @@ public class FileBrowserFragment extends BaseDialogFragment {
                 selectedTags.add(selectedTag);
             else
                 selectedTags.remove(selectedTag);
-            String deckText = "";
-            HashMap<String, DeckMock> decks = DeckMap.getInstance().filterDecksByTags(selectedTags);
-            for (DeckMock deck : decks.values()) {
-                deckText += deck.getName() + "\n";
-            }
-            Context context = getContext();
-            Toast toast = Toast.makeText(context, deckText, Toast.LENGTH_LONG);
-            toast.show();
+
+            browseTo(currentDirectory);  // Refresh file explorer with new filter info
             return false;
         }
         return false;
