@@ -55,12 +55,14 @@ import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseFragment;
 import org.liberty.android.fantastischmemo.dao.CardDao;
 import org.liberty.android.fantastischmemo.entity.DeckMap;
+import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.ui.helper.SelectableAdapter;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListActionModeUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -170,11 +172,12 @@ public class RecentListFragment extends BaseFragment {
         filterWrapper.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         
         filter.clear();
-        String[] tags = {"what", "huh"}; // TODO replace with DeckMap for now (DeckDao later)
-        for(tagCount = 0; tagCount < tags.length; tagCount++) {
-            filter.add(0, Menu.FIRST + tagCount, Menu.NONE, tags[tagCount]);
+        HashSet<Tag> tags = DeckMap.getInstance().getAllTags();tagCount = 0;
+        for (Tag tag : tags) {
+            filter.add(0, Menu.FIRST + tagCount, Menu.NONE, tag.getName());
             MenuItem tagOption = filter.findItem(Menu.FIRST + tagCount);
             tagOption.setCheckable(true);
+            tagCount++;
         }
         super.onCreateOptionsMenu(menu, inflater);
     }

@@ -52,6 +52,7 @@ import org.liberty.android.fantastischmemo.common.AMPrefKeys;
 import org.liberty.android.fantastischmemo.common.BaseDialogFragment;
 import org.liberty.android.fantastischmemo.entity.DeckMap;
 import org.liberty.android.fantastischmemo.entity.DeckMock;
+import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 
@@ -59,6 +60,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -287,11 +289,13 @@ public class FileBrowserFragment extends BaseDialogFragment {
         filterWrapper.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
         filter.clear();
-        String[] tags = {"what", "huh"}; // TODO replace with DeckMap for now (DeckDao later)
-        for(tagCount = 0; tagCount < tags.length; tagCount++) {
-            filter.add(0, Menu.FIRST + tagCount, Menu.NONE, tags[tagCount]);
+        HashSet<Tag> tags = DeckMap.getInstance().getAllTags();
+        tagCount = 0;
+        for (Tag tag : tags) {
+            filter.add(0, Menu.FIRST + tagCount, Menu.NONE, tag.getName());
             MenuItem tagOption = filter.findItem(Menu.FIRST + tagCount);
             tagOption.setCheckable(true);
+            tagCount++;
         }
         super.onCreateOptionsMenu(menu, inflater);
     }

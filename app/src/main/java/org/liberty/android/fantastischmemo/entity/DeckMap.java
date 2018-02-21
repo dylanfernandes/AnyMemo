@@ -3,6 +3,7 @@ package org.liberty.android.fantastischmemo.entity;
 import android.util.Log;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class DeckMap {
 
@@ -26,6 +27,7 @@ public class DeckMap {
     }
 
     public DeckMock findOrCreate(DeckMock deck) {
+        // Find if the deck is already in the decksMap
         DeckMock deckMock = decksMap.get(deck.getDbPath());
 
         if (deckMock == null) {
@@ -37,5 +39,13 @@ public class DeckMap {
         }
 
         return deckMock;
+    }
+
+    public HashSet<Tag> getAllTags() {
+        HashSet tags = new HashSet<Tag>();
+        for (DeckMock deck : decksMap.values()) {
+            tags.addAll(deck.getTags());
+        }
+        return tags;
     }
 }
