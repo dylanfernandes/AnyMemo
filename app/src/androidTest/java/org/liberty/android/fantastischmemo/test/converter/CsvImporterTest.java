@@ -17,7 +17,7 @@ public class CsvImporterTest extends AbstractConverterTest {
 
     @Override
     protected Converter getConverter() {
-        return new CSVImporter(amFileUtil);
+        return new CSVImporter(databaseUtil);
     }
 
     @Override

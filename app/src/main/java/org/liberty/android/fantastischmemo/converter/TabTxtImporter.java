@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.liberty.android.fantastischmemo.converter;
 
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
+import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 
 import javax.inject.Inject;
 
@@ -29,8 +30,8 @@ public class TabTxtImporter extends CSVImporter {
     private static final long serialVersionUID = 3482178789406005987L;
 
     @Inject
-    public TabTxtImporter(AMFileUtil amFileUtil) {
-        super(amFileUtil);
+    public TabTxtImporter(DatabaseUtil databaseUtil) {
+        super(databaseUtil);
         setSeparator('\t');
     }
 

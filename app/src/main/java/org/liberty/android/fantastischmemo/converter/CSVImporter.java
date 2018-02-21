@@ -28,6 +28,7 @@ import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
+import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 
 import java.io.File;
 import java.io.FileReader;
@@ -43,11 +44,11 @@ public class CSVImporter implements Converter {
     /* Null is for default separator "," */
     private Character separator = null;
 
-    private AMFileUtil amFileUtil;
+    private DatabaseUtil databaseUtil;
 
     @Inject
-    public CSVImporter(AMFileUtil amFileUtil) {
-        this.amFileUtil = amFileUtil;
+    public CSVImporter(DatabaseUtil databaseUtil) {
+        this.databaseUtil = databaseUtil;
         separator = ',';
     }
 
@@ -57,7 +58,7 @@ public class CSVImporter implements Converter {
 
     public void convert(String src, String dest) throws Exception {
         if (!new File(dest).exists()) {
-            amFileUtil.createDbFileWithDefaultSettings(new File(dest));
+            databaseUtil.setupDatabase(dest, new File(dest).getName());
         }
 
         AnyMemoDBOpenHelper helper = AnyMemoDBOpenHelperManager.getHelper(dest);

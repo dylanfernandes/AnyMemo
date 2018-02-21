@@ -24,6 +24,7 @@ import org.liberty.android.fantastischmemo.converter.ZipImporter;
 import org.liberty.android.fantastischmemo.scheduler.DefaultScheduler;
 import org.liberty.android.fantastischmemo.scheduler.Scheduler;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
+import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -98,8 +99,8 @@ public class AppModules {
     @PerApplication
     @IntoMap
     @ClassKey(CSVImporter.class)
-    Converter providesCSVImporter(AMFileUtil amFileUtil) {
-        return new CSVImporter(amFileUtil);
+    Converter providesCSVImporter(DatabaseUtil databaseUtil) {
+        return new CSVImporter(databaseUtil);
     }
 
     @Provides
@@ -178,8 +179,8 @@ public class AppModules {
     @PerApplication
     @IntoMap
     @ClassKey(TabTxtImporter.class)
-    Converter providesTabTxtImporter(AMFileUtil amFileUtil) {
-        return new TabTxtImporter(amFileUtil);
+    Converter providesTabTxtImporter(DatabaseUtil databaseUtil) {
+        return new TabTxtImporter(databaseUtil);
     }
 
     @Provides
