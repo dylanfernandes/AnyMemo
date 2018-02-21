@@ -36,6 +36,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -79,6 +80,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
     private String defaultRoot;
     private String[] fileExtensions;
     private Activity mActivity;
+    private int tagCount;
 
     private RecyclerView filesListRecyclerView;
     private FileBrowserAdapter fileListAdapter;
@@ -276,42 +278,60 @@ public class FileBrowserFragment extends BaseDialogFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.file_browser_menu, menu);
+        menu.addSubMenu(Menu.NONE, R.id.filter_menu, Menu.NONE, "");
+        SubMenu filter = menu.findItem(R.id.filter_menu).getSubMenu();
+
+        MenuItem filterWrapper = filter.getItem();
+        filterWrapper.setIcon(R.drawable.ic_menu_filter);
+        filterWrapper.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+        filter.clear();
+        String[] tags = {"what", "huh"}; // TODO replace with DeckMap for now (DeckDao later)
+        for(tagCount = 0; tagCount < tags.length; tagCount++) {
+            filter.add(0, Menu.FIRST + tagCount, Menu.NONE, tags[tagCount]);
+            MenuItem tagOption = filter.findItem(Menu.FIRST + tagCount);
+            tagOption.setCheckable(true);
+        }
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.file_browser_createdb:{
-                disposables.add(activityComponents().databaseOperationDialogUtil().showCreateDbDialog(currentDirectory.getAbsolutePath())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<File>() {
-                            @Override
-                            public void accept(File file) throws Exception {
-                                browseTo(file.getParentFile());
-                            }
-                        }));
-                return true;
-            }
-
-            case R.id.file_browser_createdirectory:{
-                disposables.add(activityComponents().databaseOperationDialogUtil().showCreateFolderDialog(currentDirectory)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<File>() {
-                            @Override
-                            public void accept(File file) throws Exception {
-                                browseTo(file);
-                            }
-                        }));
-                return true;
-
-            }
-
-            case R.id.filter_test1:
-            case R.id.filter_test2:
-                item.setChecked(!item.isChecked());
-                return false;
+        int itemId = item.getItemId();
+        if (itemId == R.id.file_browser_createdb) {
+            disposables.add(
+                activityComponents()
+                .databaseOperationDialogUtil()
+                .showCreateDbDialog(currentDirectory.getAbsolutePath())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<File>() {
+                    @Override
+                    public void accept(File file) throws Exception {
+                        browseTo(file.getParentFile());
+                    }
+                })
+            );
+            return true;
+        }
+        else if (itemId == R.id.file_browser_createdirectory) {
+            disposables.add(
+                activityComponents()
+                .databaseOperationDialogUtil()
+                .showCreateFolderDialog(currentDirectory)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<File>() {
+                    @Override
+                    public void accept(File file) throws Exception {
+                        browseTo(file);
+                    }
+                })
+            );
+            return true;
+        }
+        else if (itemId > 0 && itemId <= tagCount) {
+            item.setChecked(!item.isChecked());
+            return false;
         }
         return false;
     }

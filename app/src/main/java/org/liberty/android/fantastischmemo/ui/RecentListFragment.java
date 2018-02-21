@@ -77,7 +77,7 @@ public class RecentListFragment extends BaseFragment {
 
     private final static String TAG = RecentListFragment.class.getSimpleName();
 
-    private static int tagCount = 0;
+    private static int tagCount;
 
     @Inject RecentListUtil recentListUtil;
 
@@ -171,7 +171,7 @@ public class RecentListFragment extends BaseFragment {
         
         filter.clear();
         String[] tags = {"what", "huh"}; // TODO replace with DeckMap for now (DeckDao later)
-        for(/*tagCount*/; tagCount < tags.length; tagCount++) {
+        for(tagCount = 0; tagCount < tags.length; tagCount++) {
             filter.add(0, Menu.FIRST + tagCount, Menu.NONE, tags[tagCount]);
             MenuItem tagOption = filter.findItem(Menu.FIRST + tagCount);
             tagOption.setCheckable(true);
