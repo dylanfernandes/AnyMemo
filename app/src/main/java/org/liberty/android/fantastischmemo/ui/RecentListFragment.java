@@ -193,10 +193,14 @@ public class RecentListFragment extends BaseFragment {
         }
         // Dynamic count of checkable elements in Tag Filter
         else if(itemId > 0 && itemId <= tagCount) {
-            item.setChecked(!item.isChecked());
+            Boolean checked = !item.isChecked();
+            item.setChecked(checked);
             String selectedTagName = item.getTitle().toString();
             Tag selectedTag = DeckMap.getInstance().getTagByName(selectedTagName);
-            selectedTags.add(selectedTag);
+            if (checked)
+                selectedTags.add(selectedTag);
+            else
+                selectedTags.remove(selectedTag);
             return false;
         }
         return false;  // Default case: Allow default on-selected action to occur

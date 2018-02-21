@@ -61,6 +61,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -337,12 +338,22 @@ public class FileBrowserFragment extends BaseDialogFragment {
             return true;
         }
         else if (itemId > 0 && itemId <= tagCount) {
-            item.setChecked(!item.isChecked());
-            if(item.isChecked()){
-                String selectedTagName = item.getTitle().toString();
-                Tag selectedTag = DeckMap.getInstance().getTagByName(selectedTagName);
+            Boolean checked = !item.isChecked();
+            item.setChecked(checked);
+            String selectedTagName = item.getTitle().toString();
+            Tag selectedTag = DeckMap.getInstance().getTagByName(selectedTagName);
+            if(item.isChecked())
                 selectedTags.add(selectedTag);
+            else
+                selectedTags.remove(selectedTag);
+            String deckText = "";
+            HashMap<String, DeckMock> decks = DeckMap.getInstance().filterDecksByTags(selectedTags);
+            for (DeckMock deck : decks.values()) {
+                deckText += deck.getName() + "\n";
             }
+            Context context = getContext();
+            Toast toast = Toast.makeText(context, deckText, Toast.LENGTH_LONG);
+            toast.show();
             return false;
         }
         return false;
