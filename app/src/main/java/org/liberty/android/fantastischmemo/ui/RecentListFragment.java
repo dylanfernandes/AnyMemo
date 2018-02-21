@@ -42,6 +42,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -53,12 +54,15 @@ import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseFragment;
 import org.liberty.android.fantastischmemo.dao.CardDao;
+import org.liberty.android.fantastischmemo.entity.DeckMap;
+import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.ui.helper.SelectableAdapter;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListActionModeUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -74,6 +78,9 @@ public class RecentListFragment extends BaseFragment {
     private final AtomicInteger recentListVersion = new AtomicInteger(0);
 
     private final static String TAG = RecentListFragment.class.getSimpleName();
+
+    private HashSet<Tag> selectedTags = new HashSet<Tag>();
+    private static int tagCount;
 
     @Inject RecentListUtil recentListUtil;
 
@@ -157,23 +164,46 @@ public class RecentListFragment extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.open_screen_menu, menu);
+        menu.addSubMenu(Menu.NONE, R.id.filter_menu, Menu.NONE, "");
+        SubMenu filter = menu.findItem(R.id.filter_menu).getSubMenu();
+
+        MenuItem filterWrapper = filter.getItem();
+        filterWrapper.setIcon(R.drawable.ic_menu_filter);
+        filterWrapper.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        
+        filter.clear();
+        HashSet<Tag> tags = DeckMap.getInstance().getAllTags();tagCount = 0;
+        for (Tag tag : tags) {
+            filter.add(0, Menu.FIRST + tagCount, Menu.NONE, tag.getName());
+            MenuItem tagOption = filter.findItem(Menu.FIRST + tagCount);
+            tagOption.setCheckable(true);
+            tagCount++;
+        }
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.openmenu_clear:
-                recentListUtil.clearRecentList();
-                onResume();
-                return true;
-            case R.id.filter_test1:
-            case R.id.filter_test2:
-                item.setChecked(!item.isChecked());
-                return false;
+        int itemId = item.getItemId();
+        if(itemId == R.id.openmenu_clear) {
+            recentListUtil.clearRecentList();
+            onResume();
+            return true;  // Prevent default on-selected action
         }
-        return false;
+        // Dynamic count of checkable elements in Tag Filter
+        else if(itemId > 0 && itemId <= tagCount) {
+            Boolean checked = !item.isChecked();
+            item.setChecked(checked);
+            String selectedTagName = item.getTitle().toString();
+            Tag selectedTag = DeckMap.getInstance().getTagByName(selectedTagName);
+            if (checked)
+                selectedTags.add(selectedTag);
+            else
+                selectedTags.remove(selectedTag);
+            return false;
+        }
+        return false;  // Default case: Allow default on-selected action to occur
     }
 
     /** Aux class to store data */

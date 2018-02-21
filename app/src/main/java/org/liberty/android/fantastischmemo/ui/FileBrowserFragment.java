@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -35,8 +36,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +51,10 @@ import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
 import org.liberty.android.fantastischmemo.common.BaseDialogFragment;
+import org.liberty.android.fantastischmemo.entity.Deck;
+import org.liberty.android.fantastischmemo.entity.DeckMap;
+import org.liberty.android.fantastischmemo.entity.DeckMock;
+import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 
@@ -55,6 +62,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -76,6 +85,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
     private String defaultRoot;
     private String[] fileExtensions;
     private Activity mActivity;
+    private int tagCount;
 
     private RecyclerView filesListRecyclerView;
     private FileBrowserAdapter fileListAdapter;
@@ -95,6 +105,8 @@ public class FileBrowserFragment extends BaseDialogFragment {
     private final static String CURRENT_DIR = ".";
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
+
+    private HashSet<Tag> selectedTags;
 
     public void setOnFileClickListener(OnFileClickListener listener) {
         this.onFileClickListener = listener;
@@ -199,6 +211,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
     @Override
     public void onResume() {
         super.onResume();
+        getActivity().invalidateOptionsMenu();
         browseTo(currentDirectory);
     }
 
@@ -229,6 +242,8 @@ public class FileBrowserFragment extends BaseDialogFragment {
     private void fill(File[] files){
         this.directoryEntries.clear();
 
+        HashMap<String, DeckMock> filteredDecks = DeckMap.getInstance().filterDecksByTags(selectedTags);
+
         if(this.currentDirectory.getParent() != null){
             this.directoryEntries.add(UP_ONE_LEVEL_DIR);
         }
@@ -247,7 +262,19 @@ public class FileBrowserFragment extends BaseDialogFragment {
                 else{
                     for(String fileExtension : fileExtensions){
                         if(file.getName().toLowerCase().endsWith(fileExtension.toLowerCase())){
-                                this.directoryEntries.add(file.getAbsolutePath().substring(currentPathStringLength));
+                            String filepath = file.getAbsolutePath();
+                            // If there is a filter by tags on the decks
+                            if(filteredDecks.size() > 0) {
+                                // If file is a deck, check if it is allowed to be displayed
+                                if(file.getAbsolutePath().endsWith(".db")) {
+                                    if(filteredDecks.containsKey(filepath))
+                                        this.directoryEntries.add(filepath.substring(currentPathStringLength));
+                                }
+                                else  // If not a file then just add it
+                                    this.directoryEntries.add(filepath.substring(currentPathStringLength));
+                            }
+                            else  // No filter on decks
+                                this.directoryEntries.add(filepath.substring(currentPathStringLength));
                         }
                     }
                 }
@@ -273,42 +300,72 @@ public class FileBrowserFragment extends BaseDialogFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.file_browser_menu, menu);
+        menu.addSubMenu(Menu.NONE, R.id.filter_menu, Menu.NONE, "");
+        SubMenu filter = menu.findItem(R.id.filter_menu).getSubMenu();
+
+        MenuItem filterWrapper = filter.getItem();
+        filterWrapper.setIcon(R.drawable.ic_menu_filter);
+        filterWrapper.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+        filter.clear();
+        selectedTags = new HashSet<>();
+        HashSet<Tag> tags = DeckMap.getInstance().getAllTags();
+        tagCount = 0;
+        for (Tag tag : tags) {
+            filter.add(0, Menu.FIRST + tagCount, Menu.NONE, tag.getName());
+            MenuItem tagOption = filter.findItem(Menu.FIRST + tagCount);
+            tagOption.setCheckable(true);
+            tagCount++;
+        }
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.file_browser_createdb:{
-                disposables.add(activityComponents().databaseOperationDialogUtil().showCreateDbDialog(currentDirectory.getAbsolutePath())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<File>() {
-                            @Override
-                            public void accept(File file) throws Exception {
-                                browseTo(file.getParentFile());
-                            }
-                        }));
-                return true;
-            }
+        int itemId = item.getItemId();
+        if (itemId == R.id.file_browser_createdb) {
+            disposables.add(
+                activityComponents()
+                .databaseOperationDialogUtil()
+                .showCreateDbDialog(currentDirectory.getAbsolutePath())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<File>() {
+                    @Override
+                    public void accept(File file) throws Exception {
+                        browseTo(file.getParentFile());
+                    }
+                })
+            );
+            return true;
+        }
+        else if (itemId == R.id.file_browser_createdirectory) {
+            disposables.add(
+                activityComponents()
+                .databaseOperationDialogUtil()
+                .showCreateFolderDialog(currentDirectory)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<File>() {
+                    @Override
+                    public void accept(File file) throws Exception {
+                        browseTo(file);
+                    }
+                })
+            );
+            return true;
+        }
+        else if (itemId > 0 && itemId <= tagCount) {
+            Boolean checked = !item.isChecked();
+            item.setChecked(checked);
+            String selectedTagName = item.getTitle().toString();
+            Tag selectedTag = DeckMap.getInstance().getTagByName(selectedTagName);
+            if(item.isChecked())
+                selectedTags.add(selectedTag);
+            else
+                selectedTags.remove(selectedTag);
 
-            case R.id.file_browser_createdirectory:{
-                disposables.add(activityComponents().databaseOperationDialogUtil().showCreateFolderDialog(currentDirectory)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<File>() {
-                            @Override
-                            public void accept(File file) throws Exception {
-                                browseTo(file);
-                            }
-                        }));
-                return true;
-
-            }
-
-            case R.id.filter_test1:
-            case R.id.filter_test2:
-                item.setChecked(!item.isChecked());
-                return false;
+            browseTo(currentDirectory);  // Refresh file explorer with new filter info
+            return false;
         }
         return false;
     }
@@ -411,6 +468,8 @@ public class FileBrowserFragment extends BaseDialogFragment {
             }
 
             holder.setText(displayFileName);
+            DeckMap deckMap = DeckMap.getInstance();
+            final DeckMock deckMock = deckMap.findOrCreate(new DeckMock(displayFileName, fragment.currentDirectory.getAbsolutePath() + selectedFileName));
 
             // Set click listeners
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -449,6 +508,11 @@ public class FileBrowserFragment extends BaseDialogFragment {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             if (which == 0) {
+                                                Intent intent = new Intent(fragment.getActivity(), TagsActivity.class);
+//                                                intent.putExtra("DeckMock", deckMock);
+                                                intent.putExtra("deckPath", deckMock.getDbPath());
+                                                fragment.startActivity(intent);
+                                            } else if (which == 1) {
                                                 fragment.disposables.add(fragment.activityComponents().databaseOperationDialogUtil().showDeleteDbDialog(clickedFile)
                                                         .observeOn(AndroidSchedulers.mainThread())
                                                         .subscribe(new Consumer<File>() {
@@ -457,7 +521,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
                                                                 fragment.browseTo(file.getParentFile());
                                                             }
                                                         }));
-                                            } else if (which == 1) {
+                                            } else if (which == 2) {
                                                 fragment.disposables.add(fragment.activityComponents().databaseOperationDialogUtil().showCloneDbDialog(clickedFile)
                                                         .observeOn(AndroidSchedulers.mainThread())
                                                         .subscribe(new Consumer<File>() {
@@ -466,7 +530,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
                                                                 fragment.browseTo(file.getParentFile());
                                                             }
                                                         }));
-                                            } else if (which == 2) {
+                                            } else if (which == 3) {
                                                 fragment.disposables.add(fragment.activityComponents().databaseOperationDialogUtil().showRenameDbDialog(clickedFile)
                                                         .observeOn(AndroidSchedulers.mainThread())
                                                         .subscribe(new Consumer<File>() {
