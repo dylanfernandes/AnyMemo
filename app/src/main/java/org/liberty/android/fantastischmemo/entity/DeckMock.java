@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class DeckMock implements Parcelable {
@@ -58,8 +59,18 @@ public class DeckMock implements Parcelable {
     }
 
     public boolean hasSetTag(List<Tag> filterTags) {
-        for (Tag tag: tags){
-            for(Tag filter: filterTags){
+        for (Tag tag : tags){
+            for(Tag filter : filterTags){
+                if(tag.equals(filter))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasSetTag(HashSet<Tag> filterTags) {
+        for (Tag tag : tags) {
+            for (Tag filter : filterTags) {
                 if(tag.equals(filter))
                     return true;
             }

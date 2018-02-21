@@ -48,4 +48,14 @@ public class DeckMap {
         }
         return tags;
     }
+
+    public HashMap<String, DeckMock> filterDecksByTags(HashSet<Tag> tags) {
+        HashMap<String, DeckMock> filteredDecks = new HashMap<String, DeckMock>();
+        for (String key : decksMap.keySet()) {
+            DeckMock deck = decksMap.get(key);
+            if (deck.hasSetTag(tags))
+                filteredDecks.put(key, deck);
+        }
+        return filteredDecks;
+    }
 }

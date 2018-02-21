@@ -23,4 +23,16 @@ public class Tag {
                 .append(name)
                 .toHashCode();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Tag))
+            return false;
+        if (obj == this)
+            return true;
+        if (this.getName().equals(((Tag) obj).getName()))
+            return true;
+        else
+            return false;
+    }
 }
