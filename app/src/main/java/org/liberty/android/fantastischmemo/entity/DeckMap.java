@@ -9,6 +9,7 @@ public class DeckMap {
 
     private static DeckMap instance;
     private static HashSet<Tag> tags;
+    private HashMap<String, DeckMock> decksMap;
 
     public static DeckMap getInstance() {
         if (instance == null) {
@@ -16,8 +17,6 @@ public class DeckMap {
         }
         return instance;
     }
-
-    private HashMap<String, DeckMock> decksMap;
 
     private DeckMap() {
         decksMap = new HashMap<>();
@@ -55,13 +54,13 @@ public class DeckMap {
     public Tag getTagByName(String name) {
         HashSet<Tag> tags = getAllTags();
         for (Tag tag : tags)
-            if (tag.getName() == name)
+            if (tag.getName().equals(name))
                 return tag;
         return null;
     }
 
     public HashMap<String, DeckMock> filterDecksByTags(HashSet<Tag> tags) {
-        HashMap<String, DeckMock> filteredDecks = new HashMap<String, DeckMock>();
+        HashMap<String, DeckMock> filteredDecks = new HashMap<>();
         for (String key : decksMap.keySet()) {
             DeckMock deck = decksMap.get(key);
             if (deck.hasSetTag(tags))
