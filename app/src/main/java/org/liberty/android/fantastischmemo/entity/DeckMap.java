@@ -8,6 +8,7 @@ import java.util.HashSet;
 public class DeckMap {
 
     private static DeckMap instance;
+    private static HashSet<Tag> tags;
 
     public static DeckMap getInstance() {
         if (instance == null) {
@@ -42,11 +43,21 @@ public class DeckMap {
     }
 
     public HashSet<Tag> getAllTags() {
+        if (tags != null)
+            return tags;
         HashSet tags = new HashSet<Tag>();
         for (DeckMock deck : decksMap.values()) {
             tags.addAll(deck.getTags());
         }
         return tags;
+    }
+
+    public Tag getTagByName(String name) {
+        HashSet<Tag> tags = getAllTags();
+        for (Tag tag : tags)
+            if (tag.getName() == name)
+                return tag;
+        return null;
     }
 
     public HashMap<String, DeckMock> filterDecksByTags(HashSet<Tag> tags) {
