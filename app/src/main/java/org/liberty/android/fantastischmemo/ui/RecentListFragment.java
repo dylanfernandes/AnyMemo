@@ -79,6 +79,7 @@ public class RecentListFragment extends BaseFragment {
 
     private final static String TAG = RecentListFragment.class.getSimpleName();
 
+    private HashSet<Tag> selectedTags = new HashSet<Tag>();
     private static int tagCount;
 
     @Inject RecentListUtil recentListUtil;
@@ -193,6 +194,9 @@ public class RecentListFragment extends BaseFragment {
         // Dynamic count of checkable elements in Tag Filter
         else if(itemId > 0 && itemId <= tagCount) {
             item.setChecked(!item.isChecked());
+            String selectedTagName = item.getTitle().toString();
+            Tag selectedTag = DeckMap.getInstance().getTagByName(selectedTagName);
+            selectedTags.add(selectedTag);
             return false;
         }
         return false;  // Default case: Allow default on-selected action to occur

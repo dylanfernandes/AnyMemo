@@ -50,6 +50,7 @@ import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
 import org.liberty.android.fantastischmemo.common.BaseDialogFragment;
+import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.DeckMap;
 import org.liberty.android.fantastischmemo.entity.DeckMock;
 import org.liberty.android.fantastischmemo.entity.Tag;
@@ -102,6 +103,8 @@ public class FileBrowserFragment extends BaseDialogFragment {
     private final static String CURRENT_DIR = ".";
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
+
+    private HashSet<Tag> selectedTags = new HashSet<Tag>();
 
     public void setOnFileClickListener(OnFileClickListener listener) {
         this.onFileClickListener = listener;
@@ -335,6 +338,11 @@ public class FileBrowserFragment extends BaseDialogFragment {
         }
         else if (itemId > 0 && itemId <= tagCount) {
             item.setChecked(!item.isChecked());
+            if(item.isChecked()){
+                String selectedTagName = item.getTitle().toString();
+                Tag selectedTag = DeckMap.getInstance().getTagByName(selectedTagName);
+                selectedTags.add(selectedTag);
+            }
             return false;
         }
         return false;
