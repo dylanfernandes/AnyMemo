@@ -292,7 +292,9 @@ public class AnyMemo extends BaseActivity {
             editor.putString(AMPrefKeys.getRecentPathKey(0), AMEnv.DEFAULT_ROOT_PATH + AMEnv.DEFAULT_DB_NAME);
             editor.commit();
             try {
-                amFileUtil.copyFileFromAsset(AMEnv.DEFAULT_DB_NAME,  new File(sdPath + "/" + AMEnv.DEFAULT_DB_NAME));
+                String dest = sdPath + "/" + AMEnv.DEFAULT_DB_NAME;
+                amFileUtil.copyFileFromAsset(AMEnv.DEFAULT_DB_NAME,  new File(dest));
+                databaseUtil.setupDatabase(dest);
 
                 InputStream in2 = getResources().getAssets().open(AMEnv.EMPTY_DB_NAME);
                 String emptyDbPath = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + AMEnv.EMPTY_DB_NAME;

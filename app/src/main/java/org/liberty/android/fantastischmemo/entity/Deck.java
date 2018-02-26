@@ -1,6 +1,5 @@
 package org.liberty.android.fantastischmemo.entity;
 
-import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -19,6 +18,9 @@ public class Deck {
 
     @DatabaseField(defaultValue = "", width = 8192)
     private String description;
+
+    @DatabaseField
+    private String dbPath;
 
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType=DataType.DATE_STRING)
     private Date creationDate;
@@ -68,4 +70,11 @@ public class Deck {
         this.updateDate = updateDate;
     }
 
+    public String getDbPath() {
+        return dbPath;
+    }
+
+    public void setDbPath(String dbPath) {
+        this.dbPath = dbPath;
+    }
 }
