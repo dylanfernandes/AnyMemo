@@ -99,14 +99,16 @@ public class DatabaseUtil {
         }
     }
 
-    public void setupDatabase(String dbPath, String dbName) {
+    public void setupDatabase(String dbPath) {
         AnyMemoDBOpenHelper helper = null;
+        String dbName = new File(dbPath).getName();
         try {
             helper = AnyMemoDBOpenHelperManager.getHelper(mContext, dbPath);
             helper.getWritableDatabase(); //If new database, calls onCreate method to make new database. If database already exists, calls onUpgrade method instead.
             DeckDao deckDao = helper.getDeckDao();
             Deck deck = new Deck();
             deck.setName(dbName);
+            deck.setDbPath(dbPath);
             deckDao.create(deck);
         } catch (Exception e) {
             e.printStackTrace();
