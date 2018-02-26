@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<item xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:anymemo="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/action_filter"
+    android:icon="@drawable/ic_menu_filter"
+    anymemo:showAsAction="ifRoom">
+        <menu android:id="@+id/filter_menu">
+            <TextView
+                android:text="@string/tag_filter_title"/>
+            <group
+                android:id="@+id/filter_list"
+                android:checkableBehavior="all">
+                <item
+                    android:id="@+id/filter_test1"
+                    android:title="English_Hiragana"/>
+                <item
+                    android:id="@+id/filter_test2"
+                    android:title="French (Body parts)"/>
+            </group>
+        </menu>
+</item>

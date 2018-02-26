@@ -45,7 +45,7 @@ public class AMGUIUtility{
         Log.e(TAG, "displayError", e);
         new AlertDialog.Builder(activity)
             .setTitle(title)
-            .setMessage(text + "\n" + activity.getString(R.string.exception_text) +": " + Throwables.getRootCause(e) + "\n" + Throwables.getStackTraceAsString(e))
+            .setMessage(text) // + "\n" + activity.getString(R.string.exception_text) +": " + Throwables.getRootCause(e) + "\n" + Throwables.getStackTraceAsString(e)) UNCOMMENT AND REMOVE ')' for DEBUG MODE
             .setPositiveButton(activity.getString(R.string.back_menu_text), new DialogInterface.OnClickListener(){
                 public void onClick(DialogInterface arg0, int arg1){
                     activity.finish();
