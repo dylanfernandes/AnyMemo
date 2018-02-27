@@ -19,6 +19,9 @@ public class Deck {
     @DatabaseField(defaultValue = "", width = 8192)
     private String description;
 
+    @DatabaseField
+    private String dbPath;
+
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType=DataType.DATE_STRING)
     private Date creationDate;
 
@@ -65,5 +68,13 @@ public class Deck {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public String getDbPath() {
+        return dbPath;
+    }
+
+    public void setDbPath(String dbPath) {
+        this.dbPath = dbPath;
     }
 }

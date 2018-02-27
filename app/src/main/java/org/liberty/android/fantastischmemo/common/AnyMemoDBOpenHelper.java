@@ -16,12 +16,14 @@ import org.liberty.android.fantastischmemo.dao.DeckDao;
 import org.liberty.android.fantastischmemo.dao.FilterDao;
 import org.liberty.android.fantastischmemo.dao.LearningDataDao;
 import org.liberty.android.fantastischmemo.dao.SettingDao;
+import org.liberty.android.fantastischmemo.dao.TagDao;
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
 import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.Filter;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.entity.Setting;
+import org.liberty.android.fantastischmemo.entity.Tag;
 
 import java.sql.SQLException;
 
@@ -45,6 +47,8 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private LearningDataDao learningDataDao = null;
 
+    private TagDao tagDao = null;
+
     private boolean isReleased = false;
 
     @Override
@@ -59,6 +63,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Filter.class);
             TableUtils.createTable(connectionSource, Category.class);
             TableUtils.createTable(connectionSource, LearningData.class);
+            TableUtils.createTable(connectionSource, Tag.class);
 
             getSettingDao().create(new Setting());
             getCategoryDao().create(new Category());
@@ -148,12 +153,14 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
             database.execSQL("update cards "
                     + " set category_id = 1"
                     + " where category_id is null");
+            oldVersion = 2;
         }
         if (oldVersion <= 3) {
             database.execSQL("update settings set questionTextColor = ? where questionTextColor = ?", new Object[] {null, 0xFFBEBEBE});
             database.execSQL("update settings set answerTextColor = ? where answerTextColor = ?", new Object[] {null, 0xFFBEBEBE} );
             database.execSQL("update settings set questionBackgroundColor = ? where questionBackgroundColor = ?", new Object[] {null, 0xFF000000});
             database.execSQL("update settings set answerBackgroundColor = ? where answerBackgroundColor = ?", new Object[] {null, 0xFF000000});
+            oldVersion = 3;
         }
         if (oldVersion <= 4) {
             try {
@@ -161,8 +168,22 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 database.execSQL("update learning_data set firstLearnDate='2010-01-01 00:00:00.000000'");
             } catch (android.database.SQLException e) {
                 Log.e(TAG, "Upgrading failed, the column firstLearnData might already exists.", e);
+            } finally {
+                oldVersion = 4;
+            }
+
+        }
+        if (oldVersion <= 5) {
+            try {
+                database.execSQL("alter table decks add column dbPath VARCHAR");
+                TableUtils.createTable(connectionSource, Tag.class);
+            } catch (SQLException e) {
+                Log.e(TAG, "Upgrading failed, the tags table might already exist.", e);
+            } finally {
+                oldVersion = 5;
             }
         }
+        database.setVersion(oldVersion);
     }
 
     @Override
@@ -247,6 +268,17 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 learningDataDao = getDao(LearningData.class);
             }
             return learningDataDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public synchronized TagDao getTagDao() {
+        try {
+            if (tagDao == null) {
+                tagDao = getDao(Tag.class);
+            }
+            return tagDao;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
