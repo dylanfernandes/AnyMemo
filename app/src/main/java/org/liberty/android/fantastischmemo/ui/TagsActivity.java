@@ -68,7 +68,7 @@ public class TagsActivity extends BaseActivity {
 
         fabBGLayout=findViewById(R.id.fabBGLayout);
 
-        addTagButton.setOnClickListener(new View.OnClickListener() {
+        createNewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final EditText input = new EditText(v.getContext());
@@ -92,16 +92,15 @@ public class TagsActivity extends BaseActivity {
                         .show();
             }
         });
-        addTagButton.setOnLongClickListener(new View.OnLongClickListener() {
+
+        addTagButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View view) {
+            public void onClick(View view) {
                 if(!isFABOpen){
                     showFABMenu();
                 }else{
                     closeFABMenu();
                 }
-                //Cancel click event when longclick finished
-                return true;
             }
         });
     }
@@ -149,7 +148,7 @@ public class TagsActivity extends BaseActivity {
             }
         });
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();

@@ -42,7 +42,7 @@
             android:text="@string/create_new_tag_text"/>
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/add_existing_fab"
+            android:id="@+id/create_new_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -70,7 +70,7 @@
             android:text="@string/add_existing_tag"/>
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/create_new_fab"
+            android:id="@+id/add_existing_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
