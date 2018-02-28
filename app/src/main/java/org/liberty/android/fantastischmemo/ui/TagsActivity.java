@@ -3,14 +3,11 @@ package org.liberty.android.fantastischmemo.ui;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +25,6 @@ import org.liberty.android.fantastischmemo.entity.DeckMock;
 import org.liberty.android.fantastischmemo.entity.Tag;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,13 +35,15 @@ public class TagsActivity extends BaseActivity {
     private RecyclerView tagsRecyclerView;
     private LinearLayoutManager linearLayoutManager;
     private TagsAdapter tagsAdapter;
+    boolean isFABOpen;
+    FloatingActionButton createNewButton;
+    FloatingActionButton addExistingButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_tags_layout);
 
-//        deck = getIntent().getParcelableExtra("DeckMock");
         deck = DeckMap.getInstance().getDecksMap().get(getIntent().getStringExtra("deckPath"));
 
         tagsRecyclerView = (RecyclerView) findViewById(R.id.tags_list);
@@ -59,6 +57,9 @@ public class TagsActivity extends BaseActivity {
         tagsRecyclerView.setAdapter(tagsAdapter);
 
         FloatingActionButton addTagButton = (FloatingActionButton) findViewById(R.id.add_tag_fab);
+        createNewButton = (FloatingActionButton) findViewById(R.id.create_new_fab);
+        addExistingButton = (FloatingActionButton) findViewById(R.id.add_existing_fab);
+
         addTagButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,8 +84,30 @@ public class TagsActivity extends BaseActivity {
                         .show();
             }
         });
+        addTagButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if(!isFABOpen){
+                    showFABMenu();
+                }else{
+                    closeFABMenu();
+                }
+                return true;
+            }
+        });
     }
 
+    private void showFABMenu(){
+        isFABOpen=true;
+        createNewButton.animate().translationY(-getResources().getDimension(R.dimen.standard_60));
+        addExistingButton.animate().translationY(-getResources().getDimension(R.dimen.standard_120));
+    }
+
+    private void closeFABMenu(){
+        isFABOpen=false;
+        createNewButton.animate().translationY(0);
+        addExistingButton.animate().translationY(0);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
