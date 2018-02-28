@@ -115,8 +115,8 @@ public class AppModules {
     @PerApplication
     @IntoMap
     @ClassKey(Mnemosyne2CardsImporter.class)
-    Converter providesMnemosyne2CardsImporter(AMFileUtil amFileUtil) {
-        return new Mnemosyne2CardsImporter(amFileUtil);
+    Converter providesMnemosyne2CardsImporter(DatabaseUtil databaseUtil) {
+        return new Mnemosyne2CardsImporter(databaseUtil);
     }
 
     @Provides
@@ -131,8 +131,8 @@ public class AppModules {
     @PerApplication
     @IntoMap
     @ClassKey(MnemosyneXMLImporter.class)
-    Converter providesMnemosyneXMLImporter(AMFileUtil amFileUtil) {
-        return new MnemosyneXMLImporter(amFileUtil);
+    Converter providesMnemosyneXMLImporter(DatabaseUtil databaseUtil) {
+        return new MnemosyneXMLImporter(databaseUtil);
     }
 
     @Provides
@@ -147,8 +147,8 @@ public class AppModules {
     @PerApplication
     @IntoMap
     @ClassKey(QATxtImporter.class)
-    Converter providesQATxtImporter(AMFileUtil amFileUtil) {
-        return new QATxtImporter(amFileUtil);
+    Converter providesQATxtImporter(DatabaseUtil databaseUtil) {
+        return new QATxtImporter(databaseUtil);
     }
 
     @Provides
@@ -163,8 +163,8 @@ public class AppModules {
     @PerApplication
     @IntoMap
     @ClassKey(SupermemoXMLImporter.class)
-    Converter providesSupermemoXMLImporter(AMFileUtil amFileUtil) {
-        return new SupermemoXMLImporter(amFileUtil);
+    Converter providesSupermemoXMLImporter(DatabaseUtil databaseUtil) {
+        return new SupermemoXMLImporter(databaseUtil);
     }
 
     @Provides

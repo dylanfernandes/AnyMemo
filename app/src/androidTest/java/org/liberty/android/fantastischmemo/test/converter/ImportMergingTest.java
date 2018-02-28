@@ -140,7 +140,7 @@ public class ImportMergingTest extends BaseTest {
         }
 
         amFileUtil.copyFileFromAsset("qa-text-test.txt", new File(srcFilePath));
-        Converter converter = new QATxtImporter(amFileUtil);
+        Converter converter = new QATxtImporter(databaseUtil);
         converter.convert(srcFilePath, destFilePath);
 
         helper = AnyMemoDBOpenHelperManager.getHelper(getContext(), destFilePath);

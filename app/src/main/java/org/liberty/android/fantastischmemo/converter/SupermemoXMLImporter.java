@@ -28,6 +28,7 @@ import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
+import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -62,11 +63,11 @@ public class SupermemoXMLImporter extends org.xml.sax.helpers.DefaultHandler imp
     private StringBuffer characterBuf;
     private final String TAG = "org.liberty.android.fantastischmemo.SupermemoXMLConverter";
 
-    private AMFileUtil amFileUtil;
+    private DatabaseUtil databaseUtil;
 
     @Inject
-    public SupermemoXMLImporter(AMFileUtil amFileUtil) {
-        this.amFileUtil = amFileUtil;
+    public SupermemoXMLImporter(DatabaseUtil databaseUtil) {
+        this.databaseUtil = databaseUtil;
     }
 
     @Override
@@ -84,7 +85,7 @@ public class SupermemoXMLImporter extends org.xml.sax.helpers.DefaultHandler imp
         xr.parse(new InputSource(mXMLUrl.openStream()));
 
         if (!new File(dest).exists()) {
-            amFileUtil.createDbFileWithDefaultSettings(new File(dest));
+            databaseUtil.setupDatabase(dest);
         }
         AnyMemoDBOpenHelper helper = AnyMemoDBOpenHelperManager.getHelper(dest);
         try {

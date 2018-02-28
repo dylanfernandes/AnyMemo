@@ -29,13 +29,10 @@ public abstract class AbstractConverterTest extends BaseTest {
 
     protected DatabaseUtil databaseUtil;
 
-    protected AMFileUtil amFileUtil;
-
     @Before
     public void setUp() throws Exception {
         // Set up necessary dependencies first
         databaseUtil = new DatabaseUtil(getTargetContext());
-        amFileUtil = new AMFileUtil(getTargetContext(), new AMPrefUtil(getTargetContext()));
 
         converter = getConverter();
 

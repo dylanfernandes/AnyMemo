@@ -58,7 +58,7 @@ public class CSVImporter implements Converter {
 
     public void convert(String src, String dest) throws Exception {
         if (!new File(dest).exists()) {
-            databaseUtil.setupDatabase(dest, new File(dest).getName());
+            databaseUtil.setupDatabase(dest);
         }
 
         AnyMemoDBOpenHelper helper = AnyMemoDBOpenHelperManager.getHelper(dest);

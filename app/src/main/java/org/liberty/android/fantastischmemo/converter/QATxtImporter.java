@@ -26,6 +26,7 @@ import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
+import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -39,17 +40,17 @@ public class QATxtImporter implements Converter{
 
     private static final long serialVersionUID = 7934270553043502048L;
 
-    private AMFileUtil amFileUtil;
+    private DatabaseUtil databaseUtil;
 
     @Inject
-    public QATxtImporter(AMFileUtil amFileUtil) {
-        this.amFileUtil = amFileUtil;
+    public QATxtImporter(DatabaseUtil databaseUtil) {
+        this.databaseUtil = databaseUtil;
     }
 
     public void convert(String src, String dest) throws Exception{
 
         if (!new File(dest).exists()) {
-            amFileUtil.createDbFileWithDefaultSettings(new File(dest));
+            databaseUtil.setupDatabase(dest);
         }
         AnyMemoDBOpenHelper helper = AnyMemoDBOpenHelperManager.getHelper(dest);
 
