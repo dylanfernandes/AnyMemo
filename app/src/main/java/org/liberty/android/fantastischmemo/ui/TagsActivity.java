@@ -133,12 +133,12 @@ public class TagsActivity extends BaseActivity {
 
         class TagsViewHolder extends RecyclerView.ViewHolder {
             TextView tagTextView;
-            ImageButton tagEditButton;
+            ImageButton tagDeleteButton;
 
             TagsViewHolder(View itemView) {
                 super(itemView);
                 tagTextView = (TextView) itemView.findViewById(R.id.tag_text_view);
-                tagEditButton = (ImageButton) itemView.findViewById(R.id.tag_edit_button);
+                tagDeleteButton = (ImageButton) itemView.findViewById(R.id.tag_delete_button);
             }
         }
 
@@ -173,7 +173,7 @@ public class TagsActivity extends BaseActivity {
         public void onBindViewHolder(TagsViewHolder holder, @SuppressLint("RecyclerView") final int position) {
             final Tag tag = tags.get(position);
             holder.tagTextView.setText(tag.getName());
-            holder.tagEditButton.setOnClickListener(new View.OnClickListener(){
+            holder.tagDeleteButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(final View v) {
                     final EditText input = new EditText(v.getContext());
