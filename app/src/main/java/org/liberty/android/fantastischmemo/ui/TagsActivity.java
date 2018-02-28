@@ -149,18 +149,7 @@ public class TagsActivity extends BaseActivity {
             }
         });
     }
-
-//    private void showFABMenu(){
-//        isFABOpen=true;
-//        createNewButton.animate().translationY(-getResources().getDimension(R.dimen.standard_60));
-//        addExistingButton.animate().translationY(-getResources().getDimension(R.dimen.standard_120));
-//    }
-//
-//    private void closeFABMenu(){
-//        isFABOpen=false;
-//        createNewButton.animate().translationY(0);
-//        addExistingButton.animate().translationY(0);
-//    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
