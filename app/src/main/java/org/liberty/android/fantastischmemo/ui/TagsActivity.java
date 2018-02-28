@@ -47,6 +47,7 @@ public class TagsActivity extends BaseActivity {
 
 //        deck = getIntent().getParcelableExtra("DeckMock");
         deck = DeckMap.getInstance().getDecksMap().get(getIntent().getStringExtra("deckPath"));
+        setTitle("Tags for: " + deck.getName());
 
         tagsRecyclerView = (RecyclerView) findViewById(R.id.tags_list);
         linearLayoutManager = new LinearLayoutManager(this);
