@@ -32,7 +32,6 @@ import org.liberty.android.fantastischmemo.dao.CardDao;
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
 import org.liberty.android.fantastischmemo.entity.LearningData;
-import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.AMZipUtils;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 import org.xmlpull.v1.XmlPullParser;
