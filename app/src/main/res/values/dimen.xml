@@ -12,7 +12,12 @@
     <dimen name="space_3">24dp</dimen>
     <dimen name="nav_item_vertical_padding">20dp</dimen>
     <dimen name="nav_item_start_padding">10dp</dimen>
-    <dimen name="standard_60">60dp</dimen>
-    <dimen name="standard_120">120dp</dimen>
-    <dimen name="standard_155">155dp</dimen>
+
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="standard_12">12dp</dimen>
+    <dimen name="standard_23">23dp</dimen>
+    <dimen name="standard_55">55dp</dimen>
+    <dimen name="standard_100">100dp</dimen>
+    <dimen name="standard_145">145dp</dimen>
 </resources>

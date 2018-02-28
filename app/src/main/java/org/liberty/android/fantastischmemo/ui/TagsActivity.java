@@ -1,5 +1,6 @@
 package org.liberty.android.fantastischmemo.ui;
 
+import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.liberty.android.fantastischmemo.R;
@@ -36,8 +38,9 @@ public class TagsActivity extends BaseActivity {
     private LinearLayoutManager linearLayoutManager;
     private TagsAdapter tagsAdapter;
     boolean isFABOpen;
-    FloatingActionButton createNewButton;
-    FloatingActionButton addExistingButton;
+    FloatingActionButton createNewButton, addExistingButton, addTagButton;
+    LinearLayout createLayout, addLayout;
+    View fabBGLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,9 +59,14 @@ public class TagsActivity extends BaseActivity {
         tagsAdapter = new TagsAdapter(tags);
         tagsRecyclerView.setAdapter(tagsAdapter);
 
-        FloatingActionButton addTagButton = (FloatingActionButton) findViewById(R.id.add_tag_fab);
+        createLayout = (LinearLayout) findViewById(R.id.createLayout);
+        addLayout = (LinearLayout) findViewById(R.id.existingLayout);
+
+        addTagButton = (FloatingActionButton) findViewById(R.id.add_tag_fab);
         createNewButton = (FloatingActionButton) findViewById(R.id.create_new_fab);
         addExistingButton = (FloatingActionButton) findViewById(R.id.add_existing_fab);
+
+        fabBGLayout=findViewById(R.id.fabBGLayout);
 
         addTagButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,22 +100,67 @@ public class TagsActivity extends BaseActivity {
                 }else{
                     closeFABMenu();
                 }
+                //Cancel click event when longclick finished
                 return true;
             }
         });
     }
 
+
     private void showFABMenu(){
         isFABOpen=true;
-        createNewButton.animate().translationY(-getResources().getDimension(R.dimen.standard_60));
-        addExistingButton.animate().translationY(-getResources().getDimension(R.dimen.standard_120));
+        createLayout.setVisibility(View.VISIBLE);
+        addLayout.setVisibility(View.VISIBLE);
+        fabBGLayout.setVisibility(View.VISIBLE);
+
+        addTagButton.animate().rotationBy(180);
+        createLayout.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+        addLayout.animate().translationY(-getResources().getDimension(R.dimen.standard_100));
     }
 
     private void closeFABMenu(){
         isFABOpen=false;
-        createNewButton.animate().translationY(0);
-        addExistingButton.animate().translationY(0);
+        fabBGLayout.setVisibility(View.GONE);
+        addTagButton.animate().rotationBy(-180);
+        createLayout.animate().translationY(0);
+        addLayout.animate().translationY(0).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                if(!isFABOpen){
+                    createLayout.setVisibility(View.GONE);
+                    addLayout.setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
     }
+
+//    private void showFABMenu(){
+//        isFABOpen=true;
+//        createNewButton.animate().translationY(-getResources().getDimension(R.dimen.standard_60));
+//        addExistingButton.animate().translationY(-getResources().getDimension(R.dimen.standard_120));
+//    }
+//
+//    private void closeFABMenu(){
+//        isFABOpen=false;
+//        createNewButton.animate().translationY(0);
+//        addExistingButton.animate().translationY(0);
+//    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
