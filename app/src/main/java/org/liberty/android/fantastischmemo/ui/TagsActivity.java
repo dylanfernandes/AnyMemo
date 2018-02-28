@@ -176,49 +176,22 @@ public class TagsActivity extends BaseActivity {
             holder.tagDeleteButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(final View v) {
-                    final EditText input = new EditText(v.getContext());
-                    input.setText(tag.getName());
-                    input.setSelection(input.getText().length());
                     new AlertDialog.Builder(v.getContext())
-                            .setTitle(v.getContext().getString(R.string.edit_text))
-                            .setMessage("Enter new name for tag below.")
-                            .setView(input)
-                            .setPositiveButton(v.getContext().getString(R.string.settings_save), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String tagName = input.getText().toString();
-                                    tag.setName(tagName);
-                                    TagsAdapter.this.notifyItemChanged(position);
-                                }
-                            })
-                            .setNegativeButton(v.getContext().getString(R.string.cancel_text), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setNeutralButton(v.getContext().getString(R.string.delete_text), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    new AlertDialog.Builder(v.getContext())
-                                            .setTitle(v.getContext().getString(R.string.delete_text))
-                                            .setMessage("Are you sure you want to delete this tag?")
-                                            .setPositiveButton(v.getContext().getString(R.string.delete_text), new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    deleteTag(position);
-                                                }
-                                            })
-                                            .setNegativeButton(v.getContext().getString(R.string.cancel_text), new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();
-                                                }
-                                            })
-                                            .show();
-                                }
-                            })
-                            .show();
+                        .setTitle(v.getContext().getString(R.string.delete_text))
+                        .setMessage("Are you sure you want to delete this tag from this deck?")
+                        .setPositiveButton(v.getContext().getString(R.string.delete_text), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteTag(position);
+                            }
+                        })
+                        .setNegativeButton(v.getContext().getString(R.string.cancel_text), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
                 }
             });
         }
