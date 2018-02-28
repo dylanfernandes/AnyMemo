@@ -143,6 +143,7 @@
     </string-array>
 
     <string-array name="fb_dialog_list">
+        <item>@string/tags_text</item>
         <item>@string/delete_text</item>
         <item>@string/clone_text</item>
         <item>@string/rename_text</item>

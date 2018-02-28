@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:text="@string/tags_for_deck_header" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/existing_tags"
+        android:textSize="20dp"
+        android:id="@+id/existing_tag_text"
+        android:layout_marginTop="30dp"/>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:orientation="horizontal">
+
+
+        <TableLayout
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:orientation="horizontal"
+            android:stretchColumns="3"
+            android:layout_marginTop="8dp">
+            <TableRow
+                android:layout_marginTop="3dip"
+                android:id="@+id/existing_tag_row"
+                android:padding="3dp">
+
+                <LinearLayout>
+                    <org.liberty.android.fantastischmemo.ui.widgets.AMSpinner
+                        android:id="@+id/existing_tags"
+                        android:spinnerMode="dialog"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:minWidth="200dp"/>
+
+                    <ImageView
+                        android:layout_width="@dimen/tab_icon_size"
+                        android:layout_height="@dimen/tab_icon_size"
+                        android:gravity="start"
+                        android:layout_gravity="start"
+                        android:clickable="true"
+                        app:srcCompat="@drawable/preview_edit" />
+                    <ImageView
+                        android:layout_width="@dimen/tab_icon_size"
+                        android:layout_height="@dimen/tab_icon_size"
+                        android:gravity="start"
+                        android:layout_gravity="start"
+                        android:clickable="true"
+                        android:layout_marginLeft="6dp"
+                        app:srcCompat="@drawable/ic_add" />
+                </LinearLayout>
+
+            </TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tags_assigned_to_deck"
+                android:textSize="20dp"
+                android:id="@+id/assigned_tag_text"
+                android:layout_marginTop="60dp"/>
+
+            <TableRow
+                android:id="@+id/assigned_tag_row"
+                android:layout_marginTop="3dip"
+                android:padding="3dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <org.liberty.android.fantastischmemo.ui.widgets.AMSpinner
+                        android:id="@+id/assigned_tags"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:minWidth="200dp"
+                        android:spinnerMode="dialog" />
+
+                    <ImageView
+                        android:layout_width="@dimen/tab_icon_size"
+                        android:layout_height="@dimen/tab_icon_size"
+                        android:layout_gravity="start"
+                        android:clickable="true"
+                        android:gravity="start"
+                        app:srcCompat="@drawable/delete" />
+                </LinearLayout>
+
+            </TableRow>
+
+        </TableLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

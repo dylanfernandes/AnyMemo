@@ -5,6 +5,8 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import org.liberty.android.fantastischmemo.dao.TagDaoImpl;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * Created by Adam on 2018-02-04.
  */
@@ -43,5 +45,24 @@ public class Tag {
 
     public String toString(){
         return this.name;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31)
+                .append(name)
+                .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Tag))
+            return false;
+        if (obj == this)
+            return true;
+        if (this.getName().equals(((Tag) obj).getName()))
+            return true;
+        else
+            return false;
     }
 }

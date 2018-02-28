@@ -26,7 +26,7 @@
                 android:inputType="textMultiLine"
                 android:minLines="3"
                 android:gravity="top"
-                android:layout_weight="1" />
+                android:layout_weight="1"/>
             <TextView
                 android:text="@string/add_screen_answer"
                 android:layout_width="fill_parent"
@@ -39,7 +39,7 @@
                 android:inputType="textMultiLine"
                 android:gravity="top"
                 android:minLines="3"
-                android:layout_weight="1" />
+                android:layout_weight="1"/>
             <TextView
                 android:text="@string/note_text"
                 android:layout_width="fill_parent"
@@ -52,16 +52,27 @@
                 android:inputType="textMultiLine"
                 android:gravity="top"
                 android:minLines="1"
-                android:layout_weight="1" />
+                android:layout_weight="1"/>
             <TextView
                 android:text="@string/edit_dialog_category"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="3dip"/>
-            <Button
-                android:id="@+id/edit_dialog_category_button"
+            <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent" />
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/edit_dialog_category_entry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"/>
+                <Button
+                    android:id="@+id/edit_dialog_category_button"
+                    android:text="@string/edit_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
             <RadioGroup
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -71,14 +82,138 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/add_here_radio"
-                    android:text="@string/add_in_place" />
+                    android:text="@string/add_in_place"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/add_back_radio"
-                    android:text="@string/add_back" />
+                    android:text="@string/add_back"/>
             </RadioGroup>
-
+            <Button
+                android:id="@+id/show_advanced_options"
+                android:text="@string/advanced_options_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dip"/>
+            <LinearLayout
+                android:id="@+id/advanced_options"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <TextView
+                    android:text="@string/advanced_options_title"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:padding="3dip"
+                    android:layout_marginTop="14dip"/>
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:padding="3dip"
+                    android:layout_marginBottom="7dip"
+                    android:background="@android:color/darker_gray"/>
+                <TextView
+                    android:text="@string/id_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"/>
+                <EditText
+                    android:id="@+id/entry__id"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"/>
+                <TextView
+                    android:text="@string/entry_last_learn_date"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:padding="3dip"/>
+                <EditText
+                    android:id="@+id/entry_last_learn_date"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"/>
+                <TextView
+                    android:text="@string/entry_next_learn_date"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:padding="3dip"/>
+                <EditText
+                    android:id="@+id/entry_next_learn_date"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:text="grade"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"/>
+                <EditText
+                    android:id="@+id/entry_grade"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"/>
+                <TextView
+                    android:text="easiness"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"/>
+                <EditText
+                    android:id="@+id/entry_easiness"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"/>
+                <TextView
+                    android:text="acq_reps"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"/>
+                <EditText
+                    android:id="@+id/entry_acq_reps"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"/>
+                <TextView
+                    android:text="ret_reps"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"/>
+                <EditText
+                    android:id="@+id/entry_ret_reps"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"/>
+                <TextView
+                    android:text="lapses"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"/>
+                <EditText
+                    android:id="@+id/entry_lapses"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"/>
+                <TextView
+                    android:text="acq_reps_since_lapse"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"
+                    />
+                <EditText
+                    android:id="@+id/entry_acq_reps_since_lapse"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"/>
+                <TextView
+                    android:text="ret_reps_since_lapse"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"/>
+                <EditText
+                    android:id="@+id/entry_ret_reps_since_lapse"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"/>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -20,6 +20,7 @@
     <string name="about_button_text">About</string>
     <string name="help_button_text">Help</string>
     <string name="edit_button_text">Preview/edit</string>
+    <string name="preview_button_text">Preview</string>
     <string name="copyclipboard">Copy to clipboard</string>
     <string name="copyclipboard_summary">Automatically copy card content to clipboard.</string>
     <string name="memo_show_answer">Show answer</string>
@@ -118,7 +119,6 @@
     <string name="about_version">Version history</string>
     <string name="what_is_new">New version installed</string>
     <string name="downloader_categories">Categories</string>
-
     <string name="interface_locale_title">Interface language</string>
     <string name="interface_locale_summary">Choose the language of the user interface. Please restart AnyMemo to take effect.</string>
     <string name="settings_typeface_question">User-defined question font (TTF)</string>
@@ -161,6 +161,7 @@
     <string name="copy_text">Copy</string>
     <string name="paste_text">Paste</string>
     <string name="edit_dialog_unsave_warning">The current card is modified but not saved. Are you sure you want to save and exit?</string>
+    <string name="show_advanced_options_warning">Modifying advanced options can cause errors and should only be performed by advanced users. Proceed?</string>
     <string name="downloader_extract_zip">Extracting... Please wait.</string>
     <string name="allow_orientation_title">Orientation</string>
     <string name="allow_orientation_summary">Automatically change screen orientation. Please restart AnyMemo to take effect.</string>
@@ -277,6 +278,11 @@
     <string name="import_supermemo_2008_xml_text">Import SuperMemo 2008 XML</string>
     <string name="uncategorized_text">Uncategorized</string>
     <string name="edit_text">Edit</string>
+    <string name="tags_text">Tags</string>
+    <string name="create_new_tag_text">Create new tag</string>
+    <string name="edit_tag_text">Edit tag</string>
+    <string name="tag_filter_title">Filter</string>
+    <string name="advanced_options_title">Advanced Options</string>
     <string name="category_dialog_title">Please select a category or enter a new one</string>
     <string name="ordinal_text_short">Ord</string>
     <string name="total_text">Total</string>
@@ -468,4 +474,8 @@
     <string name="google_sign_in_not_successful_error_text">Google sign in is not successful</string>
     <string name="google_sign_in_empty_error_text">Google sign in result is empty</string>
     <string name="google_sign_in_account_empty_result">Unable to get Google account</string>
+    <string name="tags_for_deck_header">Tags For Decks</string>
+    <string name="existing_tags">Existing Tags</string>
+    <string name="tags_assigned_to_deck">Tags Assigned to this deck</string>
+    <string name="tags_search">Tag Search</string>
 </resources>
