@@ -20,5 +20,7 @@
     <color name="menu_icon">#FFFFFF</color>
     <color name="card_player_button_color">#FFFFFF</color>
 
+    <color name="colorTransBg">#26000000</color>
+
     <color name="drawer_background">#424242</color>
 </resources>

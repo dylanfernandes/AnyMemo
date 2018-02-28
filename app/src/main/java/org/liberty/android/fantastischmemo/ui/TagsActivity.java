@@ -1,16 +1,14 @@
 package org.liberty.android.fantastischmemo.ui;
 
+import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.liberty.android.fantastischmemo.R;
@@ -28,7 +27,6 @@ import org.liberty.android.fantastischmemo.entity.DeckMock;
 import org.liberty.android.fantastischmemo.entity.Tag;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,13 +37,16 @@ public class TagsActivity extends BaseActivity {
     private RecyclerView tagsRecyclerView;
     private LinearLayoutManager linearLayoutManager;
     private TagsAdapter tagsAdapter;
+    boolean isFABOpen;
+    FloatingActionButton createNewButton, addExistingButton, addTagButton;
+    LinearLayout createLayout, addLayout;
+    View fabBGLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_tags_layout);
 
-//        deck = getIntent().getParcelableExtra("DeckMock");
         deck = DeckMap.getInstance().getDecksMap().get(getIntent().getStringExtra("deckPath"));
 
         tagsRecyclerView = (RecyclerView) findViewById(R.id.tags_list);
@@ -58,8 +59,16 @@ public class TagsActivity extends BaseActivity {
         tagsAdapter = new TagsAdapter(tags);
         tagsRecyclerView.setAdapter(tagsAdapter);
 
-        FloatingActionButton addTagButton = (FloatingActionButton) findViewById(R.id.add_tag_fab);
-        addTagButton.setOnClickListener(new View.OnClickListener() {
+        createLayout = (LinearLayout) findViewById(R.id.createLayout);
+        addLayout = (LinearLayout) findViewById(R.id.existingLayout);
+
+        addTagButton = (FloatingActionButton) findViewById(R.id.add_tag_fab);
+        createNewButton = (FloatingActionButton) findViewById(R.id.create_new_fab);
+        addExistingButton = (FloatingActionButton) findViewById(R.id.add_existing_fab);
+
+        fabBGLayout=findViewById(R.id.fabBGLayout);
+
+        createNewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final EditText input = new EditText(v.getContext());
@@ -81,6 +90,61 @@ public class TagsActivity extends BaseActivity {
                             }
                         })
                         .show();
+            }
+        });
+
+        addTagButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!isFABOpen){
+                    showFABMenu();
+                }else{
+                    closeFABMenu();
+                }
+            }
+        });
+    }
+
+
+    private void showFABMenu(){
+        isFABOpen=true;
+        createLayout.setVisibility(View.VISIBLE);
+        addLayout.setVisibility(View.VISIBLE);
+        fabBGLayout.setVisibility(View.VISIBLE);
+
+        addTagButton.animate().rotationBy(180);
+        createLayout.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+        addLayout.animate().translationY(-getResources().getDimension(R.dimen.standard_100));
+    }
+
+    private void closeFABMenu(){
+        isFABOpen=false;
+        fabBGLayout.setVisibility(View.GONE);
+        addTagButton.animate().rotationBy(-180);
+        createLayout.animate().translationY(0);
+        addLayout.animate().translationY(0).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                if(!isFABOpen){
+                    createLayout.setVisibility(View.GONE);
+                    addLayout.setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
             }
         });
     }
