@@ -131,6 +131,7 @@ public class TagsActivity extends BaseActivity {
                 builder.setNegativeButton("Done", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        tagsAdapter.notifyDataSetChanged();
                         dialog.dismiss();
                     }
                 });
@@ -383,7 +384,8 @@ public class TagsActivity extends BaseActivity {
             holder.tagAddButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(final View v) {
-                    Toast.makeText(v.getContext(), tags.get(position) + " Tag added to Deck", Toast.LENGTH_LONG).show();
+                    Toast.makeText(v.getContext(), tag + " Tag added to Deck", Toast.LENGTH_LONG).show();
+                    deck.addTag(tag);
                     tags.remove(position);
                     notifyItemRemoved(position);
                     notifyDataSetChanged();
