@@ -20,21 +20,25 @@ import io.reactivex.Maybe;
 import io.reactivex.MaybeEmitter;
 import io.reactivex.MaybeOnSubscribe;
 
-@PerActivity
-public class DatabaseOperationDialogUtil extends GenericDatabaseDialogUtil {
-    private static final String TAG = DatabaseOperationDialogUtil.class.getName();
+/**
+ * Created by Olivier on 2018-03-01.
+ */
 
+@PerActivity
+public class BaseDatabaseOperationDialogUtil extends GenericDatabaseDialogUtil{
+
+    private static final String TAG = BaseDatabaseOperationDialogUtil.class.getName();
     private Activity activity;
     private AMFileUtil amFileUtil;
     private RecentListUtil recentListUtil;
-    private DatabaseUtil databaseUtil;
+    private BaseDatabaseUtil databaseUtil;
 
     @Inject
-    public DatabaseOperationDialogUtil(@NonNull final Activity activity,
-                                       @NonNull final AMFileUtil amFileUtil,
-                                       @NonNull final RecentListUtil recentListUtil,
-                                       @NonNull final DatabaseUtil databaseUtil) {
-        super(activity, amFileUtil, recentListUtil);
+    public BaseDatabaseOperationDialogUtil(@NonNull final Activity activity,
+                                           @NonNull final AMFileUtil amFileUtil,
+                                           @NonNull final RecentListUtil recentListUtil,
+                                           @NonNull final BaseDatabaseUtil databaseUtil) {
+        super(activity,amFileUtil,recentListUtil);
         this.databaseUtil = databaseUtil;
     }
 
@@ -47,11 +51,11 @@ public class DatabaseOperationDialogUtil extends GenericDatabaseDialogUtil {
                         .setTitle(activity.getString(R.string.fb_create_db))
                         .setMessage(activity.getString(R.string.fb_create_db_message))
                         .setView(input)
-                        .setPositiveButton(activity.getString(R.string.ok_text), new DialogInterface.OnClickListener() {
+                        .setPositiveButton(activity.getString(R.string.ok_text), new DialogInterface.OnClickListener(){
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onClick(DialogInterface dialog, int which ){
                                 String value = input.getText().toString();
-                                if (!value.endsWith(".db")) {
+                                if(!value.endsWith(".db")){
                                     value += ".db";
                                 }
                                 File newDbFile = new File(directoryPath + "/" + value);
@@ -61,7 +65,7 @@ public class DatabaseOperationDialogUtil extends GenericDatabaseDialogUtil {
                                     }
                                     databaseUtil.setupDatabase(newDbFile.toString());
                                     emitter.onSuccess(newDbFile);
-                                } catch (IOException e) {
+                                } catch(IOException e){
                                     Log.e(TAG, "Fail to create file", e);
                                 }
                             }
