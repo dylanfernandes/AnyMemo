@@ -478,4 +478,5 @@
     <string name="existing_tags">Existing Tags</string>
     <string name="tags_assigned_to_deck">Tags Assigned to this deck</string>
     <string name="tags_search">Tag Search</string>
+    <string name="tag_delete">Delete Tag</string>
 </resources>

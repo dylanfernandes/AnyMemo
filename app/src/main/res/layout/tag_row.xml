@@ -17,7 +17,7 @@
         android:layout_width="55dp"
         android:layout_height="55dp"
         android:layout_gravity="center"
-        android:contentDescription="Delete tag"
+        android:contentDescription="@string/tag_delete"
         android:src="@drawable/ic_menu_delete" />
 
 </LinearLayout>
