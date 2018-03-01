@@ -111,10 +111,12 @@ public class TagsActivity extends BaseActivity {
         addExistingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*********FOR TESTING WHILE WAITING FOR DB*********/
                 List<Tag> tagsAdd = new ArrayList<Tag>();
                 tagsAdd.add(new Tag("French"));
                 tagsAdd.add(new Tag("English"));
                 tagsAdd.add(new Tag("German"));
+                /*********FOR TESTING WHILE WAITING FOR DB*********/
                 List<Tag> tagsToAdd = new ArrayList<Tag>();
                 for(Tag t:tagsAdd){
                     if(!deck.hasTag(t))
@@ -138,7 +140,6 @@ public class TagsActivity extends BaseActivity {
                         dialog.dismiss();
                     }
                 });
-                //final View tagAddDialog = getLayoutInflater().inflate(R.layout.tag_add_dialog, null);
                 tagsAddRecyclerView = (RecyclerView) addDialog.findViewById(R.id.tags_add_list);
                 linearAddLayoutManager = new LinearLayoutManager(currentContext);
                 tagsAddRecyclerView.setLayoutManager(linearAddLayoutManager);
