@@ -143,7 +143,7 @@ public class TagsActivity extends BaseActivity {
                 linearAddLayoutManager = new LinearLayoutManager(currentContext);
                 tagsAddRecyclerView.setLayoutManager(linearAddLayoutManager);
                 tagsAddRecyclerView.addItemDecoration(new DividerItemDecoration(currentContext, LinearLayoutManager.VERTICAL));
-                final TagsAdapter addAdapter = new TagsAdapter(tagsToAdd);
+                final TagsAddAdapter addAdapter = new TagsAddAdapter(tagsToAdd);
                 tagsAddRecyclerView.setAdapter(addAdapter);
 
                 AlertDialog alert = builder.create();
@@ -338,4 +338,106 @@ public class TagsActivity extends BaseActivity {
             return tags.size();
         }
     }
+
+    class TagsAddAdapter extends RecyclerView.Adapter<TagsAddAdapter.TagsAddViewHolder> {
+
+        class TagsAddViewHolder extends RecyclerView.ViewHolder {
+            TextView tagTextView;
+            ImageButton tagEditButton;
+
+            TagsAddViewHolder(View itemView) {
+                super(itemView);
+                tagTextView = (TextView) itemView.findViewById(R.id.tag_add_text_view);
+                tagEditButton = (ImageButton) itemView.findViewById(R.id.tag_add_button);
+            }
+        }
+
+        private List<Tag> tags;
+
+        TagsAddAdapter() {
+            this.tags = new ArrayList<>();
+        }
+
+        TagsAddAdapter(List<Tag> tags) {
+            this.tags = tags;
+        }
+
+        public void addTag(Tag tag) {
+//            deck.addTag(tag);
+            tags.add(tag);
+            this.notifyDataSetChanged();
+        }
+
+        private void deleteTag(int position) {
+            tags.remove(position);
+            this.notifyItemRemoved(position);
+        }
+
+        @Override
+        public TagsAddViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View tagRowView = LayoutInflater.from(parent.getContext()).inflate(R.layout.tag_add_row, parent, false);
+            return new TagsAddViewHolder(tagRowView);
+        }
+
+
+        @Override
+        public void onBindViewHolder(TagsAddViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+            final Tag tag = tags.get(position);
+            holder.tagTextView.setText(tag.getName());
+            holder.tagEditButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(final View v) {
+                    final EditText input = new EditText(v.getContext());
+                    input.setText(tag.getName());
+                    input.setSelection(input.getText().length());
+                    new AlertDialog.Builder(v.getContext())
+                            .setTitle(v.getContext().getString(R.string.edit_text))
+                            .setMessage("Tag Added to Deck")
+                            .setView(input)
+                            .setPositiveButton(v.getContext().getString(R.string.settings_save), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String tagName = input.getText().toString();
+                                    tag.setName(tagName);
+                                    TagsAddAdapter.this.notifyItemChanged(position);
+                                }
+                            })
+                            .setNegativeButton(v.getContext().getString(R.string.cancel_text), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setNeutralButton(v.getContext().getString(R.string.delete_text), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    new AlertDialog.Builder(v.getContext())
+                                            .setTitle(v.getContext().getString(R.string.delete_text))
+                                            .setMessage("Are you sure you want to delete this tag?")
+                                            .setPositiveButton(v.getContext().getString(R.string.delete_text), new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    deleteTag(position);
+                                                }
+                                            })
+                                            .setNegativeButton(v.getContext().getString(R.string.cancel_text), new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .show();
+                                }
+                            })
+                            .show();
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return tags.size();
+        }
+    }
+
 }
