@@ -3,6 +3,7 @@ package org.liberty.android.fantastischmemo.ui;
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -34,7 +35,7 @@ public class TagsActivity extends BaseActivity {
     private DeckMap deckMap;
     private DeckMock deck;
     private List<Tag> tags;
-    private RecyclerView tagsRecyclerView;
+    private RecyclerView tagsRecyclerView, tagsAddRecyclerView;
     private LinearLayoutManager linearLayoutManager;
     private TagsAdapter tagsAdapter;
     boolean isFABOpen;
@@ -103,8 +104,17 @@ public class TagsActivity extends BaseActivity {
                 }
             }
         });
-    }
 
+        addExistingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(v.getContext());
+                dialog.setContentView(R.layout.tag_add_dialog);
+                dialog.setTitle("Add Tag");
+                dialog.show();
+            }
+        });
+    }
 
     private void showFABMenu(){
         isFABOpen=true;
