@@ -127,14 +127,8 @@ public class TagsActivity extends BaseActivity {
                 View addDialog = inflater.inflate(R.layout.tag_add_dialog, null);
                 Context currentContext = addDialog.getContext();
                 builder.setView(addDialog);
-                builder.setTitle("Add Tag");
-                builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setTitle("Add Existing Tag to Deck" );
+                builder.setNegativeButton("Done", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
