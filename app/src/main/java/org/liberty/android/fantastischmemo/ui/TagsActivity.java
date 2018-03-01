@@ -271,6 +271,7 @@ public class TagsActivity extends BaseActivity {
         private void deleteTag(int position) {
             tags.remove(position);
             this.notifyItemRemoved(position);
+            this.notifyDataSetChanged();
         }
 
         @Override
@@ -343,12 +344,12 @@ public class TagsActivity extends BaseActivity {
 
         class TagsAddViewHolder extends RecyclerView.ViewHolder {
             TextView tagTextView;
-            ImageButton tagEditButton;
+            ImageButton tagAddButton;
 
             TagsAddViewHolder(View itemView) {
                 super(itemView);
                 tagTextView = (TextView) itemView.findViewById(R.id.tag_add_text_view);
-                tagEditButton = (ImageButton) itemView.findViewById(R.id.tag_add_button);
+                tagAddButton = (ImageButton) itemView.findViewById(R.id.tag_add_button);
             }
         }
 
@@ -363,7 +364,6 @@ public class TagsActivity extends BaseActivity {
         }
 
         public void addTag(Tag tag) {
-//            deck.addTag(tag);
             tags.add(tag);
             this.notifyDataSetChanged();
         }
@@ -371,6 +371,7 @@ public class TagsActivity extends BaseActivity {
         private void deleteTag(int position) {
             tags.remove(position);
             this.notifyItemRemoved(position);
+            this.notifyDataSetChanged();
         }
 
         @Override
@@ -381,55 +382,16 @@ public class TagsActivity extends BaseActivity {
 
 
         @Override
-        public void onBindViewHolder(TagsAddViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+        public void onBindViewHolder(final TagsAddViewHolder holder, @SuppressLint("RecyclerView") final int position) {
             final Tag tag = tags.get(position);
             holder.tagTextView.setText(tag.getName());
-            holder.tagEditButton.setOnClickListener(new View.OnClickListener(){
+            holder.tagAddButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(final View v) {
-                    final EditText input = new EditText(v.getContext());
-                    input.setText(tag.getName());
-                    input.setSelection(input.getText().length());
-                    new AlertDialog.Builder(v.getContext())
-                            .setTitle(v.getContext().getString(R.string.edit_text))
-                            .setMessage("Tag Added to Deck")
-                            .setView(input)
-                            .setPositiveButton(v.getContext().getString(R.string.settings_save), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String tagName = input.getText().toString();
-                                    tag.setName(tagName);
-                                    TagsAddAdapter.this.notifyItemChanged(position);
-                                }
-                            })
-                            .setNegativeButton(v.getContext().getString(R.string.cancel_text), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setNeutralButton(v.getContext().getString(R.string.delete_text), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    new AlertDialog.Builder(v.getContext())
-                                            .setTitle(v.getContext().getString(R.string.delete_text))
-                                            .setMessage("Are you sure you want to delete this tag?")
-                                            .setPositiveButton(v.getContext().getString(R.string.delete_text), new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    deleteTag(position);
-                                                }
-                                            })
-                                            .setNegativeButton(v.getContext().getString(R.string.cancel_text), new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();
-                                                }
-                                            })
-                                            .show();
-                                }
-                            })
-                            .show();
+                    Toast.makeText(v.getContext(), tags.get(position) + " Tag added to Deck", Toast.LENGTH_LONG).show();
+                    tags.remove(position);
+                    notifyItemRemoved(position);
+                    notifyDataSetChanged();
                 }
             });
         }
