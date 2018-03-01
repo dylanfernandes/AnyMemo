@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -114,47 +115,37 @@ public class TagsActivity extends BaseActivity {
                 tagsAdd.add(new Tag("French"));
                 tagsAdd.add(new Tag("English"));
                 tagsAdd.add(new Tag("German"));
-                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                builder.setTitle("Add Tag");
-                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(TagsActivity.this, android.R.layout.select_dialog_multichoice);
+                List<Tag> tagsToAdd = new ArrayList<Tag>();
                 for(Tag t:tagsAdd){
                     if(!deck.hasTag(t))
-                        arrayAdapter.add(t.getName());
+                        tagsToAdd.add(t);
                 }
-                builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                LayoutInflater inflater = getLayoutInflater();
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                View addDialog = inflater.inflate(R.layout.tag_add_dialog, null);
+                Context currentContext = addDialog.getContext();
+                builder.setView(addDialog);
+                builder.setTitle("Add Tag");
+                builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                       
+
                     }
                 });
-                builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 });
+                //final View tagAddDialog = getLayoutInflater().inflate(R.layout.tag_add_dialog, null);
+                tagsAddRecyclerView = (RecyclerView) addDialog.findViewById(R.id.tags_add_list);
+                linearAddLayoutManager = new LinearLayoutManager(currentContext);
+                tagsAddRecyclerView.setLayoutManager(linearAddLayoutManager);
+                tagsAddRecyclerView.addItemDecoration(new DividerItemDecoration(currentContext, LinearLayoutManager.VERTICAL));
+                final TagsAdapter addAdapter = new TagsAdapter(tagsToAdd);
+                tagsAddRecyclerView.setAdapter(addAdapter);
 
-                builder.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String strName = arrayAdapter.getItem(which);
-                        AlertDialog.Builder builderInner = new AlertDialog.Builder(TagsActivity.this);
-                        builderInner.setMessage(strName);
-                        builderInner.setTitle("Your Selected Item is");
-                        builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        builderInner.show();
-                    }
-                });
-//                builder.setItems(items, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int item) {
-//                        // Do something with the selection
-//                    }
-//                });
                 AlertDialog alert = builder.create();
                 alert.show();
             }
