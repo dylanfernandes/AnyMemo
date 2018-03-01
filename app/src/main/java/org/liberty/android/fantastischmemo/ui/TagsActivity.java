@@ -16,10 +16,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
@@ -36,8 +38,8 @@ public class TagsActivity extends BaseActivity {
     private DeckMock deck;
     private List<Tag> tags;
     private RecyclerView tagsRecyclerView, tagsAddRecyclerView;
-    private LinearLayoutManager linearLayoutManager;
-    private TagsAdapter tagsAdapter;
+    private LinearLayoutManager linearLayoutManager, linearAddLayoutManager;
+    private TagsAdapter tagsAdapter, tagsAddAdapter;
     boolean isFABOpen;
     FloatingActionButton createNewButton, addExistingButton, addTagButton;
     LinearLayout createLayout, addLayout;
@@ -108,10 +110,53 @@ public class TagsActivity extends BaseActivity {
         addExistingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog = new Dialog(v.getContext());
-                dialog.setContentView(R.layout.tag_add_dialog);
-                dialog.setTitle("Add Tag");
-                dialog.show();
+                List<Tag> tagsAdd = new ArrayList<Tag>();
+                tagsAdd.add(new Tag("French"));
+                tagsAdd.add(new Tag("English"));
+                tagsAdd.add(new Tag("German"));
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                builder.setTitle("Add Tag");
+                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(TagsActivity.this, android.R.layout.select_dialog_multichoice);
+                for(Tag t:tagsAdd){
+                    if(!deck.hasTag(t))
+                        arrayAdapter.add(t.getName());
+                }
+                builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                       
+                    }
+                });
+                builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String strName = arrayAdapter.getItem(which);
+                        AlertDialog.Builder builderInner = new AlertDialog.Builder(TagsActivity.this);
+                        builderInner.setMessage(strName);
+                        builderInner.setTitle("Your Selected Item is");
+                        builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        builderInner.show();
+                    }
+                });
+//                builder.setItems(items, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int item) {
+//                        // Do something with the selection
+//                    }
+//                });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
     }
