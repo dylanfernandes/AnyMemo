@@ -40,6 +40,7 @@ public class User implements VersionableDomainObject{
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType=DataType.DATE_STRING)
     private Date updateDate;
 
+    public User() {}
 
     //Setters and Getters
     public Integer getId() {
@@ -101,7 +102,6 @@ public class User implements VersionableDomainObject{
     @Override
     public String toString(){
         return "User [id=" + id + ", surname=" + surname
-                + ", name=" + name + ", username=" + username
-                + ", userStatistics=" + userStatistics +  "]";
+                + ", name=" + name + ", username=" + username +  "]";
     }
 }

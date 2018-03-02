@@ -53,6 +53,7 @@ public class UserStatistics implements VersionableDomainObject{
     public final static long MILLIS_PER_DAY = 24*60*60*1000L;
 
 
+    public UserStatistics() {}
 
     //Getters and Setters
     public Integer getId() {
@@ -151,9 +152,7 @@ public class UserStatistics implements VersionableDomainObject{
 
     //Calulating Streaks
     public void streakToLongestStreak() {
-        if(streak == 0) {
-            longestStreak = 0;
-        } else if(streak > longestStreak) {
+        if(streak > longestStreak) {
             longestStreak = streak;
         }
     }
@@ -174,8 +173,9 @@ public class UserStatistics implements VersionableDomainObject{
         }
     }
 
-
+    //Run at login
     //Sets streaks to 0 if more than a day since last login
+
     public void setMoreThanADay() {
         Date today = new Date();
         boolean MORE_THAN_A_DAY = Math.abs(today.getTime() - lastLogin.getTime()) > MILLIS_PER_DAY;
@@ -184,6 +184,8 @@ public class UserStatistics implements VersionableDomainObject{
             longestStreak = 0;
             weeks = 0;
             months = 0;
+        } else {
+            streak ++;
         }
     }
 
