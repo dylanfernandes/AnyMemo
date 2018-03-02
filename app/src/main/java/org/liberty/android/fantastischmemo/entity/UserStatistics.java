@@ -2,6 +2,7 @@ package org.liberty.android.fantastischmemo.entity;
 
 
 import com.j256.ormlite.field.DataType;
+import java.lang.Math;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -41,14 +42,14 @@ public class UserStatistics implements VersionableDomainObject{
     @DatabaseField(generatedId = true)
     private Integer months;
 
-    @DatabaseField(foreign = true)
-    private User user;
-
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
     private Date creationDate;
 
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType=DataType.DATE_STRING)
     private Date updateDate;
+
+    public final static long MILLIS_PER_DAY = 24*60*60*1000L;
+
 
 
     //Getters and Setters
@@ -151,4 +152,44 @@ public class UserStatistics implements VersionableDomainObject{
                 + ", longestStreak=" + longestStreak + ",weeks=" + weeks
                 + ", months" + months + ", user" + user + "]";
     }
+
+
+    //Calulating Streaks
+    public void streakToLongestStreak() {
+        if(streak == 0) {
+            longestStreak = 0;
+        } else if(streak > longestStreak) {
+            longestStreak = streak;
+        }
+    }
+
+    public void streakToWeeks() {
+        if(streak == 0) {
+            weeks = 0;
+        } else if(streak%7 == 0) {
+            weeks = streak/7;
+        }
+    }
+
+    public void streakToMonths() {
+        if(streak == 0) {
+            months = 0;
+        } else if(streak%30 == 0) {
+            months = streak/30;
+        }
+    }
+
+
+    //Sets streaks to 0 if more than a day since last login
+    public void setMoreThanADay() {
+        Date today = new Date();
+        boolean MORE_THAN_A_DAY = Math.abs(today.getTime() - lastLogin.getTime()) > MILLIS_PER_DAY;
+        if(MORE_THAN_A_DAY) {
+            streak = 0;
+            longestStreak = 0;
+            weeks = 0;
+            months = 0;
+        }
+    }
+
 }
