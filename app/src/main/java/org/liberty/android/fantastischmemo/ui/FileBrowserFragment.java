@@ -271,6 +271,9 @@ public class FileBrowserFragment extends BaseDialogFragment {
             int currentPathStringLength = this.currentDirectory.getAbsolutePath().length();
             for(File file: files){
                 if(file.isDirectory()){
+                    if(file.getName().equals("centralDB")){
+                        continue;
+                    }
                         this.directoryEntries.add(file.getAbsolutePath().substring(currentPathStringLength) + "/");
                 }
                 else{
