@@ -294,6 +294,14 @@ public class AnyMemo extends BaseActivity {
          * to /sdcard/AnyMemo
          */
         if(firstTime == true){
+
+            if(!new File(AMEnv.HIDEN_DB_FOLDER_PATH).exists()){
+                try{
+                    FileUtils.forceMkdir(new File(AMEnv.HIDEN_DB_FOLDER_PATH));
+                }catch(IOException e){
+                    Log.e(TAG, "Error creating centralDB directory", e);
+                }
+            }
             SharedPreferences.Editor editor = settings.edit();
             editor.putBoolean(AMPrefKeys.FIRST_TIME_KEY, false);
             editor.putString(AMPrefKeys.getRecentPathKey(0), AMEnv.DEFAULT_ROOT_PATH + AMEnv.DEFAULT_DB_NAME);
@@ -319,6 +327,25 @@ public class AnyMemo extends BaseActivity {
         }
         /* Detect an update */
         if (savedVersionCode != thisVersionCode) {
+            if(!new File(AMEnv.HIDEN_DB_FOLDER_PATH).exists()){
+                try{
+                    FileUtils.forceMkdir(new File(AMEnv.HIDEN_DB_FOLDER_PATH));
+                }catch(IOException e){
+                    Log.e(TAG, "Error creating centralDB directory", e);
+                }
+            }
+
+            String centralDbDest = AMEnv.HIDEN_DB_FOLDER_PATH + AMEnv.CENTRAL_DB_NAME;
+            
+            if(!new File(centralDbDest).exists()){
+                try {
+                    amFileUtil.copyFileFromAsset(AMEnv.CENTRAL_DB_NAME,new File(centralDbDest));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                databaseUtil.setupDatabase(centralDbDest);
+            }
+
             SharedPreferences.Editor editor = settings.edit();
             /* save new version number */
             editor.putInt(AMPrefKeys.SAVED_VERSION_CODE_KEY, thisVersionCode);
