@@ -25,7 +25,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private final String TAG = getClass().getSimpleName();
 
-    private static final int CURRENT_VERSION = 5;
+    private static final int CURRENT_VERSION = 2;
 
     private final String dbPath;
 
@@ -54,14 +54,14 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         Log.v(TAG, "Old version" + oldVersion + " new version: " + newVersion);
         // Update possible card with null category field
-        if (oldVersion <= 5) {
+        if (oldVersion <= 2) {
             try {
                 database.execSQL("alter table decks add column dbPath VARCHAR");
                 TableUtils.createTable(connectionSource, Tag.class);
             } catch (SQLException e) {
                 Log.e(TAG, "Upgrading failed, the tags table might already exist.", e);
             } finally {
-                oldVersion = 5;
+                oldVersion = 2;
             }
         }
         database.setVersion(oldVersion);
@@ -138,3 +138,6 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
     }
 
 }
+
+
+

@@ -27,13 +27,17 @@ import org.liberty.android.fantastischmemo.entity.Tag;
 
 import java.sql.SQLException;
 
-public class AnyMemoDBOpenHelper extends AnyMemoBaseDBOpenHelper {
-
-    private static final int CURRENT_VERSION = 5;
+public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private final String TAG = getClass().getSimpleName();
 
+    private final String dbPath;
+
+    private static final int CURRENT_VERSION = 5;
+
     private CardDao cardDao = null;
+
+    private DeckDao deckDao = null;
 
     private SettingDao settingDao = null;
 
@@ -43,7 +47,7 @@ public class AnyMemoDBOpenHelper extends AnyMemoBaseDBOpenHelper {
 
     private LearningDataDao learningDataDao = null;
 
-    private final String dbPath;
+    private TagDao tagDao = null;
 
     private boolean isReleased = false;
 
@@ -53,12 +57,13 @@ public class AnyMemoDBOpenHelper extends AnyMemoBaseDBOpenHelper {
         Log.i(TAG, "Newly created db version: " + database.getVersion());
 
         try {
-            super.onCreate(database,connectionSource);
             TableUtils.createTable(connectionSource, Card.class);
+            TableUtils.createTable(connectionSource, Deck.class);
             TableUtils.createTable(connectionSource, Setting.class);
             TableUtils.createTable(connectionSource, Filter.class);
             TableUtils.createTable(connectionSource, Category.class);
             TableUtils.createTable(connectionSource, LearningData.class);
+            TableUtils.createTable(connectionSource, Tag.class);
 
             getSettingDao().create(new Setting());
             getCategoryDao().create(new Category());
@@ -99,28 +104,28 @@ public class AnyMemoDBOpenHelper extends AnyMemoBaseDBOpenHelper {
 
             // copy learning data
             database.execSQL("update cards set learningData_id = ("
-                + " select _id as learningData_id"
-                + " from learn_tbl where learn_tbl._id = cards.id)");
+                    + " select _id as learningData_id"
+                    + " from learn_tbl where learn_tbl._id = cards.id)");
             database.execSQL("insert into learning_data (acqReps, acqRepsSinceLapse, easiness,"
-                + " grade, lapses, lastLearnDate, nextLearnDate, retReps, "
-                + " retRepsSinceLapse)"
-                + " select acq_reps as acqReps , acq_reps_since_lapse as acqRepsSinceLapse,"
-                + " easiness, grade, lapses,"
-                + " date_learn || ' 00:00:00.000000' as lastLearnDate,"
-                + " datetime(julianday(date_learn) + interval) || '.000000' as nextLearnDate,"
-                + " ret_reps as retReps, ret_reps_since_lapse as retRepsSinceLapse"
-                + " from learn_tbl");
+                    + " grade, lapses, lastLearnDate, nextLearnDate, retReps, "
+                    + " retRepsSinceLapse)"
+                    + " select acq_reps as acqReps , acq_reps_since_lapse as acqRepsSinceLapse,"
+                    + " easiness, grade, lapses,"
+                    + " date_learn || ' 00:00:00.000000' as lastLearnDate,"
+                    + " datetime(julianday(date_learn) + interval) || '.000000' as nextLearnDate,"
+                    + " ret_reps as retReps, ret_reps_since_lapse as retRepsSinceLapse"
+                    + " from learn_tbl");
 
 
             // copy categories
             database.execSQL("insert into categories (name)"
-                + " select category as name from dict_tbl where category != ''"
-                + " and category is not null"
-                + " group by category");
+                    + " select category as name from dict_tbl where category != ''"
+                    + " and category is not null"
+                    + " group by category");
             database.execSQL("update cards set category_id = ("
-                + " select id as category_id from categories as cat"
-                + " join dict_tbl as dic on dic.category = cat.name"
-                + " where cards.id = dic._id)");
+                    + " select id as category_id from categories as cat"
+                    + " join dict_tbl as dic on dic.category = cat.name"
+                    + " where cards.id = dic._id)");
 
             // Update category if the category is null
             database.execSQL("update cards "
@@ -134,7 +139,7 @@ public class AnyMemoDBOpenHelper extends AnyMemoBaseDBOpenHelper {
 
             // Set unused fields
             database.execSQL("update cards"
-                + " set cardType = 0");
+                    + " set cardType = 0");
 
 
         }
@@ -186,6 +191,20 @@ public class AnyMemoDBOpenHelper extends AnyMemoBaseDBOpenHelper {
         Log.w(TAG, String.format("Downgrading database from version %1$d to %2$d", oldVersion, newVersion));
     }
 
+    /**
+     * Do not call this method directly, use AnyMemoDBOpenHelperManager instead.
+     */
+    @Override
+    public void close() {
+        isReleased = true;
+        try {
+            DatabaseConnection connection = getConnectionSource().getReadWriteConnection();
+            getConnectionSource().releaseConnection(connection);
+        } catch (SQLException e) {
+            Log.e(TAG, "Error releasing the connection.", e);
+        }
+        super.close();
+    }
 
     public synchronized CardDao getCardDao() {
         try {
@@ -194,6 +213,17 @@ public class AnyMemoDBOpenHelper extends AnyMemoBaseDBOpenHelper {
                 cardDao.setHelper(this);
             }
             return cardDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public synchronized DeckDao getDeckDao() {
+        try {
+            if (deckDao == null) {
+                deckDao = getDao(Deck.class);
+            }
+            return deckDao;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -243,6 +273,17 @@ public class AnyMemoDBOpenHelper extends AnyMemoBaseDBOpenHelper {
         }
     }
 
+    public synchronized TagDao getTagDao() {
+        try {
+            if (tagDao == null) {
+                tagDao = getDao(Tag.class);
+            }
+            return tagDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /*
      * Override the finalize in case the helper is not release.
      */
@@ -261,7 +302,7 @@ public class AnyMemoDBOpenHelper extends AnyMemoBaseDBOpenHelper {
     /* Package private constructor used in Manager. */
     AnyMemoDBOpenHelper(Context context, String dbpath) {
         // R.raw.ormlite_config is used to accelerate the DAO creation.
-        super(context, dbpath);
+        super(context, dbpath, null, CURRENT_VERSION);
         this.dbPath = dbpath;
     }
 
