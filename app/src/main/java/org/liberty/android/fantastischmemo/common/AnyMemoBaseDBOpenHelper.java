@@ -35,9 +35,6 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private boolean isReleased = false;
 
-
-
-
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         Log.v(TAG, "Now we are creating a new database!");
