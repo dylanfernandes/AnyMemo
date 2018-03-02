@@ -303,10 +303,10 @@ public class AnyMemo extends BaseActivity {
                 amFileUtil.copyFileFromAsset(AMEnv.DEFAULT_DB_NAME,  new File(dest));
                 databaseUtil.setupDatabase(dest);
 
-                /*String testDest = AMEnv.HIDEN_DB_FOLDER_PATH + AMEnv.DEFAULT_DB_NAME;
-                amFileUtil.copyFileFromAsset(AMEnv.DEFAULT_DB_NAME,new File(testDest));
+                String testDest = AMEnv.HIDEN_DB_FOLDER_PATH + AMEnv.CENTRAL_DB_NAME;
+                amFileUtil.copyFileFromAsset(AMEnv.CENTRAL_DB_NAME,new File(testDest));
                 databaseUtil.setupDatabase(testDest);
-                */
+
 
                 InputStream in2 = getResources().getAssets().open(AMEnv.EMPTY_DB_NAME);
                 String emptyDbPath = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + AMEnv.EMPTY_DB_NAME;
