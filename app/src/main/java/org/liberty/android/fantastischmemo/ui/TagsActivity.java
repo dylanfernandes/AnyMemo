@@ -3,6 +3,8 @@ package org.liberty.android.fantastischmemo.ui;
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,10 +17,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
@@ -34,9 +38,9 @@ public class TagsActivity extends BaseActivity {
     private DeckMap deckMap;
     private DeckMock deck;
     private List<Tag> tags;
-    private RecyclerView tagsRecyclerView;
-    private LinearLayoutManager linearLayoutManager;
-    private TagsAdapter tagsAdapter;
+    private RecyclerView tagsRecyclerView, tagsAddRecyclerView;
+    private LinearLayoutManager linearLayoutManager, linearAddLayoutManager;
+    private TagsAdapter tagsAdapter, tagsAddAdapter;
     boolean isFABOpen;
     FloatingActionButton createNewButton, addExistingButton, addTagButton;
     LinearLayout createLayout, addLayout;
@@ -104,8 +108,45 @@ public class TagsActivity extends BaseActivity {
                 }
             }
         });
-    }
 
+        addExistingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*********FOR TESTING WHILE WAITING FOR DB*********/
+                List<Tag> tagsAdd = new ArrayList<Tag>();
+                tagsAdd.add(new Tag("French"));
+                tagsAdd.add(new Tag("English"));
+                tagsAdd.add(new Tag("German"));
+                /*********FOR TESTING WHILE WAITING FOR DB*********/
+                List<Tag> tagsToAdd = new ArrayList<Tag>();
+                for(Tag t:tagsAdd){
+                    if(!deck.hasTag(t))
+                        tagsToAdd.add(t);
+                }
+                LayoutInflater inflater = getLayoutInflater();
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                View addDialog = inflater.inflate(R.layout.tag_add_dialog, null);
+                Context currentContext = addDialog.getContext();
+                builder.setView(addDialog);
+                builder.setTitle("Add Existing Tag to Deck" );
+                builder.setNegativeButton("Done", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                tagsAddRecyclerView = (RecyclerView) addDialog.findViewById(R.id.tags_add_list);
+                linearAddLayoutManager = new LinearLayoutManager(currentContext);
+                tagsAddRecyclerView.setLayoutManager(linearAddLayoutManager);
+                tagsAddRecyclerView.addItemDecoration(new DividerItemDecoration(currentContext, LinearLayoutManager.VERTICAL));
+                final TagsAddAdapter addAdapter = new TagsAddAdapter(tagsToAdd);
+                tagsAddRecyclerView.setAdapter(addAdapter);
+
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
+    }
 
     private void showFABMenu(){
         isFABOpen=true;
@@ -210,7 +251,7 @@ public class TagsActivity extends BaseActivity {
         private List<Tag> tags;
 
         TagsAdapter() {
-            this.tags = new ArrayList<>();
+            this(new ArrayList<Tag>());
         }
 
         TagsAdapter(List<Tag> tags) {
@@ -226,6 +267,7 @@ public class TagsActivity extends BaseActivity {
         private void deleteTag(int position) {
             tags.remove(position);
             this.notifyItemRemoved(position);
+            this.notifyDataSetChanged();
         }
 
         @Override
@@ -266,4 +308,67 @@ public class TagsActivity extends BaseActivity {
             return tags.size();
         }
     }
+
+    class TagsAddAdapter extends RecyclerView.Adapter<TagsAddAdapter.TagsAddViewHolder> {
+
+        class TagsAddViewHolder extends RecyclerView.ViewHolder {
+            TextView tagTextView;
+            ImageButton tagAddButton;
+
+            TagsAddViewHolder(View itemView) {
+                super(itemView);
+                tagTextView = (TextView) itemView.findViewById(R.id.tag_add_text_view);
+                tagAddButton = (ImageButton) itemView.findViewById(R.id.tag_add_button);
+            }
+        }
+
+        private List<Tag> tags;
+
+        TagsAddAdapter() {
+            this(new ArrayList<Tag>());
+        }
+
+        TagsAddAdapter(List<Tag> tags) {
+            this.tags = tags;
+        }
+
+        public void addTag(Tag tag) {
+            tags.add(tag);
+            this.notifyDataSetChanged();
+        }
+
+        private void deleteTag(int position) {
+            tags.remove(position);
+            this.notifyItemRemoved(position);
+            this.notifyDataSetChanged();
+        }
+
+        @Override
+        public TagsAddViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View tagRowView = LayoutInflater.from(parent.getContext()).inflate(R.layout.tag_add_row, parent, false);
+            return new TagsAddViewHolder(tagRowView);
+        }
+
+
+        @Override
+        public void onBindViewHolder(final TagsAddViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+            final Tag tag = tags.get(position);
+            holder.tagTextView.setText(tag.getName());
+            holder.tagAddButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(final View v) {
+                    Toast.makeText(v.getContext(), tags.get(position) + " Tag added to Deck", Toast.LENGTH_LONG).show();
+                    tags.remove(position);
+                    notifyItemRemoved(position);
+                    notifyDataSetChanged();
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return tags.size();
+        }
+    }
+
 }
