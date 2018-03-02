@@ -386,6 +386,7 @@ public class TagsActivity extends BaseActivity {
                 public void onClick(final View v) {
                     Toast.makeText(v.getContext(), tag + " Tag added to Deck", Toast.LENGTH_LONG).show();
                     deck.addTag(tag);
+                    Toast.makeText(v.getContext(), tags.get(position) + " Tag added to Deck", Toast.LENGTH_LONG).show();
                     tags.remove(position);
                     notifyItemRemoved(position);
                     notifyDataSetChanged();
