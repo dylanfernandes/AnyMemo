@@ -24,9 +24,9 @@ import io.reactivex.MaybeOnSubscribe;
 public class DatabaseOperationDialogUtil extends GenericDatabaseDialogUtil {
     private static final String TAG = DatabaseOperationDialogUtil.class.getName();
 
-    private Activity activity;
-    private AMFileUtil amFileUtil;
-    private RecentListUtil recentListUtil;
+    private Activity activity = super.getActivity();
+    private AMFileUtil amFileUtil = super.getAmFileUtil();
+    private RecentListUtil recentListUtil = super.getRecentListUtil();
     private DatabaseUtil databaseUtil;
 
     @Inject

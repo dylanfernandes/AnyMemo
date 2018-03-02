@@ -303,6 +303,11 @@ public class AnyMemo extends BaseActivity {
                 amFileUtil.copyFileFromAsset(AMEnv.DEFAULT_DB_NAME,  new File(dest));
                 databaseUtil.setupDatabase(dest);
 
+                /*String testDest = AMEnv.HIDEN_DB_FOLDER_PATH + AMEnv.DEFAULT_DB_NAME;
+                amFileUtil.copyFileFromAsset(AMEnv.DEFAULT_DB_NAME,new File(testDest));
+                databaseUtil.setupDatabase(testDest);
+                */
+
                 InputStream in2 = getResources().getAssets().open(AMEnv.EMPTY_DB_NAME);
                 String emptyDbPath = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + AMEnv.EMPTY_DB_NAME;
                 FileUtils.copyInputStreamToFile(in2, new File(emptyDbPath));
@@ -351,6 +356,7 @@ public class AnyMemo extends BaseActivity {
      */
     private void handleOpenIntent() {
         multipleLoaderManager.registerLoaderCallbacks(1, new HandleOpenIntentLoaderCallbacks(getIntent().getData()), false);
+        multipleLoaderManager.registerLoaderCallbacks(2, new HandleOpenIntentLoaderCallbacksHiddenFolder(getIntent().getData()),false);
         multipleLoaderManager.startLoading();
     }
 
@@ -517,6 +523,75 @@ public class AnyMemo extends BaseActivity {
         public CharSequence getPageTitle(int position) {
             // Display icon only
             return null;
+        }
+    }
+
+    private class HandleOpenIntentLoaderCallbacksHiddenFolder implements LoaderManager.LoaderCallbacks<File> {
+
+        private final Uri contentUri;
+
+        public HandleOpenIntentLoaderCallbacksHiddenFolder(Uri contentUri) {
+            this.contentUri = contentUri;
+        }
+
+        @Override
+        public Loader<File> onCreateLoader(int id, Bundle args) {
+            Loader<File> loader = new AsyncTaskLoader<File>(AnyMemo.this) {
+                @Override
+                public File loadInBackground() {
+                    String[] splittedUri = contentUri.toString().split("/");
+                    String newFileName = splittedUri[splittedUri.length - 1];
+                    if (!newFileName.endsWith(".db")) {
+                        newFileName += ".db";
+                    }
+
+                    File newFile = new File(AMEnv.HIDEN_DB_FOLDER_PATH + "/" + newFileName);
+                    // First detect if the db with the same name exists.
+                    // And back kup the db if
+                    try {
+                        amFileUtil.deleteFileWithBackup(newFile.getAbsolutePath());
+                    } catch (IOException e) {
+                        Log.e(TAG, "Failed to delete the exisitng db with backup", e);
+                    }
+
+                    InputStream inputStream;
+
+                    try {
+                        inputStream = AnyMemo.this.getContentResolver().openInputStream(contentUri);
+                        FileUtils.copyInputStreamToFile(inputStream, newFile);
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error opening file from intent", e);
+                        return null;
+                    }
+
+                    return newFile;
+                }
+            };
+            loader.forceLoad();
+            return loader;
+        }
+
+        @Override
+        public void onLoadFinished(Loader<File> loader, File newFile) {
+            if (newFile == null) {
+                Snackbar.make(binding.drawerLayout, R.string.db_file_is_corrupted_text, Snackbar.LENGTH_LONG)
+                        .show(); // Don’t forget to show!
+                Log.e(TAG, "Could not load db from intent");
+                return;
+            }
+
+            recentListUtil.addToRecentList(newFile.getAbsolutePath());
+
+            Intent intent = new Intent();
+            intent.setClass(AnyMemo.this, PreviewEditActivity.class);
+            intent.putExtra(PreviewEditActivity.EXTRA_DBPATH, newFile.getAbsolutePath());
+            startActivity(intent);
+            multipleLoaderManager.checkAllLoadersCompleted();
+        }
+
+        @Override
+        public void onLoaderReset(Loader<File> loader) {
+            // Nothing
         }
     }
 }

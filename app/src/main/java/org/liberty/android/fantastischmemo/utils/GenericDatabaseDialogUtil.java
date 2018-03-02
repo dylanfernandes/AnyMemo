@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import org.apache.commons.io.FileUtils;
 import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.modules.PerActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import io.reactivex.MaybeOnSubscribe;
  * Created by Olivier on 2018-03-01.
  */
 
+@PerActivity
 public class GenericDatabaseDialogUtil {
 
     private Activity activity;
@@ -174,4 +176,16 @@ public class GenericDatabaseDialogUtil {
             }
         });
     }
+
+    public RecentListUtil getRecentListUtil() {
+        return recentListUtil;
+    }
+
+    public Activity getActivity() {
+        return activity;
+    }
+    public AMFileUtil getAmFileUtil() {
+        return amFileUtil;
+    }
+
 }
