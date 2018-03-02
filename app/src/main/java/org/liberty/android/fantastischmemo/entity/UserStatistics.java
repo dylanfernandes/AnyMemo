@@ -24,8 +24,10 @@ public class UserStatistics implements VersionableDomainObject{
     @DatabaseField(version = true, format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
     private Date lastLogin;
 
-    @DatabaseField(foreign = true)
-    private Points points;
+    //Commented out Points until class is implemented
+    
+    //@DatabaseField(foreign = true)
+    //private Points points;
 
     @DatabaseField(generatedId = true)
     private Integer multiplier;
@@ -69,13 +71,14 @@ public class UserStatistics implements VersionableDomainObject{
         this.lastLogin = lastLogin;
     }
 
-    public Points getPoints() {
-        return points;
-    }
-
-    public void setPoints(Points points) {
-        this.points = points;
-    }
+    //Commented out Points until class is implemented
+//    public Points getPoints() {
+//        return points;
+//    }
+//
+//    public void setPoints(Points points) {
+//        this.points = points;
+//    }
 
     public Integer getMultiplier() {
         return multiplier;
@@ -117,14 +120,6 @@ public class UserStatistics implements VersionableDomainObject{
         this.months = months;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     @Override
     public Date getCreationDate() {
         return creationDate;
@@ -150,7 +145,7 @@ public class UserStatistics implements VersionableDomainObject{
         return "User [id=" + id + ", lastLogin=" + lastLogin
                 + ", multiplier=" + multiplier + ", streak=" + streak
                 + ", longestStreak=" + longestStreak + ",weeks=" + weeks
-                + ", months" + months + ", user" + user + "]";
+                + ", months" + months +  "]";
     }
 
 
