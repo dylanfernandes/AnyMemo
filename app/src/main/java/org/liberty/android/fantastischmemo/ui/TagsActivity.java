@@ -251,7 +251,7 @@ public class TagsActivity extends BaseActivity {
         private List<Tag> tags;
 
         TagsAdapter() {
-            this.tags = new ArrayList<>();
+            this(new ArrayList<Tag>());
         }
 
         TagsAdapter(List<Tag> tags) {
@@ -325,7 +325,7 @@ public class TagsActivity extends BaseActivity {
         private List<Tag> tags;
 
         TagsAddAdapter() {
-            this.tags = new ArrayList<>();
+            this(new ArrayList<Tag>());
         }
 
         TagsAddAdapter(List<Tag> tags) {
