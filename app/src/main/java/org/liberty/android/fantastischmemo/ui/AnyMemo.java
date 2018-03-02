@@ -566,8 +566,7 @@ public class AnyMemo extends BaseActivity {
             Loader<File> loader = new AsyncTaskLoader<File>(AnyMemo.this) {
                 @Override
                 public File loadInBackground() {
-                    String[] splittedUri = contentUri.toString().split("/");
-                    String newFileName = splittedUri[splittedUri.length - 1];
+                    String newFileName = AMEnv.CENTRAL_DB_NAME;
                     if (!newFileName.endsWith(".db")) {
                         newFileName += ".db";
                     }
