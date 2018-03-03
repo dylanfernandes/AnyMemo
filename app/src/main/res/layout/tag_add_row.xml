@@ -5,7 +5,7 @@
     android:padding="10dp">
 
     <TextView
-        android:id="@+id/tag_text_view"
+        android:id="@+id/tag_add_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="24sp"
@@ -13,11 +13,10 @@
         android:layout_gravity="center" />
 
     <ImageButton
-        android:id="@+id/tag_delete_button"
+        android:id="@+id/tag_add_button"
         android:layout_width="55dp"
         android:layout_height="55dp"
         android:layout_gravity="center"
-        android:contentDescription="@string/tag_delete"
-        android:src="@drawable/ic_menu_delete" />
-
+        android:contentDescription="@string/add_existing_tag"
+        android:src="@drawable/ic_add" />
 </LinearLayout>
