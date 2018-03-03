@@ -18,6 +18,7 @@ import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.test.BaseTest;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.AMPrefUtil;
+import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ public class ImportMergingTest extends BaseTest {
 
     private Context testContext;
 
+    private DatabaseUtil databaseUtil;
+
     private AMFileUtil amFileUtil;
 
     private String srcFilePath;
@@ -46,6 +49,7 @@ public class ImportMergingTest extends BaseTest {
         // Reflect out the test context
         testContext = getContext();
 
+        databaseUtil = new DatabaseUtil(testContext);
         amFileUtil = new AMFileUtil(testContext, new AMPrefUtil(getContext()));
 
         newDbCardList = new ArrayList<Card>();
@@ -82,7 +86,7 @@ public class ImportMergingTest extends BaseTest {
         // Now convert the csv-test.csv into csv-test.db which will be merged
         // into existing csv-test.db
         amFileUtil.copyFileFromAsset("csv-test.csv", new File(srcFilePath));
-        Converter converter = new CSVImporter(amFileUtil);
+        Converter converter = new CSVImporter(databaseUtil);
         converter.convert(srcFilePath, destFilePath);
             
         // verify the content of csv-test has merged cards
@@ -136,7 +140,7 @@ public class ImportMergingTest extends BaseTest {
         }
 
         amFileUtil.copyFileFromAsset("qa-text-test.txt", new File(srcFilePath));
-        Converter converter = new QATxtImporter(amFileUtil);
+        Converter converter = new QATxtImporter(databaseUtil);
         converter.convert(srcFilePath, destFilePath);
 
         helper = AnyMemoDBOpenHelperManager.getHelper(getContext(), destFilePath);
