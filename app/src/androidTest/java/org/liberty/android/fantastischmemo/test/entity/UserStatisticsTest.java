@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 public class UserStatisticsTest {
 
     UserStatistics us = new UserStatistics();
-
+    private final static long MILLIS_PER_DAY = 24*60*60*1000L;
 
     @Test
     public void testGetSetId() {
@@ -109,7 +109,7 @@ public class UserStatisticsTest {
 
     @Test
     public void testUpdateStreaks() {
-        long MILLIS_PER_DAY = 24*60*60*1000L;
+        
 
         Date today = new Date();
         long todayInMillis = today.getTime();
@@ -137,7 +137,7 @@ public class UserStatisticsTest {
 
     @Test
     public void testCheckStreak() {
-        long MILLIS_PER_DAY = 24*60*60*1000L;
+
 
         Date today = new Date();
         long todayInMillis = today.getTime();
