@@ -24,6 +24,7 @@ import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.Filter;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.entity.Setting;
+import org.liberty.android.fantastischmemo.entity.User;
 import org.liberty.android.fantastischmemo.entity.UserStatistics;
 
 import java.sql.SQLException;
@@ -241,6 +242,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         try {
             if (categoryDao == null) {
                 categoryDao = getDao(Category.class);
+                categoryDao.setHelper(this);
             }
             return categoryDao;
         } catch (SQLException e) {
@@ -262,7 +264,8 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
     public synchronized UserDao getUserDao() {
         try {
             if (userDao == null) {
-                userDao = getDao(UserStatistics.class);
+                userDao = getDao(User.class);
+                userDao.setHelper(this);
             }
             return userDao;
         } catch (SQLException e) {
