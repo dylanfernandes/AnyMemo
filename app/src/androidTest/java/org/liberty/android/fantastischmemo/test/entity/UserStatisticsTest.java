@@ -150,7 +150,7 @@ public class UserStatisticsTest {
         assertTrue(us.checkStreak(today));
 
         us.setLastLogin(lastLogin);
-        assertFalse(us.checkStreak(lastLogin));
+        assertFalse(us.checkStreak(today));
 
     }
 
