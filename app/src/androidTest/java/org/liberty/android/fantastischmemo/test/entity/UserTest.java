@@ -37,7 +37,7 @@ public class UserTest {
     @Test
     public void testGetSetUsername() {
         user.setUsername("prich");
-        assertEquals("prich", user.getSurname());
+        assertEquals("prich", user.getUsername());
     }
 
     @Test

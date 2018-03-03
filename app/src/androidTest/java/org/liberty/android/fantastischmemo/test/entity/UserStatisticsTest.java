@@ -130,6 +130,7 @@ public class UserStatisticsTest {
         assertEquals(0, (int)us.getMonths());
 
         us.setLastLogin(today);
+        us.setMoreThanADay();
         assertEquals(1, (int)us.getStreak());
 
     }
@@ -145,8 +146,10 @@ public class UserStatisticsTest {
         calendar.setTimeInMillis(twoDaysAgo);
         Date lastLogin = calendar.getTime();
 
+        us.setLastLogin(today);
         assertTrue(us.checkStreak(today));
 
+        us.setLastLogin(lastLogin);
         assertFalse(us.checkStreak(lastLogin));
 
     }
