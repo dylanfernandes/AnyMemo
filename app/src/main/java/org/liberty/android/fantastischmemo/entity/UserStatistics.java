@@ -178,14 +178,23 @@ public class UserStatistics implements VersionableDomainObject{
 
     public void setMoreThanADay() {
         Date today = new Date();
-        boolean MORE_THAN_A_DAY = Math.abs(today.getTime() - lastLogin.getTime()) > MILLIS_PER_DAY;
-        if(MORE_THAN_A_DAY) {
+        boolean moreThanADay = Math.abs(today.getTime() - lastLogin.getTime()) > MILLIS_PER_DAY;
+        if(moreThanADay) {
             streak = 0;
             longestStreak = 0;
             weeks = 0;
             months = 0;
         } else {
             streak ++;
+        }
+    }
+
+    public boolean checkStreak(Date date) {
+        boolean moreThanADay = Math.abs(date.getTime() - lastLogin.getTime()) > MILLIS_PER_DAY;
+        if(moreThanADay) {
+            return false;
+        } else {
+            return true;
         }
     }
 
