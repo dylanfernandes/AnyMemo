@@ -108,7 +108,7 @@ public class UserStatisticsTest {
     }
 
     @Test
-    public void testSetMoreThanADay() {
+    public void testUpdateStreaks() {
         long MILLIS_PER_DAY = 24*60*60*1000L;
 
         Date today = new Date();
@@ -123,14 +123,14 @@ public class UserStatisticsTest {
         us.setLongestStreak(10);
         us.setWeeks(10);
         us.setMonths(10);
-        us.setMoreThanADay();
+        us.updateStreaks();
         assertEquals(0, (int)us.getStreak());
         assertEquals(0, (int)us.getLongestStreak());
         assertEquals(0, (int)us.getWeeks());
         assertEquals(0, (int)us.getMonths());
 
         us.setLastLogin(today);
-        us.setMoreThanADay();
+        us.updateStreaks();
         assertEquals(1, (int)us.getStreak());
 
     }

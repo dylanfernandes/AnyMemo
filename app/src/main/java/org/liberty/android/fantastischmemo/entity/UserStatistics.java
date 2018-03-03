@@ -176,7 +176,7 @@ public class UserStatistics implements VersionableDomainObject{
     //Run at login
     //Sets streaks to 0 if more than a day since last login
 
-    public void setMoreThanADay() {
+    public void updateStreaks() {
         Date today = new Date();
         boolean moreThanADay = Math.abs(today.getTime() - lastLogin.getTime()) > MILLIS_PER_DAY;
         if(moreThanADay) {
