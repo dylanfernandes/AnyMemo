@@ -178,8 +178,7 @@ public class UserStatistics implements VersionableDomainObject{
 
     public void updateStreaks() {
         Date today = new Date();
-        boolean moreThanADay = Math.abs(today.getTime() - lastLogin.getTime()) > MILLIS_PER_DAY;
-        if(moreThanADay) {
+        if(checkStreak(today)) {
             streak = 0;
             longestStreak = 0;
             weeks = 0;
@@ -190,12 +189,7 @@ public class UserStatistics implements VersionableDomainObject{
     }
 
     public boolean checkStreak(Date date) {
-        boolean moreThanADay = Math.abs(date.getTime() - lastLogin.getTime()) > MILLIS_PER_DAY;
-        if(moreThanADay) {
-            return false;
-        } else {
-            return true;
-        }
+        return Math.abs(date.getTime() - lastLogin.getTime()) > MILLIS_PER_DAY;
     }
 
 }
