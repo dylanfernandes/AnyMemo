@@ -28,7 +28,7 @@ public class User implements VersionableDomainObject{
     @DatabaseField(defaultValue = "")
     private String name;
 
-    @DatabaseField(defaultValue = "")
+    @DatabaseField(defaultValue = "", unique = true)
     private String username;
 
     @DatabaseField(foreign = true)

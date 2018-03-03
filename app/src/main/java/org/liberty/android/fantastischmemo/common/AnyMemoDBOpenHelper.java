@@ -16,12 +16,15 @@ import org.liberty.android.fantastischmemo.dao.DeckDao;
 import org.liberty.android.fantastischmemo.dao.FilterDao;
 import org.liberty.android.fantastischmemo.dao.LearningDataDao;
 import org.liberty.android.fantastischmemo.dao.SettingDao;
+import org.liberty.android.fantastischmemo.dao.UserDao;
+import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
 import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.Filter;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.entity.Setting;
+import org.liberty.android.fantastischmemo.entity.UserStatistics;
 
 import java.sql.SQLException;
 
@@ -44,6 +47,10 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
     private CategoryDao categoryDao = null;
 
     private LearningDataDao learningDataDao = null;
+
+    private UserDao userDao = null;
+
+    private UserStatisticsDao userStatisticsDao = null;
 
     private boolean isReleased = false;
 
@@ -252,6 +259,28 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    public synchronized UserDao getUserDao() {
+        try {
+            if (userDao == null) {
+                userDao = getDao(UserStatistics.class);
+            }
+            return userDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public synchronized UserStatisticsDao getUserStatisticDao() {
+        try {
+            if (userStatisticsDao == null) {
+                userStatisticsDao = getDao(UserStatistics.class);
+            }
+            return userStatisticsDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /*
      * Override the finalize in case the helper is not release.
      */
@@ -278,4 +307,6 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
     String getDbPath() {
         return dbPath;
     }
+
+
 }
