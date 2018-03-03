@@ -44,7 +44,7 @@ public class AMEnv {
     public final static String DEFAULT_AUDIO_PATH = DEFAULT_ROOT_PATH + DEFAULT_AUDIO_POSTFIX;
     public final static String DEFAULT_IMAGE_PATH = DEFAULT_ROOT_PATH + DEFAULT_IMAGE_POSTFIX;
     public final static String DEFAULT_TMP_PATH = DEFAULT_ROOT_PATH + DEFAULT_TMP_POSTFIX;
-    public final static String HIDEN_DB_FOLDER_PATH = DEFAULT_ROOT_PATH + HIDDEN_DB_FOLDER;
+    public final static String HIDDEN_DB_FOLDER_PATH = DEFAULT_ROOT_PATH + HIDDEN_DB_FOLDER;
     public final static String DEFAULT_DB_NAME= "french-body-parts.db";
     public final static String EMPTY_DB_NAME= "empty.db";
     public final static String CENTRAL_DB_NAME = "tagdeck.db";

@@ -27,7 +27,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -43,7 +42,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -295,9 +293,9 @@ public class AnyMemo extends BaseActivity {
          */
         if(firstTime == true){
 
-            if(!new File(AMEnv.HIDEN_DB_FOLDER_PATH).exists()){
+            if(!new File(AMEnv.HIDDEN_DB_FOLDER_PATH).exists()){
                 try{
-                    FileUtils.forceMkdir(new File(AMEnv.HIDEN_DB_FOLDER_PATH));
+                    FileUtils.forceMkdir(new File(AMEnv.HIDDEN_DB_FOLDER_PATH));
                 }catch(IOException e){
                     Log.e(TAG, "Error creating centralDB directory", e);
                 }
@@ -311,7 +309,7 @@ public class AnyMemo extends BaseActivity {
                 amFileUtil.copyFileFromAsset(AMEnv.DEFAULT_DB_NAME,  new File(dest));
                 databaseUtil.setupDatabase(dest);
 
-                String centralDbDest = AMEnv.HIDEN_DB_FOLDER_PATH + AMEnv.CENTRAL_DB_NAME;
+                String centralDbDest = AMEnv.HIDDEN_DB_FOLDER_PATH + AMEnv.CENTRAL_DB_NAME;
                 amFileUtil.copyFileFromAsset(AMEnv.CENTRAL_DB_NAME,new File(centralDbDest));
                 databaseUtil.setupDatabase(centralDbDest);
 
@@ -327,19 +325,20 @@ public class AnyMemo extends BaseActivity {
         }
         /* Detect an update */
         if (savedVersionCode != thisVersionCode) {
-            if(!new File(AMEnv.HIDEN_DB_FOLDER_PATH).exists()){
+            if(!new File(AMEnv.HIDDEN_DB_FOLDER_PATH).exists()){
                 try{
-                    FileUtils.forceMkdir(new File(AMEnv.HIDEN_DB_FOLDER_PATH));
+                    FileUtils.forceMkdir(new File(AMEnv.HIDDEN_DB_FOLDER_PATH));
                 }catch(IOException e){
                     Log.e(TAG, "Error creating centralDB directory", e);
                 }
             }
 
-            String centralDbDest = AMEnv.HIDEN_DB_FOLDER_PATH + AMEnv.CENTRAL_DB_NAME;
+            String centralDbDest = AMEnv.HIDDEN_DB_FOLDER_PATH + AMEnv.CENTRAL_DB_NAME;
             
             if(!new File(centralDbDest).exists()){
                 try {
                     amFileUtil.copyFileFromAsset(AMEnv.CENTRAL_DB_NAME,new File(centralDbDest));
+                    databaseUtil.setupDatabase(centralDbDest);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -571,7 +570,7 @@ public class AnyMemo extends BaseActivity {
                         newFileName += ".db";
                     }
 
-                    File newFile = new File(AMEnv.HIDEN_DB_FOLDER_PATH + "/" + newFileName);
+                    File newFile = new File(AMEnv.HIDDEN_DB_FOLDER_PATH + "/" + newFileName);
                     // First detect if the db with the same name exists.
                     // And back kup the db if
                     try {

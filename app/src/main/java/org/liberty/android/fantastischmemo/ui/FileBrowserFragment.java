@@ -39,7 +39,6 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,7 +51,6 @@ import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
 import org.liberty.android.fantastischmemo.common.BaseDialogFragment;
-import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.DeckMap;
 import org.liberty.android.fantastischmemo.entity.DeckMock;
 import org.liberty.android.fantastischmemo.entity.Tag;
@@ -134,7 +132,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
         super.onCreate(bundle);
         fragmentComponents().inject(this);
 
-        centralDB = new File(AMEnv.HIDEN_DB_FOLDER_PATH);
+        centralDB = new File(AMEnv.HIDDEN_DB_FOLDER_PATH);
 
         if (!centralDB.exists()){
             try{
