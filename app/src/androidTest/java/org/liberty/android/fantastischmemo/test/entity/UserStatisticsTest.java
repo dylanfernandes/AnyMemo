@@ -18,7 +18,6 @@ import static org.junit.Assert.assertTrue;
 public class UserStatisticsTest {
 
     UserStatistics us = new UserStatistics();
-    private final static long MILLIS_PER_DAY = 24*60*60*1000L;
 
     @Test
     public void testGetSetId() {
@@ -109,11 +108,11 @@ public class UserStatisticsTest {
 
     @Test
     public void testUpdateStreaks() {
-        
+
 
         Date today = new Date();
         long todayInMillis = today.getTime();
-        long twoDaysAgo = todayInMillis - (2*MILLIS_PER_DAY);
+        long twoDaysAgo = todayInMillis - (2*us.MILLIS_PER_DAY);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(twoDaysAgo);
         Date lastLogin = calendar.getTime();
@@ -141,7 +140,7 @@ public class UserStatisticsTest {
 
         Date today = new Date();
         long todayInMillis = today.getTime();
-        long twoDaysAgo = todayInMillis - (2*MILLIS_PER_DAY);
+        long twoDaysAgo = todayInMillis - (2*us.MILLIS_PER_DAY);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(twoDaysAgo);
         Date lastLogin = calendar.getTime();
