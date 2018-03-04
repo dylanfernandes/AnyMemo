@@ -29,19 +29,19 @@ public class UserStatistics implements VersionableDomainObject{
     //@DatabaseField(foreign = true)
     //private Points points;
 
-    @DatabaseField(generatedId = true)
+    @DatabaseField(defaultValue = "1")
     private Integer multiplier;
 
-    @DatabaseField(generatedId = true)
+    @DatabaseField(defaultValue = "0")
     private Integer streak;
 
-    @DatabaseField(generatedId = true)
+    @DatabaseField(defaultValue = "0")
     private Integer longestStreak;
 
-    @DatabaseField(generatedId = true)
+    @DatabaseField(defaultValue = "0")
     private Integer weeks;
 
-    @DatabaseField(generatedId = true)
+    @DatabaseField(defaultValue = "0")
     private Integer months;
 
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)

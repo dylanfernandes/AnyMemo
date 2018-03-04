@@ -24,6 +24,7 @@ import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.Filter;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.entity.Setting;
+import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.entity.User;
 import org.liberty.android.fantastischmemo.entity.UserStatistics;
 
@@ -35,7 +36,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private final String dbPath;
 
-    private static final int CURRENT_VERSION = 5;
+    private static final int CURRENT_VERSION = 6;
 
     private CardDao cardDao = null;
 
@@ -67,6 +68,8 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Filter.class);
             TableUtils.createTable(connectionSource, Category.class);
             TableUtils.createTable(connectionSource, LearningData.class);
+            TableUtils.createTable(connectionSource, User.class);
+            TableUtils.createTable(connectionSource, UserStatistics.class);
 
             getSettingDao().create(new Setting());
             getCategoryDao().create(new Category());
@@ -169,6 +172,14 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 database.execSQL("update learning_data set firstLearnDate='2010-01-01 00:00:00.000000'");
             } catch (android.database.SQLException e) {
                 Log.e(TAG, "Upgrading failed, the column firstLearnData might already exists.", e);
+            }
+        }
+        if (oldVersion <= 5) {
+            try {
+                TableUtils.createTable(connectionSource, User.class);
+                TableUtils.createTable(connectionSource, UserStatistics.class);
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     }
