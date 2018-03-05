@@ -1,10 +1,14 @@
 package org.liberty.android.fantastischmemo.test.entity;
 
 import org.junit.Test;
+import org.liberty.android.fantastischmemo.entity.AchievementPoint;
 import org.liberty.android.fantastischmemo.entity.UserStatistics;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -153,4 +157,27 @@ public class UserStatisticsTest {
 
     }
 
+    @Test
+    public void testGetSetPoints(){
+        List<AchievementPoint> userPoints= new ArrayList<>();
+        List<AchievementPoint> retrievedPoints;
+        AchievementPoint a1 = new AchievementPoint();
+        AchievementPoint a2 = new AchievementPoint();
+        AchievementPoint a3 = new AchievementPoint();
+        a1.setValue(1);
+        a2.setValue(2);
+        a3.setValue(3);
+        userPoints.add(a1);
+        userPoints.add(a2);
+        userPoints.add(a3);
+        us.setPoints(userPoints);
+        retrievedPoints = us.getPoints();
+
+        assertEquals(userPoints.size(),retrievedPoints.size());
+
+        for(int i = 0; i < userPoints.size();i++)
+        {
+            assertEquals(userPoints.get(i).getValue(), retrievedPoints.get(i).getValue());
+        }
+    }
 }
