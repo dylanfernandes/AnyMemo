@@ -6,13 +6,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/tags_list"
+    <FrameLayout
+        android:id="@+id/tags_fragment_root"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:clipToPadding="false"
-        android:paddingBottom="80dp" />
+        android:layout_height="match_parent">
+    </FrameLayout>
 
     <View
         android:id="@+id/fabBGLayout"
