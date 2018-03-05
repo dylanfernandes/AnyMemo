@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +16,21 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
+import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseFragment;
+import org.liberty.android.fantastischmemo.dao.TagDao;
 import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.ui.adapters.AbstractTagsAdapter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TagsFragment extends BaseFragment {
 
     TagsAdapter tagsAdapter;
+    TagDao tagDao;
 
     @Nullable
     @Override
@@ -37,6 +43,11 @@ public class TagsFragment extends BaseFragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         tagsRecyclerView.setLayoutManager(linearLayoutManager);
 
+        Bundle bundle = this.getArguments();
+        String deckPath = bundle.getString("deckPath");
+        AnyMemoDBOpenHelper deckDBHelper = AnyMemoDBOpenHelperManager.getHelper(deckPath);
+        tagDao = deckDBHelper.getTagDao();
+
         List<Tag> tags = loadTags();
 
         tagsAdapter = new TagsAdapter(tags);
@@ -46,13 +57,12 @@ public class TagsFragment extends BaseFragment {
     }
 
     public List<Tag> loadTags() {
-        List<Tag> tags = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            tags.add(new Tag("Some Tag Name " + (i + 1)));
+        try {
+            return tagDao.queryForAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-        return tags;
-//        return deck.getTags();
+        return null;
     }
 
     class TagsAdapter extends AbstractTagsAdapter<TagsAdapter.TagsViewHolder> {
@@ -110,6 +120,26 @@ public class TagsFragment extends BaseFragment {
             });
 
             return builder.create();
+        }
+
+        @Override
+        public void deleteTag(Tag tag) {
+            try {
+                tagDao.delete(tag);
+                super.deleteTag(tag);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void addTag(Tag tag) {
+            try {
+                tagDao.createIfNotExists(tag);
+                super.addTag(tag);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -22,14 +22,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
+import org.liberty.android.fantastischmemo.dao.TagDao;
 import org.liberty.android.fantastischmemo.entity.DeckMap;
 import org.liberty.android.fantastischmemo.entity.DeckMock;
 import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.ui.adapters.AbstractTagsAdapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.sql.SQLException;
 import java.util.List;
 
 public class TagsActivity extends BaseActivity {
@@ -40,11 +42,16 @@ public class TagsActivity extends BaseActivity {
     FloatingActionButton createNewButton, addExistingButton, addTagButton;
     LinearLayout createLayout, addLayout;
     View fabBGLayout;
+    private TagDao centralTagDao;
+    private TagsFragment tagsFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_tags_layout);
+
+        AnyMemoBaseDBOpenHelper helper = AnyMemoBaseDBOpenHelperManager.getHelper("central.db");
+        centralTagDao = helper.getTagDao();
 
         String deckPath = getIntent().getStringExtra("deckPath");
 
@@ -53,7 +60,7 @@ public class TagsActivity extends BaseActivity {
 
         Bundle bundle = new Bundle();
         bundle.putString("deckPath", deckPath);
-        final TagsFragment tagsFragment = new TagsFragment();
+        tagsFragment = new TagsFragment();
         tagsFragment.setArguments(bundle);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -81,7 +88,13 @@ public class TagsActivity extends BaseActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String tagName = input.getText().toString();
-                                tagsFragment.tagsAdapter.addTag(new Tag(tagName));
+                                Tag tag = new Tag(tagName);
+                                try {
+                                    centralTagDao.createIfNotExists(tag);
+                                    tagsFragment.tagsAdapter.addTag(tag);
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -108,17 +121,8 @@ public class TagsActivity extends BaseActivity {
         addExistingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*********FOR TESTING WHILE WAITING FOR DB*********/
-                List<Tag> tagsAdd = new ArrayList<Tag>();
-                tagsAdd.add(new Tag("French"));
-                tagsAdd.add(new Tag("English"));
-                tagsAdd.add(new Tag("German"));
-                /*********FOR TESTING WHILE WAITING FOR DB*********/
-                List<Tag> tagsToAdd = new ArrayList<Tag>();
-                for(Tag t:tagsAdd){
-                    if(!deck.hasTag(t))
-                        tagsToAdd.add(t);
-                }
+                List<Tag> tagsToAdd = loadAllTagsExceptInDeck();
+
                 LayoutInflater inflater = getLayoutInflater();
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                 View addDialog = inflater.inflate(R.layout.tag_add_dialog, null);
@@ -188,7 +192,8 @@ public class TagsActivity extends BaseActivity {
         return true;
     }
 
-    /*public boolean onOptionsItemSelected(MenuItem item) {
+    /*
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
             case R.id.tag_search:
@@ -200,7 +205,7 @@ public class TagsActivity extends BaseActivity {
             }
         }
         return false;
-    }*/
+    }
 
     public List<Tag> loadAllTags(){
         ArrayList<Tag> tagList = new ArrayList<Tag>();
@@ -210,6 +215,18 @@ public class TagsActivity extends BaseActivity {
             tagList.addAll(deck.getTags());
         }
         return tagList;
+    }
+    */
+
+    public List<Tag> loadAllTagsExceptInDeck(){
+        try {
+            List<Tag> tags = centralTagDao.queryForAll();
+            tags.removeAll(tagsFragment.loadTags());
+            return tags;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     class TagsAddAdapter extends AbstractTagsAdapter<TagsAddAdapter.TagsAddViewHolder> {
