@@ -40,7 +40,7 @@ public class UserDaoImpl extends AbstractHelperDaoImpl<User, Integer> implements
             create(newUser);
             // Create new one and it should exist
             user = queryForFirst(pq);
-            assert user != null : "Category creation failed. The query is still null!";
+            assert user != null : "User creation failed. The query is still null!";
             return user;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -49,7 +49,6 @@ public class UserDaoImpl extends AbstractHelperDaoImpl<User, Integer> implements
 
     @Override
     public int delete(User user) {
-        Integer id = user.getId();
         UserStatistics userStat = user.getUserStatistics();
         getHelper().getUserStatisticDao().delete(userStat);
         return super.delete(user);

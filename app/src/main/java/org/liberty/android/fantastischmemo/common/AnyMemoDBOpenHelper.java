@@ -51,6 +51,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
     private LearningDataDao learningDataDao = null;
 
     private UserDao userDao = null;
+    private UserDao tagDao = null;
 
     private UserStatisticsDao userStatisticsDao = null;
 
