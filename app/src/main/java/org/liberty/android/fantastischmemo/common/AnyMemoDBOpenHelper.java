@@ -24,7 +24,6 @@ import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.Filter;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.entity.Setting;
-import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.entity.User;
 import org.liberty.android.fantastischmemo.entity.UserStatistics;
 
@@ -51,6 +50,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
     private LearningDataDao learningDataDao = null;
 
     private UserDao userDao = null;
+    private UserDao tagDao = null;
 
     private UserStatisticsDao userStatisticsDao = null;
 

@@ -9,6 +9,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDaoImpl;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Paul on 2018-02-26.
@@ -24,10 +25,8 @@ public class UserStatistics implements VersionableDomainObject{
     @DatabaseField(version = true, format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
     private Date lastLogin;
 
-    //Commented out Points until class is implemented
-    
-    //@DatabaseField(foreign = true)
-    //private Points points;
+    @DatabaseField(foreign = true)
+    private List<AchievementPoint> points;
 
     @DatabaseField(defaultValue = "1")
     private Integer multiplier;
@@ -72,14 +71,13 @@ public class UserStatistics implements VersionableDomainObject{
         this.lastLogin = lastLogin;
     }
 
-    //Commented out Points until class is implemented
-//    public Points getPoints() {
-//        return points;
-//    }
-//
-//    public void setPoints(Points points) {
-//        this.points = points;
-//    }
+    public List<AchievementPoint> getPoints() {
+        return points;
+    }
+
+    public void setPoints(List<AchievementPoint> points) {
+        this.points = points;
+    }
 
     public Integer getMultiplier() {
         return multiplier;
