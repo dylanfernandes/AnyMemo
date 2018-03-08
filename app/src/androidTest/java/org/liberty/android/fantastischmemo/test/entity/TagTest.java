@@ -47,10 +47,10 @@ public class TagTest {
         Tag t3 = new Tag("notTest");
         //true outcome test
         assertTrue(t1.getName() == t2.getName());
-        assertTrue(t1 == t2);
+        assertTrue(t1.equals(t2));
         //false outcome test
         assertFalse(t1.getName() == t3.getName());
-        assertFalse(t1 == t3);
+        assertFalse(t1.equals(t3));
     }
 
 }
