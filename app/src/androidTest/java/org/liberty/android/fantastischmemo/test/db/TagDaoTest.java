@@ -36,10 +36,15 @@ public class TagDaoTest extends AbstractExistingDBTest {
         List<Tag> tags = tagDao.queryForAll();
         int initsize = tags.size();
         Tag t1 = tagDao.createOrReturn("t1");
-        Tag t2 = tagDao.createOrReturn("t1");
-        assertEquals(t1.getName(), "t1");
+        Tag t2 = tagDao.createOrReturn("t2");
         tags = tagDao.queryForAll();
-        assertEquals(tags.size(), initsize + 1);
+        assertEquals("t1",tags.get(0).getName());
+        assertEquals("t2",tags.get(1).getName());
+        Tag t3 = tagDao.createOrReturn("t1");
+        tags = tagDao.queryForAll();
+        assertEquals("t1",tags.get(0).getName());
+        assertEquals("t2",tags.get(1).getName());
+        assertEquals(tags.size(), initsize + 2);
     }
 
     @SmallTest
