@@ -91,7 +91,7 @@ public class CreateTagInDeckUITest extends AbstractExistingDBTest {
 
                     @Override
                     public String getDescription() {
-                        return "click plus button";
+                        return "click pencil button";
                     }
 
                     @Override
@@ -110,7 +110,7 @@ public class CreateTagInDeckUITest extends AbstractExistingDBTest {
 
                     @Override
                     public String getDescription() {
-                        return "click plus button";
+                        return "click create button";
                     }
 
                     @Override
