@@ -101,7 +101,24 @@ public class CreateTagInDeckUITest extends AbstractExistingDBTest {
                 }
         );
         onView(allOf(withTagValue(is((Object) "create_tag_input")), isDisplayed())).perform(typeText("testTag"), closeSoftKeyboard());
-        onView(allOf(withText("Create"), isDisplayed())).perform(click());
+        onView(allOf(withText("Create"), isDisplayed())).check(matches(allOf( isEnabled(), isClickable()))).perform(
+                new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return isEnabled(); // no constraints, they are checked above
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return "click plus button";
+                    }
+
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                }
+        );
 
         onView(allOf(withText("testTag"), isDisplayed())).check(matches(withText("testTag")));
 
