@@ -49,7 +49,7 @@ public class CreateTagInDeckUITest extends AbstractExistingDBTest {
             false); // Lazy launching
 
     @Test
-    public void testCreateNewTag() {
+    public void testCreateNewTag() throws InterruptedException {
         Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         TagDao tagDao = helper.getTagDao();
         DeckMap.getInstance().findOrCreate(new DeckMock("french-body-parts.db", TestHelper.SAMPLE_DB_PATH));
@@ -58,6 +58,7 @@ public class CreateTagInDeckUITest extends AbstractExistingDBTest {
         mActivityRule.launchActivity(intent);
 
         onView(withId(R.id.add_tag_fab)).perform(click());
+        Thread.sleep(1500);
         onView(withId(R.id.create_new_fab)).perform(click());
         onView(allOf(withTagValue(is((Object) "create_tag_input")), isDisplayed())).perform(typeText("testTag"), closeSoftKeyboard());
         onView(allOf(withText("Create"), isDisplayed())).perform(click());
