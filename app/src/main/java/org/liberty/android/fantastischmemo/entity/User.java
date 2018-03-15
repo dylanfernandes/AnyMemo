@@ -32,7 +32,7 @@ public class User implements VersionableDomainObject{
     private String username;
 
     @DatabaseField(foreign = true)
-    private UserStatistics userStatistics;
+    private Integer userStatsId;
 
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
     private Date creationDate;
@@ -73,14 +73,6 @@ public class User implements VersionableDomainObject{
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public UserStatistics getUserStatistics() {
-        return this.userStatistics;
-    }
-
-    public void setUserStatistics(UserStatistics userStatistics) {
-        this.userStatistics = userStatistics;
     }
 
     public Date getCreationDate() {

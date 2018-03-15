@@ -22,25 +22,28 @@ public class UserStatistics implements VersionableDomainObject{
     @DatabaseField(generatedId = true)
     private Integer id;
 
+    @DatabaseField(foreign = true)
+    private Integer userId;
+
     @DatabaseField(version = true, format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
     private Date lastLogin;
 
     @DatabaseField(foreign = true)
     private List<AchievementPoint> points;
 
-    @DatabaseField(generatedId = true)
+    @DatabaseField(defaultValue = "1")
     private Integer multiplier;
 
-    @DatabaseField(generatedId = true)
+    @DatabaseField(defaultValue = "0")
     private Integer streak;
 
-    @DatabaseField(generatedId = true)
+    @DatabaseField(defaultValue = "0")
     private Integer longestStreak;
 
-    @DatabaseField(generatedId = true)
+    @DatabaseField(defaultValue = "0")
     private Integer weeks;
 
-    @DatabaseField(generatedId = true)
+    @DatabaseField(defaultValue = "0")
     private Integer months;
 
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
@@ -117,6 +120,14 @@ public class UserStatistics implements VersionableDomainObject{
 
     public void setMonths(Integer months) {
         this.months = months;
+    }
+
+    public Integer getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     @Override
