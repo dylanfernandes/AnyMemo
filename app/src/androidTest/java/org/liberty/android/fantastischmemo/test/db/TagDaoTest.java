@@ -27,10 +27,55 @@ public class TagDaoTest extends AbstractExistingDBTest {
         Tag t1 = tagDao.createOrReturn("t1");
         assertNotNull(t1);
         assertEquals(t1.getName(), "t1");
+    }
+
+    @SmallTest
+    @Test
+    public void testAddDuplicateTags() throws Exception {
+        TagDao tagDao = helper.getTagDao();
+        List<Tag> tags = tagDao.queryForAll();
+        int initsize = tags.size();
+        Tag t1 = tagDao.createOrReturn("t1");
+        Tag t2 = tagDao.createOrReturn("t2");
         tags = tagDao.queryForAll();
-        assertEquals(tags.size(), initsize + 1);
-        Tag t2 = tagDao.createOrReturn("t1");
-        assertEquals(t2.getName(), "t1");
-        assertEquals(tags.size(), initsize + 1);
+        assertEquals("t1",tags.get(0).getName());
+        assertEquals("t2",tags.get(1).getName());
+        Tag t3 = tagDao.createOrReturn("t1");
+        tags = tagDao.queryForAll();
+        assertEquals("t1",tags.get(0).getName());
+        assertEquals("t2",tags.get(1).getName());
+        assertEquals(tags.size(), initsize + 2);
+    }
+
+    @SmallTest
+    @Test
+    public void testDeleteTags() throws Exception {
+        TagDao tagDao = helper.getTagDao();
+        List<Tag> tags = tagDao.queryForAll();
+        Tag t1 = tagDao.createOrReturn("t1");
+        Tag t2 = tagDao.createOrReturn("t2");
+        int initsize = tags.size();
+        tagDao.delete(t1);
+        tags = tagDao.queryForAll();
+        assertEquals(tags.size(), initsize+1);
+    }
+
+    @SmallTest
+    @Test
+    public void testTagMaintainOrdinal() throws Exception {
+        TagDao tagDao = helper.getTagDao();
+        List<Tag> tags = tagDao.queryForAll();
+        Tag t1 = tagDao.createOrReturn("t1");
+        Tag t2 = tagDao.createOrReturn("t2");
+        Tag t3 = tagDao.createOrReturn("t3");
+        tags = tagDao.queryForAll();
+        assertEquals("t1",tags.get(0).getName());
+        assertEquals("t2",tags.get(1).getName());
+        assertEquals("t3",tags.get(2).getName());
+        tagDao.delete(t2);
+        tags = tagDao.queryForAll();
+        assertEquals("t1",tags.get(0).getName());
+        assertEquals("t3",tags.get(1).getName());
+
     }
 }
