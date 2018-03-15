@@ -75,6 +75,10 @@ public class User implements VersionableDomainObject{
         this.username = username;
     }
 
+    public Integer getUserStatsId() {
+        return userStatsId;
+    }
+
     public Date getCreationDate() {
         return creationDate;
     }

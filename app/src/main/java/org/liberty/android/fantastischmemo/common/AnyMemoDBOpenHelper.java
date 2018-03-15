@@ -17,6 +17,8 @@ import org.liberty.android.fantastischmemo.dao.FilterDao;
 import org.liberty.android.fantastischmemo.dao.LearningDataDao;
 import org.liberty.android.fantastischmemo.dao.SettingDao;
 import org.liberty.android.fantastischmemo.dao.TagDao;
+import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
+import org.liberty.android.fantastischmemo.dao.UserDao;
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
 import org.liberty.android.fantastischmemo.entity.Deck;
@@ -24,6 +26,8 @@ import org.liberty.android.fantastischmemo.entity.Filter;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.entity.Setting;
 import org.liberty.android.fantastischmemo.entity.Tag;
+import org.liberty.android.fantastischmemo.entity.User;
+import org.liberty.android.fantastischmemo.entity.UserStatistics;
 
 import java.sql.SQLException;
 
@@ -33,7 +37,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private final String dbPath;
 
-    private static final int CURRENT_VERSION = 5;
+    private static final int CURRENT_VERSION = 6;
 
     private CardDao cardDao = null;
 
@@ -46,6 +50,10 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
     private CategoryDao categoryDao = null;
 
     private LearningDataDao learningDataDao = null;
+
+    private UserDao userDao = null;
+
+    private UserStatisticsDao userStatisticsDao = null;
 
     private TagDao tagDao = null;
 
@@ -64,6 +72,8 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Category.class);
             TableUtils.createTable(connectionSource, LearningData.class);
             TableUtils.createTable(connectionSource, Tag.class);
+            TableUtils.createTable(connectionSource, User.class);
+            TableUtils.createTable(connectionSource, UserStatistics.class);
 
             getSettingDao().create(new Setting());
             getCategoryDao().create(new Category());
@@ -177,8 +187,11 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
             try {
                 database.execSQL("alter table decks add column dbPath VARCHAR");
                 TableUtils.createTable(connectionSource, Tag.class);
+                TableUtils.createTable(connectionSource, User.class);
+                TableUtils.createTable(connectionSource, UserStatistics.class);
             } catch (SQLException e) {
                 Log.e(TAG, "Upgrading failed, the tags table might already exist.", e);
+                e.printStackTrace();
             } finally {
                 oldVersion = 5;
             }
@@ -255,12 +268,40 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         try {
             if (categoryDao == null) {
                 categoryDao = getDao(Category.class);
+                categoryDao.setHelper(this);
             }
             return categoryDao;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
+    public synchronized UserDao getUserDao() {
+        try {
+            if (userDao == null) {
+                userDao = getDao(User.class);
+                userDao.setHelper(this);
+            }
+            return userDao;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public synchronized UserStatisticsDao getUserStatisticsDao() {
+        try {
+            if (userStatisticsDao == null) {
+                userStatisticsDao = getDao(User.class);
+                userStatisticsDao.setHelper(this);
+            }
+            return userStatisticsDao;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public synchronized LearningDataDao getLearningDataDao() {
         try {
