@@ -79,6 +79,10 @@ public class User implements VersionableDomainObject{
         return userStatsId;
     }
 
+    public void setUserStatsId(Integer userStatsId) {
+        this.userStatsId = userStatsId;
+    }
+
     public Date getCreationDate() {
         return creationDate;
     }

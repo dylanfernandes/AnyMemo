@@ -292,7 +292,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
     public synchronized UserStatisticsDao getUserStatisticsDao() {
         try {
             if (userStatisticsDao == null) {
-                userStatisticsDao = getDao(User.class);
+                userStatisticsDao = getDao(UserStatistics.class);
                 userStatisticsDao.setHelper(this);
             }
             return userStatisticsDao;
