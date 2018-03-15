@@ -39,19 +39,18 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.base.Strings;
 
+import org.apache.commons.io.FileUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
 import org.liberty.android.fantastischmemo.common.BaseDialogFragment;
-import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.DeckMap;
 import org.liberty.android.fantastischmemo.entity.DeckMock;
 import org.liberty.android.fantastischmemo.entity.Tag;
@@ -59,6 +58,7 @@ import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -82,6 +82,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
     private final DISPLAYMODE displayMode = DISPLAYMODE.RELATIVE;
     private ArrayList<String> directoryEntries = new ArrayList<String>();
     private File currentDirectory = new File("/");
+    private File centralDB;
     private String defaultRoot;
     private String[] fileExtensions;
     private Activity mActivity;
@@ -130,6 +131,17 @@ public class FileBrowserFragment extends BaseDialogFragment {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         fragmentComponents().inject(this);
+
+        centralDB = new File(AMEnv.HIDDEN_DB_FOLDER_PATH);
+
+        if (!centralDB.exists()){
+            try{
+                FileUtils.forceMkdir(centralDB);
+            }catch(IOException e){
+                Log.e(TAG, "Error creating centralDB directory", e);
+            }
+
+        }
 
         disposables = new CompositeDisposable();
         Bundle args = this.getArguments();
@@ -257,6 +269,9 @@ public class FileBrowserFragment extends BaseDialogFragment {
             int currentPathStringLength = this.currentDirectory.getAbsolutePath().length();
             for(File file: files){
                 if(file.isDirectory()){
+                    if(file.getName().equals("centralDB")){
+                        continue;
+                    }
                         this.directoryEntries.add(file.getAbsolutePath().substring(currentPathStringLength) + "/");
                 }
                 else{
