@@ -14,11 +14,14 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.locks.ReentrantLock;
 
-/*
- * Keep the reference count of each AnyMemoDBOpenHelper.
+/**
+ * Created by Olivier on 2018-03-01.
  */
-public class AnyMemoDBOpenHelperManager{
-    private static final String TAG = AnyMemoDBOpenHelperManager.class.getSimpleName();
+
+public class AnyMemoBaseDBOpenHelperManager {
+
+
+    private static final String TAG = AnyMemoBaseDBOpenHelperManager.class.getSimpleName();
 
     // Comparator for determining if two files are the same
     private static Comparator<String> filenameComparator = new Comparator<String>() {
@@ -32,7 +35,7 @@ public class AnyMemoDBOpenHelperManager{
         }
     };
 
-    private static volatile Map<String, WeakReference<AnyMemoDBOpenHelper>> helpers = Collections.synchronizedMap(new TreeMap<String, WeakReference<AnyMemoDBOpenHelper>>(filenameComparator));
+    private static volatile Map<String, WeakReference<AnyMemoBaseDBOpenHelper>> helpers = Collections.synchronizedMap(new TreeMap<String, WeakReference<AnyMemoBaseDBOpenHelper>>(filenameComparator));
 
     private static volatile Map<String, Integer> refCounts = Collections.synchronizedMap(new TreeMap<String, Integer>(filenameComparator));
 
@@ -42,23 +45,23 @@ public class AnyMemoDBOpenHelperManager{
     /**
      * Get a DBOpenHelper with application context.
      */
-    public static AnyMemoDBOpenHelper getHelper(String dbpath) {
+    public static AnyMemoBaseDBOpenHelper getHelper(String dbpath) {
         return getHelper(AMApplication.getCurrentApplicationContext(), dbpath);
     }
 
     /* Get a db open helper and return a cached one if it was called before for the same db */
-    public static AnyMemoDBOpenHelper getHelper(Context context, String dbpath) {
+    public static AnyMemoBaseDBOpenHelper getHelper(Context context, String dbpath) {
         bigLock.lock();
         try {
             assert dbpath != null : "dbpath should not be null";
             if (!helpers.containsKey(dbpath)) {
-                Log.i(TAG, "Call get AnyMemoDBOpenHelper for first time for db: " + dbpath);
-                AnyMemoDBOpenHelper helper = new AnyMemoDBOpenHelper(context, dbpath);
-                helpers.put(dbpath, new WeakReference<AnyMemoDBOpenHelper>(helper));
+                Log.i(TAG, "Call get AnyMemoBaseDBOpenHelper for first time for db: " + dbpath);
+                AnyMemoBaseDBOpenHelper helper = new AnyMemoBaseDBOpenHelper(context, dbpath);
+                helpers.put(dbpath, new WeakReference<AnyMemoBaseDBOpenHelper>(helper));
                 refCounts.put(dbpath, 1);
                 return helpers.get(dbpath).get();
             } else {
-                Log.i(TAG, "Call get AnyMemoDBOpenHelper for " + dbpath + " again, return existing helper.");
+                Log.i(TAG, "Call get AnyMemoBaseDBOpenHelper for " + dbpath + " again, return existing helper.");
                 refCounts.put(dbpath, refCounts.get(dbpath) + 1);
                 return helpers.get(dbpath).get();
             }
@@ -68,7 +71,7 @@ public class AnyMemoDBOpenHelperManager{
     }
 
     /* Release a db open helper if there is no open connection to it */
-    public static void releaseHelper(AnyMemoDBOpenHelper helper) {
+    public static void releaseHelper(AnyMemoBaseDBOpenHelper helper) {
         bigLock.lock();
         try {
             String dbpath = helper.getDbPath();
@@ -77,7 +80,7 @@ public class AnyMemoDBOpenHelperManager{
                 return;
             }
 
-            Log.i(TAG, "Release AnyMemoDBOpenHelper: " + dbpath + " Ref count: " + refCounts.get(dbpath));
+            Log.i(TAG, "Release AnyMemoBaseDBOpenHelper: " + dbpath + " Ref count: " + refCounts.get(dbpath));
 
             refCounts.put(dbpath, refCounts.get(dbpath) - 1);
 
@@ -101,7 +104,7 @@ public class AnyMemoDBOpenHelperManager{
                 return;
             }
 
-            AnyMemoDBOpenHelper helper = helpers.get(dbpath).get();
+            AnyMemoBaseDBOpenHelper helper = helpers.get(dbpath).get();
 
             Log.i(TAG, "force releasing " + dbpath + " It contains " + refCounts.get(dbpath) + " refs");
             // Weak reference can return null, so we must check here.
@@ -120,4 +123,6 @@ public class AnyMemoDBOpenHelperManager{
         }
 
     }
+
+
 }
