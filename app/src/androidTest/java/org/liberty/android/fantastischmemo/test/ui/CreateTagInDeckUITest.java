@@ -86,7 +86,7 @@ public class CreateTagInDeckUITest extends AbstractExistingDBTest {
                 new ViewAction() {
                     @Override
                     public Matcher<View> getConstraints() {
-                        return isEnabled(); // no constrai1nts, they are checked above
+                        return isEnabled(); // no constraints, they are checked above
                     }
 
                     @Override
