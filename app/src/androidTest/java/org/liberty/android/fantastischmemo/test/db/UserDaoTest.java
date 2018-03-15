@@ -17,8 +17,6 @@ import static org.junit.Assert.assertNotNull;
 
 public class UserDaoTest  extends AbstractExistingDBTest {
 
-
-    @SmallTest
     @Test
     public void testAddUser() throws Exception {
         UserDao userDao = helper.getUserDao();
@@ -28,7 +26,6 @@ public class UserDaoTest  extends AbstractExistingDBTest {
         assertEquals(testUser.getUsername(), "testUsername");
     }
 
-    @SmallTest
     @Test
     public void testRemoveUser() throws Exception {
         UserDao userDao = helper.getUserDao();
