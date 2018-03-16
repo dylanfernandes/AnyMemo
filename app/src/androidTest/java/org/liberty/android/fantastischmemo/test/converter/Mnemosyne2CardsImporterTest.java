@@ -18,7 +18,7 @@ public class Mnemosyne2CardsImporterTest extends AbstractConverterTest {
 
     @Override
     protected Converter getConverter() {
-        Mnemosyne2CardsImporter importer = new Mnemosyne2CardsImporter(amFileUtil);
+        Mnemosyne2CardsImporter importer = new Mnemosyne2CardsImporter(databaseUtil);
         return importer;
     }
 

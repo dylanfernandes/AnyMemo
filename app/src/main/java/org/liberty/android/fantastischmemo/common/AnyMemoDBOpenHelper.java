@@ -16,12 +16,18 @@ import org.liberty.android.fantastischmemo.dao.DeckDao;
 import org.liberty.android.fantastischmemo.dao.FilterDao;
 import org.liberty.android.fantastischmemo.dao.LearningDataDao;
 import org.liberty.android.fantastischmemo.dao.SettingDao;
+import org.liberty.android.fantastischmemo.dao.TagDao;
+import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
+import org.liberty.android.fantastischmemo.dao.UserDao;
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
 import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.Filter;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.entity.Setting;
+import org.liberty.android.fantastischmemo.entity.Tag;
+import org.liberty.android.fantastischmemo.entity.User;
+import org.liberty.android.fantastischmemo.entity.UserStatistics;
 
 import java.sql.SQLException;
 
@@ -31,7 +37,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private final String dbPath;
 
-    private static final int CURRENT_VERSION = 5;
+    private static final int CURRENT_VERSION = 6;
 
     private CardDao cardDao = null;
 
@@ -44,6 +50,12 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
     private CategoryDao categoryDao = null;
 
     private LearningDataDao learningDataDao = null;
+
+    private UserDao userDao = null;
+
+    private UserStatisticsDao userStatisticsDao = null;
+
+    private TagDao tagDao = null;
 
     private boolean isReleased = false;
 
@@ -59,6 +71,9 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Filter.class);
             TableUtils.createTable(connectionSource, Category.class);
             TableUtils.createTable(connectionSource, LearningData.class);
+            TableUtils.createTable(connectionSource, Tag.class);
+            TableUtils.createTable(connectionSource, User.class);
+            TableUtils.createTable(connectionSource, UserStatistics.class);
 
             getSettingDao().create(new Setting());
             getCategoryDao().create(new Category());
@@ -99,28 +114,28 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
             // copy learning data
             database.execSQL("update cards set learningData_id = ("
-                + " select _id as learningData_id"
-                + " from learn_tbl where learn_tbl._id = cards.id)");
+                    + " select _id as learningData_id"
+                    + " from learn_tbl where learn_tbl._id = cards.id)");
             database.execSQL("insert into learning_data (acqReps, acqRepsSinceLapse, easiness,"
-                + " grade, lapses, lastLearnDate, nextLearnDate, retReps, "
-                + " retRepsSinceLapse)"
-                + " select acq_reps as acqReps , acq_reps_since_lapse as acqRepsSinceLapse,"
-                + " easiness, grade, lapses,"
-                + " date_learn || ' 00:00:00.000000' as lastLearnDate,"
-                + " datetime(julianday(date_learn) + interval) || '.000000' as nextLearnDate,"
-                + " ret_reps as retReps, ret_reps_since_lapse as retRepsSinceLapse"
-                + " from learn_tbl");
+                    + " grade, lapses, lastLearnDate, nextLearnDate, retReps, "
+                    + " retRepsSinceLapse)"
+                    + " select acq_reps as acqReps , acq_reps_since_lapse as acqRepsSinceLapse,"
+                    + " easiness, grade, lapses,"
+                    + " date_learn || ' 00:00:00.000000' as lastLearnDate,"
+                    + " datetime(julianday(date_learn) + interval) || '.000000' as nextLearnDate,"
+                    + " ret_reps as retReps, ret_reps_since_lapse as retRepsSinceLapse"
+                    + " from learn_tbl");
 
 
             // copy categories
             database.execSQL("insert into categories (name)"
-                + " select category as name from dict_tbl where category != ''"
-                + " and category is not null"
-                + " group by category");
+                    + " select category as name from dict_tbl where category != ''"
+                    + " and category is not null"
+                    + " group by category");
             database.execSQL("update cards set category_id = ("
-                + " select id as category_id from categories as cat"
-                + " join dict_tbl as dic on dic.category = cat.name"
-                + " where cards.id = dic._id)");
+                    + " select id as category_id from categories as cat"
+                    + " join dict_tbl as dic on dic.category = cat.name"
+                    + " where cards.id = dic._id)");
 
             // Update category if the category is null
             database.execSQL("update cards "
@@ -134,7 +149,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
             // Set unused fields
             database.execSQL("update cards"
-                + " set cardType = 0");
+                    + " set cardType = 0");
 
 
         }
@@ -148,12 +163,14 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
             database.execSQL("update cards "
                     + " set category_id = 1"
                     + " where category_id is null");
+            oldVersion = 2;
         }
         if (oldVersion <= 3) {
             database.execSQL("update settings set questionTextColor = ? where questionTextColor = ?", new Object[] {null, 0xFFBEBEBE});
             database.execSQL("update settings set answerTextColor = ? where answerTextColor = ?", new Object[] {null, 0xFFBEBEBE} );
             database.execSQL("update settings set questionBackgroundColor = ? where questionBackgroundColor = ?", new Object[] {null, 0xFF000000});
             database.execSQL("update settings set answerBackgroundColor = ? where answerBackgroundColor = ?", new Object[] {null, 0xFF000000});
+            oldVersion = 3;
         }
         if (oldVersion <= 4) {
             try {
@@ -161,8 +178,27 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 database.execSQL("update learning_data set firstLearnDate='2010-01-01 00:00:00.000000'");
             } catch (android.database.SQLException e) {
                 Log.e(TAG, "Upgrading failed, the column firstLearnData might already exists.", e);
+            } finally {
+                oldVersion = 4;
+            }
+
+        }
+        if (oldVersion <= 5) {
+            try {
+
+                database.execSQL("alter table decks add column dbPath VARCHAR");
+                TableUtils.createTable(connectionSource, Tag.class);
+                TableUtils.createTable(connectionSource, UserStatistics.class);
+                TableUtils.createTable(connectionSource, User.class);
+
+            } catch (SQLException e) {
+                Log.e(TAG, "Upgrading failed, the tags table might already exist.", e);
+                e.printStackTrace();
+            } finally {
+                oldVersion = 5;
             }
         }
+        database.setVersion(oldVersion);
     }
 
     @Override
@@ -234,6 +270,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         try {
             if (categoryDao == null) {
                 categoryDao = getDao(Category.class);
+                categoryDao.setHelper(this);
             }
             return categoryDao;
         } catch (SQLException e) {
@@ -241,12 +278,48 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    public synchronized UserDao getUserDao() {
+        try {
+            if (userDao == null) {
+                userDao = getDao(User.class);
+            }
+            return userDao;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public synchronized UserStatisticsDao getUserStatisticsDao() {
+        try {
+            if (userStatisticsDao == null) {
+                userStatisticsDao = getDao(UserStatistics.class);
+            }
+            return userStatisticsDao;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     public synchronized LearningDataDao getLearningDataDao() {
         try {
             if (learningDataDao == null) {
                 learningDataDao = getDao(LearningData.class);
             }
             return learningDataDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public synchronized TagDao getTagDao() {
+        try {
+            if (tagDao == null) {
+                tagDao = getDao(Tag.class);
+            }
+            return tagDao;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
