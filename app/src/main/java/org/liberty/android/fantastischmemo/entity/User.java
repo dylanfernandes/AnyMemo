@@ -22,14 +22,14 @@ public class User implements VersionableDomainObject{
     @DatabaseField(generatedId = true)
     private Integer id;
 
-    @DatabaseField(defaultValue = "")
-    private String surname;
+    @DatabaseField(defaultValue = "", width = 8192)
+    private String surname = "";
 
-    @DatabaseField(defaultValue = "")
-    private String name;
+    @DatabaseField(defaultValue = "", width = 8192)
+    private String name = "";
 
-    @DatabaseField(defaultValue = "", unique = true)
-    private String username;
+    @DatabaseField(defaultValue = "", unique = true, width = 8192)
+    private String username = "";
 
     @DatabaseField(foreign = true)
     private UserStatistics userStatistics;

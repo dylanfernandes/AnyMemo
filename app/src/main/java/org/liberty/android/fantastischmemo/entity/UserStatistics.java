@@ -16,17 +16,17 @@ import java.util.List;
  */
 
 @DatabaseTable(tableName = "userstatistics", daoClass = UserStatisticsDaoImpl.class)
-public class UserStatistics implements VersionableDomainObject{
+public class UserStatistics{
 
     //Attributes
     @DatabaseField(generatedId = true)
     private Integer id;
 
+    @DatabaseField(foreign = true)
+    private User user;
+
     @DatabaseField(version = true, format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
     private Date lastLogin;
-
-    @DatabaseField(foreign = true)
-    private List<AchievementPoint> points;
 
     @DatabaseField(defaultValue = "1")
     private Integer multiplier;
@@ -43,11 +43,7 @@ public class UserStatistics implements VersionableDomainObject{
     @DatabaseField(defaultValue = "0")
     private Integer months;
 
-    @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
-    private Date creationDate;
-
-    @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType=DataType.DATE_STRING)
-    private Date updateDate;
+    public List<AchievementPoint> points;
 
     public final static long MILLIS_PER_DAY = 24*60*60*1000L;
 
@@ -117,26 +113,6 @@ public class UserStatistics implements VersionableDomainObject{
 
     public void setMonths(Integer months) {
         this.months = months;
-    }
-
-    @Override
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    @Override
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    @Override
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    @Override
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
     }
 
     @Override
