@@ -3,10 +3,12 @@ package org.liberty.android.fantastischmemo.entity;
 
 import com.j256.ormlite.field.DataType;
 
+
 import java.io.Serializable;
 import java.lang.Math;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
+
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDaoImpl;
@@ -19,11 +21,14 @@ import java.util.List;
  */
 
 @DatabaseTable(tableName = "userstatistics", daoClass = UserStatisticsDaoImpl.class)
+
 public class UserStatistics {
+
 
     //Attributes
     @DatabaseField(generatedId = true)
     private Integer id;
+
 
     @DatabaseField(foreign = true)
     private User user;
@@ -124,6 +129,7 @@ public class UserStatistics {
 
     public void setUser(User user) {
         this.user = user;
+
     }
 
     @Override
