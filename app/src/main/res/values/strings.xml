@@ -480,7 +480,7 @@
     <string name="tags_assigned_to_deck">Tags Assigned to this deck</string>
     <string name="tags_search">Tag Search</string>
     <string name="tag_delete">Delete Tag</string>
-    <string name="account">Account Page</string>
+    <string name="account">Account</string>
     <string name="username">Username</string>
     <string name="user_name">Name</string>
     <string name="creation_date">Creation date</string>
