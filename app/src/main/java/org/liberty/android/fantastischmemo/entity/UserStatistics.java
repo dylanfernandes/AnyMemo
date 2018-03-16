@@ -23,11 +23,9 @@ import java.util.List;
 @DatabaseTable(tableName = "userstatistics", daoClass = UserStatisticsDaoImpl.class)
 public class UserStatistics {
 
-
     //Attributes
     @DatabaseField(generatedId = true)
     private Integer id;
-
 
     @DatabaseField(foreign = true)
     private User user;
@@ -122,6 +120,7 @@ public class UserStatistics {
         this.months = months;
     }
 
+
     public User getUser() {
         return this.user;
     }
@@ -130,6 +129,7 @@ public class UserStatistics {
         this.user = user;
 
     }
+
 
     @Override
     public String toString(){

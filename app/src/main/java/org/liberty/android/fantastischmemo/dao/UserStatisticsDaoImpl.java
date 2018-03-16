@@ -42,12 +42,12 @@ public class UserStatisticsDaoImpl extends AbstractHelperDaoImpl<UserStatistics,
             create(userStats);
             // Create new one and it should exist
             stats = queryForFirst(pq);
-            assert stats != null : "Tag creation failed. The query is still null!";
+            assert stats != null : "Statistics creation failed. The query is still null!";
             return stats;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
     }
-
+  
 }
