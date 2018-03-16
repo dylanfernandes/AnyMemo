@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface CategoryDao extends HelperDao<Category, Integer> {
     Category createOrReturn(String name);
-    void removeCategory(Category c);
 
     // Populate category for cards.
     void populateCategory(List<Card> cardList);
