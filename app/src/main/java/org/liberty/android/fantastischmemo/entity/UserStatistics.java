@@ -2,6 +2,8 @@ package org.liberty.android.fantastischmemo.entity;
 
 
 import com.j256.ormlite.field.DataType;
+
+import java.io.Serializable;
 import java.lang.Math;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -16,7 +18,7 @@ import java.util.List;
  */
 
 @DatabaseTable(tableName = "userstatistics", daoClass = UserStatisticsDaoImpl.class)
-public class UserStatistics implements VersionableDomainObject{
+public class UserStatistics {
 
     //Attributes
     @DatabaseField(generatedId = true)
@@ -28,29 +30,29 @@ public class UserStatistics implements VersionableDomainObject{
     @DatabaseField(version = true, format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
     private Date lastLogin;
 
-    @DatabaseField(foreign = true)
-    private List<AchievementPoint> points;
-
     @DatabaseField(defaultValue = "1")
-    private Integer multiplier;
+    private Integer multiplier = 1;
 
     @DatabaseField(defaultValue = "0")
-    private Integer streak;
+    private Integer streak = 0;
 
     @DatabaseField(defaultValue = "0")
-    private Integer longestStreak;
+    private Integer longestStreak = 0;
 
     @DatabaseField(defaultValue = "0")
-    private Integer weeks;
+    private Integer weeks = 0;
 
     @DatabaseField(defaultValue = "0")
-    private Integer months;
+    private Integer months = 0;
 
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
     private Date creationDate;
 
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType=DataType.DATE_STRING)
     private Date updateDate;
+
+    @DatabaseField
+    private List<AchievementPoint> points;
 
     public final static long MILLIS_PER_DAY = 24*60*60*1000L;
 
@@ -128,26 +130,6 @@ public class UserStatistics implements VersionableDomainObject{
 
     public void setUserId(Integer userId) {
         this.userId = userId;
-    }
-
-    @Override
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    @Override
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    @Override
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    @Override
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
     }
 
     @Override

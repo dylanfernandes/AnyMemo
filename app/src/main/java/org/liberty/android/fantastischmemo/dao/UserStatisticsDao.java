@@ -1,6 +1,6 @@
 package org.liberty.android.fantastischmemo.dao;
 
-
+import com.j256.ormlite.dao.Dao;
 import org.liberty.android.fantastischmemo.entity.UserStatistics;
 import org.liberty.android.fantastischmemo.entity.User;
 
@@ -9,7 +9,7 @@ import org.liberty.android.fantastischmemo.entity.User;
  */
 
 
-public interface UserStatisticsDao extends HelperDao<UserStatistics, Integer> {
+public interface UserStatisticsDao extends Dao<UserStatistics, Integer> {
 
     UserStatistics createOrReturn(User user);
 }
