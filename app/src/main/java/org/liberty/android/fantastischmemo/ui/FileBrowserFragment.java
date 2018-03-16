@@ -50,7 +50,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseDialogFragment;
+import org.liberty.android.fantastischmemo.dao.TagDao;
+import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.DeckMap;
 import org.liberty.android.fantastischmemo.entity.DeckMock;
 import org.liberty.android.fantastischmemo.entity.Tag;
@@ -59,7 +62,9 @@ import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -217,6 +222,13 @@ public class FileBrowserFragment extends BaseDialogFragment {
         fileListAdapter = new FileBrowserAdapter(this);
         filesListRecyclerView.setAdapter(fileListAdapter);
 
+        try {
+            List<Deck> decks = AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getDeckDao().queryForAll();
+            Toast.makeText(getContext(), "decks: " + decks.size(), Toast.LENGTH_LONG).show();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return v;
     }
 
@@ -316,23 +328,50 @@ public class FileBrowserFragment extends BaseDialogFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         inflater.inflate(R.menu.file_browser_menu, menu);
-        menu.addSubMenu(Menu.NONE, R.id.filter_menu, Menu.NONE, "");
+        menu.addSubMenu(Menu.NONE, R.id.filter_menu, Menu.NONE, "Search Decks");
         SubMenu filter = menu.findItem(R.id.filter_menu).getSubMenu();
 
         MenuItem filterWrapper = filter.getItem();
-        filterWrapper.setIcon(R.drawable.ic_menu_filter);
+        filterWrapper.setIcon(R.drawable.ic_menu_search);
         filterWrapper.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        filterWrapper.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(getActivity(), FilterActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
 
         filter.clear();
-        selectedTags = new HashSet<>();
-        HashSet<Tag> tags = DeckMap.getInstance().getAllTags();
-        tagCount = 0;
-        for (Tag tag : tags) {
-            filter.add(0, Menu.FIRST + tagCount, Menu.NONE, tag.getName());
-            MenuItem tagOption = filter.findItem(Menu.FIRST + tagCount);
-            tagOption.setCheckable(true);
-            tagCount++;
+        /*selectedTags = new HashSet<>();
+        TagDao tagDao = AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getTagDao();
+        List<Tag> tags = null;
+        try {
+            tags = tagDao.queryForAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        tagCount = 0;
+        if (tags != null) {
+            for (final Tag tag : tags) {
+                filter.add(0, Menu.FIRST + tagCount, Menu.NONE, tag.getName());
+                final MenuItem tagOption = filter.findItem(Menu.FIRST + tagCount);
+                tagOption.setCheckable(true);
+                tagOption.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (!item.isChecked()) {
+                            Toast.makeText(getContext(), "Checked " + tag.getDecks(), Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getContext(), "Unchecked " + tag.getName(), Toast.LENGTH_LONG).show();
+                        }
+                        return false;
+                    }
+                });
+                tagCount++;
+            }
+        }*/
         super.onCreateOptionsMenu(menu, inflater);
     }
 

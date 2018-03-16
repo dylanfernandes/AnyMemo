@@ -1,11 +1,21 @@
 package org.liberty.android.fantastischmemo.entity;
 
+import android.util.Log;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
+import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
+import org.liberty.android.fantastischmemo.dao.DeckDao;
+import org.liberty.android.fantastischmemo.dao.TagDao;
 import org.liberty.android.fantastischmemo.dao.TagDaoImpl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Adam on 2018-02-04.
@@ -19,11 +29,11 @@ public class Tag {
     @DatabaseField
     private String name;
 
-    public Tag(){
+    public Tag() {
         //empty constructor for ormlite
     }
 
-    public Tag(String name){
+    public Tag(String name) {
         this.name = name;
     }
 
@@ -43,7 +53,7 @@ public class Tag {
         this.name = name;
     }
 
-    public String toString(){
+    public String toString() {
         return this.name;
     }
 
@@ -64,5 +74,36 @@ public class Tag {
             return true;
         else
             return false;
+    }
+
+    public List<Deck> getDecks() {
+        DeckDao deckDao = AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getDeckDao();
+        List<Deck> allDecks = null;
+        List<Deck> decksToReturn = new ArrayList<>();
+
+        try {
+            allDecks = deckDao.queryForAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (allDecks != null) {
+            for (Deck deck : allDecks) {
+                TagDao tagDao = AnyMemoDBOpenHelperManager.getHelper(deck.getDbPath()).getTagDao();
+                List<Tag> tags = null;
+
+                try {
+                    tags = tagDao.queryForAll();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                if (tags != null && tags.contains(this)) {
+                    decksToReturn.add(deck);
+                }
+            }
+        }
+
+        return decksToReturn;
     }
 }

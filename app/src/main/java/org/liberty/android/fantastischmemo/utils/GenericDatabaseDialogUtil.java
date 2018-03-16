@@ -9,10 +9,14 @@ import android.widget.EditText;
 
 import org.apache.commons.io.FileUtils;
 import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
+import org.liberty.android.fantastischmemo.dao.DeckDao;
+import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.modules.PerActivity;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -81,6 +85,11 @@ public class GenericDatabaseDialogUtil {
                 String destDir = srcDir.replaceAll(".db", ".clone.db");
                 try {
                     FileUtils.copyFile(new File(srcDir), new File(destDir));
+                    DeckDao deckDao = AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getDeckDao();
+                    List<Deck> doesExist = deckDao.queryForEq("dbPath", destDir);
+                    Deck deck = new Deck();
+                    deck.setDbPath(destDir);
+                    deckDao.createIfNotExists(deck);
                     emitter.onSuccess(new File(destDir));
                 } catch(IOException e){
                     new AlertDialog.Builder(activity)
