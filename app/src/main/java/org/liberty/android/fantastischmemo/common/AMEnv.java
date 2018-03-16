@@ -38,13 +38,16 @@ public class AMEnv {
     private final static String DEFAULT_AUDIO_POSTFIX = "voice/";
     private final static String DEFAULT_IMAGE_POSTFIX = "images/";
     private final static String DEFAULT_TMP_POSTFIX = "tmp/";
+    private final static String HIDDEN_DB_FOLDER = "centralDB/";
 
     public final static String DEFAULT_ROOT_PATH = EXTERNAL_STORAGE_PATH + DEFAULT_POSTFIX;
     public final static String DEFAULT_AUDIO_PATH = DEFAULT_ROOT_PATH + DEFAULT_AUDIO_POSTFIX;
     public final static String DEFAULT_IMAGE_PATH = DEFAULT_ROOT_PATH + DEFAULT_IMAGE_POSTFIX;
     public final static String DEFAULT_TMP_PATH = DEFAULT_ROOT_PATH + DEFAULT_TMP_POSTFIX;
+    public final static String HIDDEN_DB_FOLDER_PATH = DEFAULT_ROOT_PATH + HIDDEN_DB_FOLDER;
     public final static String DEFAULT_DB_NAME= "french-body-parts.db";
     public final static String EMPTY_DB_NAME= "empty.db";
+    public final static String CENTRAL_DB_NAME = "central.db";
     public final static String ANYMEMO_SERVICE_ENDPOINT = "https://anymemo.org";
 
     public final static String GDRIVE_SCOPE ="oauth2:https://www.googleapis.com/auth/plus.login https://docs.google.com/feeds/ https://docs.googleusercontent.com/ https://spreadsheets.google.com/feeds/ https://www.googleapis.com/auth/drive.file";

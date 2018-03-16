@@ -17,7 +17,7 @@ public class TabTxtImporterTest extends AbstractConverterTest {
 
     @Override
     protected Converter getConverter() {
-        return new TabTxtImporter(amFileUtil);
+        return new TabTxtImporter(databaseUtil);
     }
 
     @Override

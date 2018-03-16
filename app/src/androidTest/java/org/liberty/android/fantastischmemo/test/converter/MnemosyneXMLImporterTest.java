@@ -19,7 +19,7 @@ public class MnemosyneXMLImporterTest extends AbstractConverterTest {
 
     @Override
     protected Converter getConverter() {
-        return new MnemosyneXMLImporter(amFileUtil);
+        return new MnemosyneXMLImporter(databaseUtil);
     }
 
     @Override
