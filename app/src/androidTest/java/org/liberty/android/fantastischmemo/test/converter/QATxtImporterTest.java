@@ -15,7 +15,7 @@ public class QATxtImporterTest extends AbstractConverterTest {
 
     @Override
     protected Converter getConverter() {
-        return new QATxtImporter(amFileUtil);
+        return new QATxtImporter(databaseUtil);
     }
 
     @Override

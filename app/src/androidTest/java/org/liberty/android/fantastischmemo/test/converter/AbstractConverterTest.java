@@ -9,6 +9,7 @@ import org.liberty.android.fantastischmemo.converter.Converter;
 import org.liberty.android.fantastischmemo.test.BaseTest;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.AMPrefUtil;
+import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 
 import java.io.File;
 
@@ -26,12 +27,12 @@ public abstract class AbstractConverterTest extends BaseTest {
 
     protected abstract void verify(String destFilePath) throws Exception;
 
-    protected AMFileUtil amFileUtil;
+    protected DatabaseUtil databaseUtil;
 
     @Before
     public void setUp() throws Exception {
         // Set up necessary dependencies first
-        amFileUtil = new AMFileUtil(getTargetContext(), new AMPrefUtil(getTargetContext()));
+        databaseUtil = new DatabaseUtil(getTargetContext());
 
         converter = getConverter();
 

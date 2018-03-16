@@ -27,7 +27,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -43,7 +42,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -294,12 +292,27 @@ public class AnyMemo extends BaseActivity {
          * to /sdcard/AnyMemo
          */
         if(firstTime == true){
+
+            if(!new File(AMEnv.HIDDEN_DB_FOLDER_PATH).exists()){
+                try{
+                    FileUtils.forceMkdir(new File(AMEnv.HIDDEN_DB_FOLDER_PATH));
+                }catch(IOException e){
+                    Log.e(TAG, "Error creating centralDB directory", e);
+                }
+            }
             SharedPreferences.Editor editor = settings.edit();
             editor.putBoolean(AMPrefKeys.FIRST_TIME_KEY, false);
             editor.putString(AMPrefKeys.getRecentPathKey(0), AMEnv.DEFAULT_ROOT_PATH + AMEnv.DEFAULT_DB_NAME);
             editor.commit();
             try {
-                amFileUtil.copyFileFromAsset(AMEnv.DEFAULT_DB_NAME,  new File(sdPath + "/" + AMEnv.DEFAULT_DB_NAME));
+                String dest = sdPath + "/" + AMEnv.DEFAULT_DB_NAME;
+                amFileUtil.copyFileFromAsset(AMEnv.DEFAULT_DB_NAME,  new File(dest));
+                databaseUtil.setupDatabase(dest);
+
+                String centralDbDest = AMEnv.HIDDEN_DB_FOLDER_PATH + AMEnv.CENTRAL_DB_NAME;
+                amFileUtil.copyFileFromAsset(AMEnv.CENTRAL_DB_NAME,new File(centralDbDest));
+                databaseUtil.setupDatabase(centralDbDest);
+
 
                 InputStream in2 = getResources().getAssets().open(AMEnv.EMPTY_DB_NAME);
                 String emptyDbPath = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + AMEnv.EMPTY_DB_NAME;
@@ -312,6 +325,26 @@ public class AnyMemo extends BaseActivity {
         }
         /* Detect an update */
         if (savedVersionCode != thisVersionCode) {
+            if(!new File(AMEnv.HIDDEN_DB_FOLDER_PATH).exists()){
+                try{
+                    FileUtils.forceMkdir(new File(AMEnv.HIDDEN_DB_FOLDER_PATH));
+                }catch(IOException e){
+                    Log.e(TAG, "Error creating centralDB directory", e);
+                }
+            }
+
+            String centralDbDest = AMEnv.HIDDEN_DB_FOLDER_PATH + AMEnv.CENTRAL_DB_NAME;
+            
+            if(!new File(centralDbDest).exists()){
+                try {
+                    amFileUtil.copyFileFromAsset(AMEnv.CENTRAL_DB_NAME,new File(centralDbDest));
+                    databaseUtil.setupDatabase(centralDbDest);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                databaseUtil.setupDatabase(centralDbDest);
+            }
+
             SharedPreferences.Editor editor = settings.edit();
             /* save new version number */
             editor.putInt(AMPrefKeys.SAVED_VERSION_CODE_KEY, thisVersionCode);
@@ -349,6 +382,7 @@ public class AnyMemo extends BaseActivity {
      */
     private void handleOpenIntent() {
         multipleLoaderManager.registerLoaderCallbacks(1, new HandleOpenIntentLoaderCallbacks(getIntent().getData()), false);
+        multipleLoaderManager.registerLoaderCallbacks(2, new HandleOpenIntentLoaderCallbacksHiddenFolder(getIntent().getData()),false);
         multipleLoaderManager.startLoading();
     }
 
@@ -515,6 +549,74 @@ public class AnyMemo extends BaseActivity {
         public CharSequence getPageTitle(int position) {
             // Display icon only
             return null;
+        }
+    }
+
+    private class HandleOpenIntentLoaderCallbacksHiddenFolder implements LoaderManager.LoaderCallbacks<File> {
+
+        private final Uri contentUri;
+
+        public HandleOpenIntentLoaderCallbacksHiddenFolder(Uri contentUri) {
+            this.contentUri = contentUri;
+        }
+
+        @Override
+        public Loader<File> onCreateLoader(int id, Bundle args) {
+            Loader<File> loader = new AsyncTaskLoader<File>(AnyMemo.this) {
+                @Override
+                public File loadInBackground() {
+                    String newFileName = AMEnv.CENTRAL_DB_NAME;
+                    if (!newFileName.endsWith(".db")) {
+                        newFileName += ".db";
+                    }
+
+                    File newFile = new File(AMEnv.HIDDEN_DB_FOLDER_PATH + "/" + newFileName);
+                    // First detect if the db with the same name exists.
+                    // And back kup the db if
+                    try {
+                        amFileUtil.deleteFileWithBackup(newFile.getAbsolutePath());
+                    } catch (IOException e) {
+                        Log.e(TAG, "Failed to delete the exisitng db with backup", e);
+                    }
+
+                    InputStream inputStream;
+
+                    try {
+                        inputStream = AnyMemo.this.getContentResolver().openInputStream(contentUri);
+                        FileUtils.copyInputStreamToFile(inputStream, newFile);
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error opening file from intent", e);
+                        return null;
+                    }
+
+                    return newFile;
+                }
+            };
+            loader.forceLoad();
+            return loader;
+        }
+
+        @Override
+        public void onLoadFinished(Loader<File> loader, File newFile) {
+            if (newFile == null) {
+                Snackbar.make(binding.drawerLayout, R.string.db_file_is_corrupted_text, Snackbar.LENGTH_LONG)
+                        .show(); // Don’t forget to show!
+                Log.e(TAG, "Could not load db from intent");
+                return;
+            }
+
+            recentListUtil.addToRecentList(newFile.getAbsolutePath());
+
+            Intent intent = new Intent();
+            intent.setClass(AnyMemo.this, PreviewEditActivity.class);
+            intent.putExtra(PreviewEditActivity.EXTRA_DBPATH, newFile.getAbsolutePath());
+            startActivity(intent);
+            multipleLoaderManager.checkAllLoadersCompleted();
+        }
+
+        @Override
+        public void onLoaderReset(Loader<File> loader) {
+            // Nothing
         }
     }
 }
