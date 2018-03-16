@@ -484,7 +484,7 @@
     <string name="username">Username</string>
     <string name="user_name">Name</string>
     <string name="creation_date">Creation date</string>
-    <string name="longest_login_strike">Longest login strike</string>
-    <string name="current_login_strike">Current login strike</string>
+    <string name="longest_login_streak">Longest login streak</string>
+    <string name="current_login_streak">Current login streak</string>
     <string name="view_statistic">View statistic</string>
 </resources>
