@@ -1,15 +1,21 @@
 package org.liberty.android.fantastischmemo.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import com.j256.ormlite.field.DataType;
 import java.lang.Math;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
+import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
+import org.liberty.android.fantastischmemo.dao.AchievementPointDaoImpl;
+
 /**
  * Created by dylanfernandes on 2018-03-02.
  */
 
-public class AchievementPoint {
+@DatabaseTable(tableName = "achievementpoints", daoClass = AchievementPointDaoImpl.class)
+public class AchievementPoint implements Serializable, VersionableDomainObject{
     @DatabaseField(generatedId = true)
     private Integer id;
     @DatabaseField(version = true, format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
@@ -18,10 +24,19 @@ public class AchievementPoint {
     private Integer value;
     //@DatabaseField(foreign=true)
     //private UserStatistics stats;
-    @DatabaseField
+    @DatabaseField(foreign = true)
     private Tag tag;
-    @DatabaseField
+
+    @DatabaseField(foreign = true)
     private Deck deck;
+
+    @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
+    private Date creationDate;
+
+    @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType=DataType.DATE_STRING)
+    private Date updateDate;
+
+    public AchievementPoint () {}
 
     public Integer getId() {
         return id;
@@ -64,4 +79,23 @@ public class AchievementPoint {
     }
 
 
+    @Override
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    @Override
+    public void setCreationDate(Date cDate) {
+        creationDate = cDate;
+    }
+
+    @Override
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    @Override
+    public void setUpdateDate(Date uDate) {
+        updateDate = uDate;
+    }
 }
