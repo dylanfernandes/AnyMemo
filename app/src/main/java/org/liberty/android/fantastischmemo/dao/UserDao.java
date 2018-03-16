@@ -8,5 +8,6 @@ import org.liberty.android.fantastischmemo.entity.User;
 public interface UserDao extends HelperDao<User, Integer> {
 
     User createOrReturn(String username);
+    void editName(String username, String name);
 
 }

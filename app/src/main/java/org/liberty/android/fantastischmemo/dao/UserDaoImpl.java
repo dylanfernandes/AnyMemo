@@ -6,6 +6,7 @@ import org.liberty.android.fantastischmemo.entity.UserStatistics;
 
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTableConfig;
 import java.sql.SQLException;
@@ -42,6 +43,17 @@ public class UserDaoImpl extends AbstractHelperDaoImpl<User, Integer> implements
             user = queryForFirst(pq);
             assert user != null : "User creation failed. The query is still null!";
             return user;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void editName(String username, String name){
+        try {
+            UpdateBuilder<User, Integer> ub = updateBuilder();
+            ub.where().eq("username", username);
+            ub.updateColumnValue("name" , name);
+            ub.update();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -27,6 +27,17 @@ public class UserDaoTest  extends AbstractExistingDBTest {
     }
 
     @Test
+    public void testEditName() throws Exception{
+        UserDao userDao = helper.getUserDao();
+        User testUser = userDao.createOrReturn("testUsername");
+        testUser.setName("testName");
+        assertEquals(testUser.getName(), "testName");
+        //testUser.setName("newName");
+        userDao.editName(testUser.getUsername(), "newName");
+        assertEquals(testUser.getName(), "newName");
+    }
+
+    @Test
     public void testRemoveUser() throws Exception {
         UserDao userDao = helper.getUserDao();
         User testUser = userDao.createOrReturn("testUsername");
