@@ -185,17 +185,24 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         }
         if (oldVersion <= 5) {
             try {
-
                 database.execSQL("alter table decks add column dbPath VARCHAR");
                 TableUtils.createTable(connectionSource, Tag.class);
-                TableUtils.createTable(connectionSource, UserStatistics.class);
-                TableUtils.createTable(connectionSource, User.class);
-
             } catch (SQLException e) {
                 Log.e(TAG, "Upgrading failed, the tags table might already exist.", e);
                 e.printStackTrace();
             } finally {
                 oldVersion = 5;
+            }
+        }
+        if (oldVersion <= 6) {
+            try {
+                TableUtils.createTable(connectionSource, UserStatistics.class);
+                TableUtils.createTable(connectionSource, User.class);
+            } catch (SQLException e) {
+                Log.e(TAG, "Upgrading failed, the tags table might already exist.", e);
+                e.printStackTrace();
+            } finally {
+                oldVersion = 6;
             }
         }
         database.setVersion(oldVersion);

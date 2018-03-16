@@ -16,7 +16,6 @@ import java.util.Date;
  */
 
 @DatabaseTable(tableName = "user", daoClass = UserDaoImpl.class)
-
 public class User implements VersionableDomainObject {
 
 

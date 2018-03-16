@@ -21,7 +21,6 @@ import java.util.List;
  */
 
 @DatabaseTable(tableName = "userstatistics", daoClass = UserStatisticsDaoImpl.class)
-
 public class UserStatistics {
 
 
