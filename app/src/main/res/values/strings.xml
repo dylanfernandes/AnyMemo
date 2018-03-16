@@ -481,4 +481,10 @@
     <string name="tags_search">Tag Search</string>
     <string name="tag_delete">Delete Tag</string>
     <string name="account">Account Page</string>
+    <string name="username">Username</string>
+    <string name="user_name">Name</string>
+    <string name="creation_date">Creation date</string>
+    <string name="longest_login_strike">Longest login strike</string>
+    <string name="current_login_strike">Current login strike</string>
+    <string name="view_statistic">View statistic</string>
 </resources>

@@ -104,7 +104,9 @@
         <activity 
             android:name=".ui.FileBrowserActivity"
             android:configChanges="orientation|keyboardHidden" />
-        <activity 
+        <activity
+            android:name=".ui.AccountPage" />
+        <activity
             android:name=".ui.OptionScreen" />
         <activity 
             android:name=".ui.AlgorithmCustomizationScreen"
