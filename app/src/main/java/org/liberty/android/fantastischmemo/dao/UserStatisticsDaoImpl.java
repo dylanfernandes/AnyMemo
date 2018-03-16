@@ -1,11 +1,13 @@
 package org.liberty.android.fantastischmemo.dao;
 
+
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTableConfig;
 
 import org.liberty.android.fantastischmemo.entity.User;
+
 import org.liberty.android.fantastischmemo.entity.UserStatistics;
 
 import java.sql.SQLException;
@@ -15,6 +17,7 @@ import java.sql.SQLException;
  */
 
 public class UserStatisticsDaoImpl extends AbstractHelperDaoImpl<UserStatistics, Integer> implements UserStatisticsDao {
+
 
     public UserStatisticsDaoImpl(ConnectionSource connectionSource, DatabaseTableConfig<UserStatistics> config) throws SQLException {
         super(connectionSource, UserStatistics.class);
@@ -46,4 +49,5 @@ public class UserStatisticsDaoImpl extends AbstractHelperDaoImpl<UserStatistics,
         }
 
     }
+
 }
