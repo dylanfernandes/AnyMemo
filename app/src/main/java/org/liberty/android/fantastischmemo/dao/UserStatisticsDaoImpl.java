@@ -28,15 +28,14 @@ public class UserStatisticsDaoImpl extends AbstractHelperDaoImpl<UserStatistics,
     public UserStatistics createOrReturn(User user) {
 
         try {
-            int userId = user.getId();
             QueryBuilder<UserStatistics, Integer> qb = queryBuilder();
-            PreparedQuery<UserStatistics> pq = qb.where().eq("userId", userId).prepare();
+            PreparedQuery<UserStatistics> pq = qb.where().eq("user_id", user.getId()).prepare();
             UserStatistics stats = queryForFirst(pq);
             if(stats != null) {
                 return stats;
             }
             UserStatistics userStats = new UserStatistics();
-            userStats.setUserId(userId);
+            userStats.setUser(user);
             create(userStats);
             // Create new one and it should exist
             stats = queryForFirst(pq);

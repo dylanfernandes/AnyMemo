@@ -6,6 +6,7 @@ import com.j256.ormlite.field.DataType;
 import java.io.Serializable;
 import java.lang.Math;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDaoImpl;
@@ -25,7 +26,7 @@ public class UserStatistics {
     private Integer id;
 
     @DatabaseField(foreign = true)
-    private Integer userId;
+    private User user;
 
     @DatabaseField(version = true, format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
     private Date lastLogin;
@@ -45,14 +46,7 @@ public class UserStatistics {
     @DatabaseField(defaultValue = "0")
     private Integer months = 0;
 
-    @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
-    private Date creationDate;
-
-    @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType=DataType.DATE_STRING)
-    private Date updateDate;
-
-    @DatabaseField
-    private List<AchievementPoint> points;
+    public List<AchievementPoint> points;
 
     public final static long MILLIS_PER_DAY = 24*60*60*1000L;
 
@@ -124,12 +118,12 @@ public class UserStatistics {
         this.months = months;
     }
 
-    public Integer getUserId() {
-        return this.userId;
+    public User getUser() {
+        return this.user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

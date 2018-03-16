@@ -16,7 +16,7 @@ import java.util.Date;
  */
 
 @DatabaseTable(tableName = "user", daoClass = UserDaoImpl.class)
-public class User implements VersionableDomainObject{
+public class User implements VersionableDomainObject {
 
     //Attributes
     @DatabaseField(generatedId = true)
@@ -32,7 +32,7 @@ public class User implements VersionableDomainObject{
     private String username;
 
     @DatabaseField(foreign = true)
-    private Integer userStatsId;
+    private UserStatistics userStatistics;
 
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
     private Date creationDate;
@@ -75,12 +75,12 @@ public class User implements VersionableDomainObject{
         this.username = username;
     }
 
-    public Integer getUserStatsId() {
-        return userStatsId;
+    public UserStatistics getUserStatistics() {
+        return this.userStatistics;
     }
 
-    public void setUserStatsId(Integer userStatsId) {
-        this.userStatsId = userStatsId;
+    public void setUserStatistics(UserStatistics userStatistics) {
+        this.userStatistics = userStatistics;
     }
 
     public Date getCreationDate() {

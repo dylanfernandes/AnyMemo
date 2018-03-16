@@ -44,8 +44,8 @@ public class UserTest {
     public void testGetSetUserStatistic() {
         UserStatistics us = new UserStatistics();
         us.setId(5);
-        user.setUserStatsId(us.getId());
-        assertEquals(5, (int)user.getUserStatsId());
+        user.setUserStatistics(us);
+        assertEquals(5, (int)user.getUserStatistics().getId());
     }
 
 }
