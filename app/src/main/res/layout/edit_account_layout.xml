@@ -29,7 +29,6 @@
                 android:id="@+id/edit_profile_current_name_entry"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:inputType="none"
                 android:gravity="top"
                 android:minLines="1" android:layout_weight="1"/>
         </LinearLayout>
@@ -64,7 +63,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="40dp">
 
-        <Button android:id="@+id/dropbox_login_button"
+        <Button android:id="@+id/update_profile_button"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
