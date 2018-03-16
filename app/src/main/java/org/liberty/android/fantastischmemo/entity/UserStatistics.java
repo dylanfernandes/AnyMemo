@@ -50,6 +50,10 @@ public class UserStatistics{
 
     public UserStatistics() {}
 
+    public UserStatistics(int longest){
+        this.longestStreak = longest;
+    }
+
     //Getters and Setters
     public Integer getId() {
         return this.id;
