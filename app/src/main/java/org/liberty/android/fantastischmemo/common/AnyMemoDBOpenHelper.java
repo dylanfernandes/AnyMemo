@@ -10,6 +10,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
 
+import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
 import org.liberty.android.fantastischmemo.dao.CardDao;
 import org.liberty.android.fantastischmemo.dao.CategoryDao;
 import org.liberty.android.fantastischmemo.dao.DeckDao;
@@ -19,6 +20,7 @@ import org.liberty.android.fantastischmemo.dao.SettingDao;
 import org.liberty.android.fantastischmemo.dao.UserDao;
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.dao.TagDao;
+import org.liberty.android.fantastischmemo.entity.AchievementPoint;
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
 import org.liberty.android.fantastischmemo.entity.Deck;
@@ -57,6 +59,8 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private TagDao tagDao = null;
 
+    private AchievementPointDao apDao = null;
+
     private boolean isReleased = false;
 
     @Override
@@ -74,6 +78,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, User.class);
             TableUtils.createTable(connectionSource, UserStatistics.class);
             TableUtils.createTable(connectionSource, Tag.class);
+            TableUtils.createTable(connectionSource, AchievementPoint.class);
 
 
             getSettingDao().create(new Setting());
@@ -199,6 +204,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
             try {
                 TableUtils.createTable(connectionSource, User.class);
                 TableUtils.createTable(connectionSource, UserStatistics.class);
+                TableUtils.createTable(connectionSource, AchievementPoint.class);
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
@@ -333,6 +339,16 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    public synchronized AchievementPointDao getAchievementPointDao() {
+        try {
+            if (apDao == null) {
+                apDao = getDao(AchievementPoint.class);
+            }
+            return apDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     /*
      * Override the finalize in case the helper is not release.
      */

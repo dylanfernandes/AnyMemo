@@ -7,12 +7,14 @@ import org.liberty.android.fantastischmemo.dao.TagDaoImpl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.io.Serializable;
+
 /**
  * Created by Adam on 2018-02-04.
  */
 
 @DatabaseTable(tableName = "tags", daoClass = TagDaoImpl.class)
-public class Tag {
+public class Tag implements Serializable {
     @DatabaseField(generatedId = true)
     private Integer id;
 
