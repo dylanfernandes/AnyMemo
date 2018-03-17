@@ -82,6 +82,16 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 oldVersion = 3;
             }
         }
+
+        if (oldVersion <= 4) {
+
+            userDao.createOrReturn("someUsername");
+            User randomUser = new User();
+            randomUser.setName("someName");
+            randomUser.setSurname("someSurname");
+            userDao.update(randomUser);
+            oldVersion = 4;
+        }
         database.setVersion(oldVersion);
     }
 
@@ -135,6 +145,17 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 userDao.setHelper(this);
             }
             return userDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public synchronized UserStatisticsDao getUserStatisticDao() {
+        try {
+            if (userStatisticsDao == null) {
+                userStatisticsDao = getDao(UserStatistics.class);
+            }
+            return userStatisticsDao;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

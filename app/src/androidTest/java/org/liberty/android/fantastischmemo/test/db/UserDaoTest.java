@@ -19,7 +19,7 @@ public class UserDaoTest  extends AbstractExistingDBTest {
 
     @Test
     public void testAddUser() throws Exception {
-        UserDao userDao = helper.getUserDao();
+        UserDao userDao = centralHelper.getUserDao();
         long count = userDao.countOf();
         User testUser = userDao.createOrReturn("testUsername");
         assertEquals(count + 1, userDao.countOf());
@@ -28,7 +28,7 @@ public class UserDaoTest  extends AbstractExistingDBTest {
 
     @Test
     public void testEditName() throws Exception{
-        UserDao userDao = helper.getUserDao();
+        UserDao userDao = centralHelper.getUserDao();
         User testUser = userDao.createOrReturn("testUsername");
         userDao.editName(testUser.getUsername(), "newName");
         testUser = userDao.queryForId(testUser.getId());
