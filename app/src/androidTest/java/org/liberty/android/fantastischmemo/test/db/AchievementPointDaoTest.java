@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by dylanfernandes on 2018-03-15.
@@ -17,16 +19,29 @@ import static junit.framework.Assert.assertEquals;
 public class AchievementPointDaoTest extends AbstractExistingDBTest {
 
     @Test
-    public void testAddPoint() throws Exception{
+    public void testAddPoint() throws Exception {
         AchievementPointDao apDao = helper.getAchievementPointDao();
-        List<AchievementPoint> pointsList  = new ArrayList<>();//=  apDao.queryForAll();
-        int startSize = pointsList.size();
-        int endList;
+        List<AchievementPoint> pointsList  =  apDao.queryForAll();
+        long startSize = pointsList.size();
+        long endList;
         AchievementPoint ap = new AchievementPoint();
-        ap.setValue(5);
+        ap.setId(1);
         apDao.create(ap);
-        pointsList = apDao.queryForAll();
-        endList = pointsList.size();
+        endList = apDao.countOf();
         assertEquals(startSize + 1, endList);
+        assertTrue(apDao.idExists(1));
+    }
+
+    @Test
+    public void testDeletePoint() throws Exception {
+        AchievementPointDao apDao = helper.getAchievementPointDao();
+        long addSize;
+        AchievementPoint ap = new AchievementPoint();
+        ap.setId(2);
+        apDao.create(ap);
+        addSize = apDao.countOf();
+        apDao.delete(ap);
+        assertEquals(addSize - 1, apDao.countOf());
+        assertFalse( apDao.idExists(2));
     }
 }
