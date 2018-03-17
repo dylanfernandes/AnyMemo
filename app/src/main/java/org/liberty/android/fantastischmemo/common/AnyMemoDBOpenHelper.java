@@ -195,17 +195,6 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
             }
         }
 
-        if (oldVersion <= 6) {
-            try {
-                TableUtils.createTable(connectionSource, User.class);
-                TableUtils.createTable(connectionSource, UserStatistics.class);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                oldVersion = 6;
-            }
-        }
-
         database.setVersion(oldVersion);
 
     }

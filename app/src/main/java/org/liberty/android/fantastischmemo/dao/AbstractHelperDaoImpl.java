@@ -6,6 +6,7 @@ import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTableConfig;
 
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.entity.VersionableDomainObject;
 
@@ -17,6 +18,7 @@ import java.util.concurrent.Callable;
 public abstract class AbstractHelperDaoImpl<E, T> extends BaseDaoImpl<E, T> {
     private static final String TAG = AbstractHelperDaoImpl.class.getSimpleName();
     private AnyMemoDBOpenHelper helper = null;
+    private AnyMemoBaseDBOpenHelper centralHelper = null;
 
     protected AbstractHelperDaoImpl(ConnectionSource connectionSource, DatabaseTableConfig<E> config)
         throws SQLException {
@@ -38,6 +40,14 @@ public abstract class AbstractHelperDaoImpl<E, T> extends BaseDaoImpl<E, T> {
     public void setHelper(AnyMemoDBOpenHelper helper) {
         if (this.helper == null) {
             this.helper = helper;
+        } else {
+            throw new RuntimeException("Set the helper for DAO twice!");
+        }
+    }
+
+    public void setHelper(AnyMemoBaseDBOpenHelper helper){
+        if (this.centralHelper == null) {
+            this.centralHelper = helper;
         } else {
             throw new RuntimeException("Set the helper for DAO twice!");
         }

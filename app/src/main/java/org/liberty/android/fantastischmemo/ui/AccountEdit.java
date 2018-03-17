@@ -14,6 +14,7 @@ import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
+import org.liberty.android.fantastischmemo.dao.UserDao;
 
 /**
  * Created by Olivier on 2018-03-15.
@@ -23,6 +24,8 @@ public class AccountEdit extends BaseActivity {
     private EditText currentNameEntry;
     private EditText updateNameEntry;
     private Button updateButton;
+
+    private String currentName;
 
     private AnyMemoBaseDBOpenHelper helper;
     private UserDao userdao;
@@ -90,6 +93,8 @@ public class AccountEdit extends BaseActivity {
             helper = AnyMemoBaseDBOpenHelperManager.getHelper(AccountEdit.this, dbPath);
 
             userdao = helper.getUserDao();
+            
+            return null;
         }
 
         @Override
@@ -97,7 +102,7 @@ public class AccountEdit extends BaseActivity {
             currentNameEntry = (EditText)findViewById(R.id.edit_profile_current_name_entry);
             updateNameEntry = (EditText)findViewById(R.id.edit_profile_update_name_entry);
 
-            currentNameEntry.setText(userdao./*Get the user's current name*/);
+            currentNameEntry.setText(userdao.createOrReturn(""));
             currentNameEntry.setEnabled(false);
 
             progressDialog.dismiss();
@@ -123,13 +128,15 @@ public class AccountEdit extends BaseActivity {
         @Override
         public Void doInBackground(Void... params) {
             //Update user name
-            userdao.updateUserName();
+            userdao.editName("","");
+
+            return null;
         }
 
         @Override
         public void onPostExecute(Void result){
             currentNameEntry.setEnabled(true);
-            currentNameEntry.setText(userdao./*Get the user's new current name*/);
+            currentNameEntry.setText(userdao.createOrReturn(""));
         }
     }
 
