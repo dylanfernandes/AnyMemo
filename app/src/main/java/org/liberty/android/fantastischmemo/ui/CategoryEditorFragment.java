@@ -299,7 +299,7 @@ public class CategoryEditorFragment extends BaseDialogFragment {
             if (Strings.isNullOrEmpty(selectedCategory.getName())) {
                 return null;
             }
-            categoryDao.removeCategory(selectedCategory);
+            categoryDao.delete(selectedCategory);
             return null;
         }
 

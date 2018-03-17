@@ -44,7 +44,7 @@ public class CategoryTest extends AbstractExistingDBTest {
         cardDao.create(nc);
         categoryDao.refresh(nc.getCategory());
         assertEquals("c1", nc.getCategory().getName());
-        categoryDao.removeCategory(c1);
+        categoryDao.delete(c1);
         nc = cardDao.queryForId(nc.getId());
         categoryDao.refresh(nc.getCategory());
         assertEquals("", nc.getCategory().getName());
