@@ -1,8 +1,6 @@
 package org.liberty.android.fantastischmemo.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import org.liberty.android.fantastischmemo.R;
@@ -16,16 +14,26 @@ import org.liberty.android.fantastischmemo.entity.UserStatistics;
  */
 
 public class AccountPage extends BaseActivity{
-    private TextView userID;
+    private TextView user_Name;
+    private TextView username;
+    private TextView longest_streak;
+    private TextView current_streak;
 
-    User fakeUser = new User(123, "fakeName", "fakeUserName");
-    UserStatistics fakeUserStat = new UserStatistics(17);
+    User fakeUser = new User("Thomas", "blue_fish");
+    UserStatistics fakeUserStat = new UserStatistics(17, 3);
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_page_tab);
-        userID = (TextView)findViewById(R.id.account_id);
-        userID.setText("" + fakeUser.getId());
+        user_Name = (TextView)findViewById(R.id.account_user_name);
+        user_Name.setText(fakeUser.getName());
+        username = (TextView)findViewById(R.id.account_username);
+        username.setText(fakeUser.getUsername());
+        longest_streak = (TextView)findViewById(R.id.account_longest_streak);
+        longest_streak.setText(String.valueOf(fakeUserStat.getLongestStreak()));
+        current_streak = (TextView)findViewById(R.id.account_current_streak);
+        current_streak.setText(String.valueOf(fakeUserStat.getCurrentStreak()));
+
     };
 
 }

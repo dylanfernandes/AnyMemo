@@ -42,8 +42,8 @@ public class User implements VersionableDomainObject{
 
     public User() {}
 
-    public User(int id, String name, String username){
-        this.id = id;
+    //fake UserStatistics for AccountPage
+    public User(String name, String username){
         this.name = name;
         this.username = username;
     }

@@ -38,6 +38,9 @@ public class UserStatistics implements VersionableDomainObject{
     private Integer longestStreak;
 
     @DatabaseField(generatedId = true)
+    private Integer currentStreak;
+
+    @DatabaseField(generatedId = true)
     private Integer weeks;
 
     @DatabaseField(generatedId = true)
@@ -54,8 +57,10 @@ public class UserStatistics implements VersionableDomainObject{
 
     public UserStatistics() {}
 
-    public UserStatistics(int longest){
+    //fake UserStatistics for AccountPage
+    public UserStatistics(Integer longest, Integer current){
         this.longestStreak = longest;
+        this.currentStreak = current;
     }
 
     //Getters and Setters
@@ -105,6 +110,14 @@ public class UserStatistics implements VersionableDomainObject{
 
     public void setLongestStreak(Integer longestStreak) {
         this.longestStreak = longestStreak;
+    }
+
+    public Integer getCurrentStreak() {
+        return currentStreak;
+    }
+
+    public void setCurrentStreak(Integer currentStreak) {
+        this.currentStreak = currentStreak;
     }
 
     public Integer getWeeks() {
