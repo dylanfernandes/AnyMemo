@@ -19,8 +19,6 @@ import org.liberty.android.fantastischmemo.dao.SettingDao;
 import org.liberty.android.fantastischmemo.dao.UserDao;
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.dao.TagDao;
-import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
-import org.liberty.android.fantastischmemo.dao.UserDao;
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
 import org.liberty.android.fantastischmemo.entity.Deck;
@@ -30,8 +28,7 @@ import org.liberty.android.fantastischmemo.entity.Setting;
 import org.liberty.android.fantastischmemo.entity.User;
 import org.liberty.android.fantastischmemo.entity.UserStatistics;
 import org.liberty.android.fantastischmemo.entity.Tag;
-import org.liberty.android.fantastischmemo.entity.User;
-import org.liberty.android.fantastischmemo.entity.UserStatistics;
+
 
 import java.sql.SQLException;
 

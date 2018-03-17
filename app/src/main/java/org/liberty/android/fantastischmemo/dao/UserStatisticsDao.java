@@ -12,7 +12,7 @@ import org.liberty.android.fantastischmemo.entity.User;
 
 
 
-public interface UserStatisticsDao extends Dao<UserStatistics, Integer> {
+public interface UserStatisticsDao extends HelperDao<UserStatistics, Integer> {
 
     UserStatistics createOrReturn(User user);
 

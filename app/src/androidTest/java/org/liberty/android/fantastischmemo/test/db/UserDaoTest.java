@@ -1,11 +1,10 @@
 package org.liberty.android.fantastischmemo.test.db;
 
-import android.support.test.filters.SmallTest;
 
 import org.junit.Test;
 import org.liberty.android.fantastischmemo.dao.UserDao;
 import org.liberty.android.fantastischmemo.entity.User;
-import org.liberty.android.fantastischmemo.test.AbstractExistingDBTest;
+import org.liberty.android.fantastischmemo.test.AbstractExistingBaseDBTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -15,7 +14,7 @@ import static org.junit.Assert.assertNotNull;
  * Created by Emily on 2018-03-03.
  */
 
-public class UserDaoTest  extends AbstractExistingDBTest {
+public class UserDaoTest  extends AbstractExistingBaseDBTest {
 
     @Test
     public void testAddUser() throws Exception {

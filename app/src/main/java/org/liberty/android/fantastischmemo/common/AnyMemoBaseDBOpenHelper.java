@@ -1,7 +1,7 @@
 package org.liberty.android.fantastischmemo.common;
 
 import android.content.Context;
-import android.database.Cursor;
+
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -134,6 +134,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
         try {
             if (userStatisticsDao == null) {
                 userStatisticsDao = getDao(UserStatistics.class);
+                userStatisticsDao.setCentralDbHelper(this);
             }
             return userStatisticsDao;
 

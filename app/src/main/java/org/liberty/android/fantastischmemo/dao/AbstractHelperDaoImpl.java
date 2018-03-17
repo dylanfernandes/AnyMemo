@@ -6,6 +6,7 @@ import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTableConfig;
 
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.entity.VersionableDomainObject;
 
@@ -17,6 +18,7 @@ import java.util.concurrent.Callable;
 public abstract class AbstractHelperDaoImpl<E, T> extends BaseDaoImpl<E, T> {
     private static final String TAG = AbstractHelperDaoImpl.class.getSimpleName();
     private AnyMemoDBOpenHelper helper = null;
+    private AnyMemoBaseDBOpenHelper centralDbHelper = null;
 
     protected AbstractHelperDaoImpl(ConnectionSource connectionSource, DatabaseTableConfig<E> config)
         throws SQLException {
@@ -26,6 +28,21 @@ public abstract class AbstractHelperDaoImpl<E, T> extends BaseDaoImpl<E, T> {
     protected AbstractHelperDaoImpl(ConnectionSource connectionSource, Class<E> clazz)
         throws SQLException {
         super(connectionSource, clazz);
+    }
+
+    protected AnyMemoBaseDBOpenHelper getCentralDbHelper() {
+        if (centralDbHelper != null) {
+            return centralDbHelper;
+        } else {
+            throw new IllegalStateException("Must set the centralDbHelper in order to use");
+        }
+    }
+    public void setCentralDbHelper(AnyMemoBaseDBOpenHelper centralDbHelper) {
+        if (this.centralDbHelper == null) {
+            this.centralDbHelper = centralDbHelper;
+        } else {
+            throw new RuntimeException("Set the centralDbHelper for DAO twice!");
+        }
     }
 
     protected AnyMemoDBOpenHelper getHelper() {

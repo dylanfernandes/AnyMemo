@@ -10,7 +10,7 @@ import com.j256.ormlite.dao.Dao;
  */
 
 
-public interface UserDao extends Dao<User, Integer> {
+public interface UserDao extends HelperDao<User, Integer> {
 
 
     User createOrReturn(String username);
