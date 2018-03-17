@@ -10,10 +10,12 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
 
+import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
 import org.liberty.android.fantastischmemo.dao.DeckDao;
 import org.liberty.android.fantastischmemo.dao.TagDao;
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.dao.UserDao;
+import org.liberty.android.fantastischmemo.entity.AchievementPoint;
 import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.entity.UserStatistics;
@@ -41,6 +43,8 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private UserDao userDao = null;
 
+    private AchievementPointDao apDao = null;
+
     private boolean isReleased = false;
 
     @Override
@@ -53,6 +57,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Tag.class);
             TableUtils.createTable(connectionSource, UserStatistics.class);
             TableUtils.createTable(connectionSource, User.class);
+            TableUtils.createTable(connectionSource, AchievementPoint.class);
 
         } catch (SQLException e) {
             throw new RuntimeException("Database creation error: " + e.toString());
@@ -78,6 +83,15 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
             try {
                 TableUtils.createTable(connectionSource, UserStatistics.class);
                 TableUtils.createTable(connectionSource, User.class);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                oldVersion = 3;
+            }
+        }
+        if (oldVersion <= 4) {
+            try {
+                TableUtils.createTable(connectionSource, AchievementPoint.class);
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
@@ -149,6 +163,17 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 userDao = getDao(User.class);
             }
             return userDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public synchronized AchievementPointDao getAchievementPointDao() {
+        try {
+            if (apDao == null) {
+                apDao = getDao(AchievementPoint.class);
+            }
+            return apDao;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

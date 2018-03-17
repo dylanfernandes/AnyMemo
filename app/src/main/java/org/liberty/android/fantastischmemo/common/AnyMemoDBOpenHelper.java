@@ -52,8 +52,6 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private TagDao tagDao = null;
 
-    private AchievementPointDao apDao = null;
-
     private boolean isReleased = false;
 
     @Override
@@ -69,7 +67,6 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Category.class);
             TableUtils.createTable(connectionSource, LearningData.class);
             TableUtils.createTable(connectionSource, Tag.class);
-            TableUtils.createTable(connectionSource, AchievementPoint.class);
 
 
             getSettingDao().create(new Setting());
@@ -293,16 +290,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    public synchronized AchievementPointDao getAchievementPointDao() {
-        try {
-            if (apDao == null) {
-                apDao = getDao(AchievementPoint.class);
-            }
-            return apDao;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
     /*
      * Override the finalize in case the helper is not release.
      */
