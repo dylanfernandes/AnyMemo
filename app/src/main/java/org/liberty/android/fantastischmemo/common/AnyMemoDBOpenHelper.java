@@ -16,8 +16,6 @@ import org.liberty.android.fantastischmemo.dao.DeckDao;
 import org.liberty.android.fantastischmemo.dao.FilterDao;
 import org.liberty.android.fantastischmemo.dao.LearningDataDao;
 import org.liberty.android.fantastischmemo.dao.SettingDao;
-import org.liberty.android.fantastischmemo.dao.UserDao;
-import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.dao.TagDao;
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
@@ -25,8 +23,6 @@ import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.Filter;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.entity.Setting;
-import org.liberty.android.fantastischmemo.entity.User;
-import org.liberty.android.fantastischmemo.entity.UserStatistics;
 import org.liberty.android.fantastischmemo.entity.Tag;
 
 
@@ -52,10 +48,6 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private LearningDataDao learningDataDao = null;
 
-    private UserDao userDao = null;
-
-    private UserStatisticsDao userStatisticsDao = null;
-
     private TagDao tagDao = null;
 
     private boolean isReleased = false;
@@ -72,11 +64,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Filter.class);
             TableUtils.createTable(connectionSource, Category.class);
             TableUtils.createTable(connectionSource, LearningData.class);
-            TableUtils.createTable(connectionSource, User.class);
-            TableUtils.createTable(connectionSource, UserStatistics.class);
             TableUtils.createTable(connectionSource, Tag.class);
-            TableUtils.createTable(connectionSource, User.class);
-            TableUtils.createTable(connectionSource, UserStatistics.class);
 
 
             getSettingDao().create(new Setting());
@@ -198,17 +186,6 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 oldVersion = 5;
             }
         }
-        if (oldVersion <= 6) {
-            try {
-                TableUtils.createTable(connectionSource, User.class);
-                TableUtils.createTable(connectionSource, UserStatistics.class);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                oldVersion = 6;
-            }
-        }
-        database.setVersion(oldVersion);
     }
 
     @Override
@@ -288,36 +265,12 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    public synchronized UserDao getUserDao() {
-        try {
-            if (userDao == null) {
-                userDao = getDao(User.class);
-            }
-            return userDao;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
     public synchronized LearningDataDao getLearningDataDao() {
         try {
             if (learningDataDao == null) {
                 learningDataDao = getDao(LearningData.class);
             }
             return learningDataDao;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public synchronized UserStatisticsDao getUserStatisticDao() {
-        try {
-            if (userStatisticsDao == null) {
-                userStatisticsDao = getDao(UserStatistics.class);
-            }
-            return userStatisticsDao;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -361,8 +314,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
     String getDbPath() {
         return dbPath;
     }
-
-
+    
 
 }
 
