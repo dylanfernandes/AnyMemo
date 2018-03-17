@@ -17,6 +17,8 @@ import org.liberty.android.fantastischmemo.dao.DeckDao;
 import org.liberty.android.fantastischmemo.dao.FilterDao;
 import org.liberty.android.fantastischmemo.dao.LearningDataDao;
 import org.liberty.android.fantastischmemo.dao.SettingDao;
+import org.liberty.android.fantastischmemo.dao.UserDao;
+import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.dao.TagDao;
 import org.liberty.android.fantastischmemo.entity.AchievementPoint;
 import org.liberty.android.fantastischmemo.entity.Card;
@@ -25,6 +27,8 @@ import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.Filter;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.entity.Setting;
+import org.liberty.android.fantastischmemo.entity.User;
+import org.liberty.android.fantastischmemo.entity.UserStatistics;
 import org.liberty.android.fantastischmemo.entity.Tag;
 
 import java.sql.SQLException;
@@ -35,7 +39,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private final String dbPath;
 
-    private static final int CURRENT_VERSION = 7;
+    private static final int CURRENT_VERSION = 6;
 
     private CardDao cardDao = null;
 
@@ -48,6 +52,10 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
     private CategoryDao categoryDao = null;
 
     private LearningDataDao learningDataDao = null;
+
+    private UserDao userDao = null;
+
+    private UserStatisticsDao userStatisticsDao = null;
 
     private TagDao tagDao = null;
 
@@ -67,8 +75,11 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Filter.class);
             TableUtils.createTable(connectionSource, Category.class);
             TableUtils.createTable(connectionSource, LearningData.class);
+            TableUtils.createTable(connectionSource, User.class);
+            TableUtils.createTable(connectionSource, UserStatistics.class);
             TableUtils.createTable(connectionSource, Tag.class);
             TableUtils.createTable(connectionSource, AchievementPoint.class);
+
 
             getSettingDao().create(new Setting());
             getCategoryDao().create(new Category());
@@ -188,17 +199,21 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 oldVersion = 5;
             }
         }
-        if (oldVersion <= 7) {
+
+        if (oldVersion <= 6) {
             try {
-               // database.execSQL("alter table decks add column dbPath VARCHAR");
+                TableUtils.createTable(connectionSource, User.class);
+                TableUtils.createTable(connectionSource, UserStatistics.class);
                 TableUtils.createTable(connectionSource, AchievementPoint.class);
             } catch (SQLException e) {
-                Log.e(TAG, "Upgrading failed, the achievementpoints table might already exist.", e);
+                e.printStackTrace();
             } finally {
-                oldVersion = 7;
+                oldVersion = 6;
             }
         }
+
         database.setVersion(oldVersion);
+
     }
 
     @Override
@@ -270,6 +285,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         try {
             if (categoryDao == null) {
                 categoryDao = getDao(Category.class);
+                categoryDao.setHelper(this);
             }
             return categoryDao;
         } catch (SQLException e) {
@@ -288,12 +304,36 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    public synchronized UserDao getUserDao() {
+        try {
+            if (userDao == null) {
+                userDao = getDao(User.class);
+                userDao.setHelper(this);
+            }
+            return userDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public synchronized UserStatisticsDao getUserStatisticDao() {
+        try {
+            if (userStatisticsDao == null) {
+                userStatisticsDao = getDao(UserStatistics.class);
+            }
+            return userStatisticsDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public synchronized TagDao getTagDao() {
         try {
             if (tagDao == null) {
                 tagDao = getDao(Tag.class);
             }
             return tagDao;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -335,4 +375,8 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
     String getDbPath() {
         return dbPath;
     }
+
+
+
 }
+

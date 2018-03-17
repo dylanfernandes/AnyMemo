@@ -21,4 +21,5 @@ public class UserStatisticsDaoImpl extends AbstractHelperDaoImpl<UserStatistics,
             throws SQLException {
         super(connectionSource, clazz);
     }
+
 }
