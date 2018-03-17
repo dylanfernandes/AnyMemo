@@ -44,4 +44,16 @@ public class AchievementPointDaoTest extends AbstractExistingDBTest {
         assertEquals(addSize - 1, apDao.countOf());
         assertFalse( apDao.idExists(2));
     }
+
+    @Test
+    public void testModifyPoint() throws Exception {
+        AchievementPointDao apDao = helper.getAchievementPointDao();
+        AchievementPoint ap = new AchievementPoint();
+        ap.setId(1);
+        apDao.create(ap);
+        assertTrue( apDao.idExists(1));
+        ap.setId(2);
+        apDao.createOrUpdate(ap);
+        assertTrue( apDao.idExists(2));
+    }
 }
