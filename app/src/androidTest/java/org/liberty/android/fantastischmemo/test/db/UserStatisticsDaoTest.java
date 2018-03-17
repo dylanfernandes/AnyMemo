@@ -20,7 +20,7 @@ public class UserStatisticsDaoTest extends AbstractExistingDBTest {
     public void testAddUserStatistics() throws Exception {
         User user = new User();
         user.setId(1);
-        UserStatisticsDao userStatsDao = helper.getUserStatisticsDao();
+        UserStatisticsDao userStatsDao = centralDbHelper.getUserStatisticsDao();
         long count = userStatsDao.countOf();
         UserStatistics userStats = userStatsDao.createOrReturn(user);
         assertEquals(count + 1, userStatsDao.countOf());
@@ -29,7 +29,7 @@ public class UserStatisticsDaoTest extends AbstractExistingDBTest {
 
     @Test
     public void testDeleteUserStatistics() throws Exception {
-        UserStatisticsDao userStatsDao = helper.getUserStatisticsDao();
+        UserStatisticsDao userStatsDao = centralDbHelper.getUserStatisticsDao();
         User user = new User();
         user.setId(1);
         UserStatistics userStats = userStatsDao.createOrReturn(user);
@@ -40,7 +40,7 @@ public class UserStatisticsDaoTest extends AbstractExistingDBTest {
 
     @Test
     public void testReturnUserStatistics() throws Exception {
-        UserStatisticsDao userStatsDao = helper.getUserStatisticsDao();
+        UserStatisticsDao userStatsDao = centralDbHelper.getUserStatisticsDao();
         long count = userStatsDao.countOf();
         User user = new User();
         user.setId(1);

@@ -62,7 +62,11 @@ public class UserDaoImpl extends AbstractHelperDaoImpl<User, Integer> implements
     @Override
     public int delete(User user) {
         UserStatistics userStat = user.getUserStatistics();
-        getHelper().getUserStatisticDao().delete(userStat);
+        try {
+            getHelper().getUserStatisticDao().delete(userStat);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return super.delete(user);
     }
 }

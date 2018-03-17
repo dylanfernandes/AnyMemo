@@ -303,18 +303,6 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    public synchronized UserStatisticsDao getUserStatisticsDao() {
-        try {
-            if (userStatisticsDao == null) {
-                userStatisticsDao = getDao(UserStatistics.class);
-            }
-            return userStatisticsDao;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 
     public synchronized LearningDataDao getLearningDataDao() {
         try {
@@ -322,18 +310,6 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 learningDataDao = getDao(LearningData.class);
             }
             return learningDataDao;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public synchronized UserDao getUserDao() {
-        try {
-            if (userDao == null) {
-                userDao = getDao(User.class);
-                userDao.setHelper(this);
-            }
-            return userDao;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
