@@ -34,7 +34,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private final String dbPath;
 
-    private static final int CURRENT_VERSION = 6;
+    private static final int CURRENT_VERSION = 5;
 
     private CardDao cardDao = null;
 
@@ -314,7 +314,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
     String getDbPath() {
         return dbPath;
     }
-    
+
 
 }
 
