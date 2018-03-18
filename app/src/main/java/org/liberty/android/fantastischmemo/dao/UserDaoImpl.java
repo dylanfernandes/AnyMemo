@@ -1,6 +1,8 @@
 package org.liberty.android.fantastischmemo.dao;
 
-import org.liberty.android.fantastischmemo.entity.Category;
+
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.entity.User;
 import org.liberty.android.fantastischmemo.entity.UserStatistics;
 
@@ -62,7 +64,12 @@ public class UserDaoImpl extends AbstractHelperDaoImpl<User, Integer> implements
     @Override
     public int delete(User user) {
         UserStatistics userStat = user.getUserStatistics();
-        getHelper().getUserStatisticDao().delete(userStat);
+
+        AnyMemoBaseDBOpenHelper dbHelper = AnyMemoBaseDBOpenHelperManager.getHelper("central.db");
+        UserStatisticsDao userStatsDao = dbHelper.getUserStatisticsDao();
+        userStatsDao.delete(userStat);
+
+
         return super.delete(user);
     }
 }

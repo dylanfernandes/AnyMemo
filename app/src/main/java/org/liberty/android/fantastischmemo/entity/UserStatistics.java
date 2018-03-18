@@ -2,8 +2,13 @@ package org.liberty.android.fantastischmemo.entity;
 
 
 import com.j256.ormlite.field.DataType;
+
+
+import java.io.Serializable;
 import java.lang.Math;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDaoImpl;
@@ -16,7 +21,7 @@ import java.util.List;
  */
 
 @DatabaseTable(tableName = "userstatistics", daoClass = UserStatisticsDaoImpl.class)
-public class UserStatistics{
+public class UserStatistics {
 
     //Attributes
     @DatabaseField(generatedId = true)
@@ -29,20 +34,19 @@ public class UserStatistics{
     private Date lastLogin;
 
     @DatabaseField(defaultValue = "1")
-    private Integer multiplier;
+    private Integer multiplier = 1;
 
     @DatabaseField(defaultValue = "0")
-    private Integer streak;
+    private Integer streak = 0;
 
     @DatabaseField(defaultValue = "0")
-    private Integer longestStreak;
+    private Integer longestStreak = 0;
 
     @DatabaseField(defaultValue = "0")
-
-    private Integer weeks;
+    private Integer weeks = 0;
 
     @DatabaseField(defaultValue = "0")
-    private Integer months;
+    private Integer months = 0;
 
     public List<AchievementPoint> points;
 
@@ -121,6 +125,17 @@ public class UserStatistics{
     public void setMonths(Integer months) {
         this.months = months;
     }
+
+
+    public User getUser() {
+        return this.user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+
+    }
+
 
     @Override
     public String toString(){
