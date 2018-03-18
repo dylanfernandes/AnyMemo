@@ -31,7 +31,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private final String TAG = getClass().getSimpleName();
 
-    private static final int CURRENT_VERSION = 4;
+    private static final int CURRENT_VERSION = 5;
 
     private final String dbPath;
 
@@ -98,6 +98,18 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 oldVersion = 4;
             }
         }
+
+        if (oldVersion <= 5) {
+
+            userDao.createOrReturn("Default Username");
+            User defaultUser = new User();
+            defaultUser.setName("Default Name");
+            defaultUser.setSurname("Defailt Surname");
+            userDao.update(defaultUser);
+            userStatisticsDao.createOrReturn(defaultUser);
+            oldVersion = 5;
+        }
+
         database.setVersion(oldVersion);
     }
 

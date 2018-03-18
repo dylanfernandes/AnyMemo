@@ -68,7 +68,7 @@ public class AccountPage extends BaseActivity{
     public Void doInBackground(Void... params) {
         baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(AccountPage.this, dbPath);
         userDao = baseHelper.getUserDao();
-        userStatDao = baseHelper.getUserStatisticDao();
+        userStatDao = baseHelper.getUserStatisticsDao();
         user = userDao.queryForId(1);
         userStat = userStatDao.queryForId(1);
         return null;
