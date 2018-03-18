@@ -95,7 +95,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
-                oldVersion = 3;
+                oldVersion = 4;
             }
         }
         database.setVersion(oldVersion);
