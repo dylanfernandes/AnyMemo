@@ -38,7 +38,6 @@ public class UserStatistics{
     private Integer longestStreak;
 
     @DatabaseField(defaultValue = "0")
-
     private Integer weeks;
 
     @DatabaseField(defaultValue = "0")
