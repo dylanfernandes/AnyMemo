@@ -32,7 +32,7 @@ public class AccountPage extends BaseActivity{
         longest_streak = (TextView)findViewById(R.id.account_longest_streak);
         longest_streak.setText(String.valueOf(fakeUserStat.getLongestStreak()));
         current_streak = (TextView)findViewById(R.id.account_current_streak);
-        current_streak.setText(String.valueOf(fakeUserStat.getCurrentStreak()));
+        current_streak.setText(String.valueOf(fakeUserStat.getStreak()));
 
     };
 
