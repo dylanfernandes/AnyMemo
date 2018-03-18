@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.widget.EditText;
 
 import org.apache.commons.io.FileUtils;
@@ -16,6 +15,7 @@ import org.liberty.android.fantastischmemo.modules.PerActivity;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -51,10 +51,16 @@ public class GenericDatabaseDialogUtil {
                 new AlertDialog.Builder(activity)
                         .setTitle(activity.getString(R.string.delete_text))
                         .setMessage(activity.getString(R.string.fb_delete_message))
-                        .setPositiveButton(activity.getString(R.string.delete_text), new DialogInterface.OnClickListener(){
+                        .setPositiveButton(activity.getString(R.string.delete_text), new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which ){
-                                amFileUtil.deleteDbSafe(clickedFile.getAbsolutePath());
+                            public void onClick(DialogInterface dialog, int which) {
+                                String path = clickedFile.getAbsolutePath();
+                                amFileUtil.deleteDbSafe(path);
+                                try {
+                                    deleteDeckFromCentralDB(path);
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
                                 emitter.onSuccess(clickedFile);
                             }
                         })
@@ -85,13 +91,9 @@ public class GenericDatabaseDialogUtil {
                 String destDir = srcDir.replaceAll(".db", ".clone.db");
                 try {
                     FileUtils.copyFile(new File(srcDir), new File(destDir));
-                    DeckDao deckDao = AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getDeckDao();
-                    List<Deck> doesExist = deckDao.queryForEq("dbPath", destDir);
-                    Deck deck = new Deck();
-                    deck.setDbPath(destDir);
-                    deckDao.createIfNotExists(deck);
+                    addDeckToCentralDB(destDir);
                     emitter.onSuccess(new File(destDir));
-                } catch(IOException e){
+                } catch (IOException e) {
                     new AlertDialog.Builder(activity)
                             .setTitle(activity.getString(R.string.fail))
                             .setMessage(activity.getString(R.string.fb_fail_to_clone) + "\nError: " + e.toString())
@@ -120,10 +122,13 @@ public class GenericDatabaseDialogUtil {
                                 String value = input.getText().toString();
                                 if (!value.equals(clickedFile.getAbsolutePath())) {
                                     try {
-                                        FileUtils.copyFile(clickedFile, new File(value));
+                                        File newFile = new File(value);
+                                        FileUtils.copyFile(clickedFile, newFile);
                                         amFileUtil.deleteDbSafe(clickedFile.getAbsolutePath());
                                         recentListUtil.deleteFromRecentList(clickedFile.getAbsolutePath());
-                                        emitter.onSuccess(new File(value));
+                                        deleteDeckFromCentralDB(clickedFile.getAbsolutePath());
+                                        addDeckToCentralDB(newFile.toString());
+                                        emitter.onSuccess(newFile);
                                     } catch (IOException e) {
                                         new AlertDialog.Builder(activity)
                                                 .setTitle(activity.getString(R.string.fail))
@@ -132,6 +137,8 @@ public class GenericDatabaseDialogUtil {
                                                 .create()
                                                 .show();
                                         emitter.onComplete();
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
                                     }
                                 }
                             }
@@ -157,9 +164,9 @@ public class GenericDatabaseDialogUtil {
                         .setTitle(R.string.fb_create_dir)
                         .setMessage(R.string.fb_create_dir_message)
                         .setView(input)
-                        .setPositiveButton(activity.getString(R.string.ok_text), new DialogInterface.OnClickListener(){
+                        .setPositiveButton(activity.getString(R.string.ok_text), new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which ){
+                            public void onClick(DialogInterface dialog, int which) {
                                 String value = input.getText().toString();
                                 File newDir = new File(currentDirectory.getAbsolutePath() + "/" + value);
                                 newDir.mkdir();
@@ -193,8 +200,37 @@ public class GenericDatabaseDialogUtil {
     public Activity getActivity() {
         return activity;
     }
+
     public AMFileUtil getAmFileUtil() {
         return amFileUtil;
     }
 
+    private static boolean deckExistsInCentralDB(String dbPath) throws SQLException {
+        DeckDao deckDao = AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getDeckDao();
+        List<Deck> decks = deckDao.queryForEq("dbPath", dbPath);
+        return decks.size() != 0;
+    }
+
+    private static void deleteDeckFromCentralDB(String path) throws SQLException {
+        DeckDao deckDao = AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getDeckDao();
+        if (deckExistsInCentralDB(path)) {
+            Deck deck = deckDao.queryForEq("dbPath", path).get(0);
+            deckDao.delete(deck);
+        }
+    }
+
+    private static String getDeckNameFromPath(String path) {
+        String[] pathSplit = path.split("/");
+        return pathSplit[pathSplit.length - 1];
+    }
+
+    public static void addDeckToCentralDB(String path) throws SQLException {
+        DeckDao deckDao = AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getDeckDao();
+        if (!deckExistsInCentralDB(path)) {
+            Deck deck = new Deck();
+            deck.setDbPath(path);
+            deck.setName(getDeckNameFromPath(path));
+            deckDao.createIfNotExists(deck);
+        }
+    }
 }

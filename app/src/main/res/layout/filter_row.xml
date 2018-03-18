@@ -6,25 +6,16 @@
     android:padding="10dp">
 
     <TextView
-        android:id="@+id/deck_text"
+        android:id="@+id/tag_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="24sp"
         android:layout_weight="1"
         android:layout_gravity="center" />
 
-    <!--<ImageButton
-        android:id="@+id/deck_edit_button"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        android:layout_gravity="center"
-        android:contentDescription="@string/edit_text"
-        android:src="@drawable/ic_menu_edit" />-->
-
-    <!--<CheckedTextView
-        android:id="@+id/filter_checked_text_view"
-        android:checked="true"
+    <CheckBox
+        android:id="@+id/tag_check_box"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />-->
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

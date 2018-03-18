@@ -2,6 +2,8 @@ package org.liberty.android.fantastischmemo.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,9 +14,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.liberty.android.fantastischmemo.R;
@@ -24,7 +26,6 @@ import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.Tag;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FilterActivity extends BaseActivity {
@@ -43,6 +44,13 @@ public class FilterActivity extends BaseActivity {
 
         DecksAdapter decksAdapter = new DecksAdapter(decks);
         decksRecyclerView.setAdapter(decksAdapter);
+
+        /*DeckDao deckDao = AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getDeckDao();
+        try {
+            deckDao.delete(deckDao.queryForAll());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }*/
     }
 
     @Override
@@ -67,49 +75,60 @@ public class FilterActivity extends BaseActivity {
         View view = inflater.inflate(R.layout.filter_layout, null);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.deck_list);
-        recyclerView.setAdapter(new FilterAdapter(loadTags()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        List<Tag> list = loadTags();
+        final FilterAdapter filterAdapter = new FilterAdapter(list);
+        recyclerView.setAdapter(filterAdapter);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Filter by Tag");
         builder.setView(view);
+        builder.setPositiveButton(getString(R.string.filter_text), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // do the filtering logic
+
+            }
+        });
+        builder.setNegativeButton(getString(R.string.cancel_text), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
 
         return builder.create();
     }
 
     private List<Deck> loadDecks() {
-        List<Deck> list = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
-            Deck deck = new Deck();
-            deck.setName("Deck " + i);
-            list.add(deck);
+        try {
+            return AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getDeckDao().queryForAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return list;
+        return null;
     }
 
     private List<Tag> loadTags() {
-        List<Tag> tags = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++) {
-            tags.add(new Tag("Random " + i));
-        }
-
-        return tags;
-        /*try {
+        try {
             return AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getTagDao().queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;*/
+        return null;
     }
 
     class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterViewHolder> {
 
         class FilterViewHolder extends RecyclerView.ViewHolder {
             TextView tagTextView;
+            CheckBox tagCheckBox;
 
             FilterViewHolder(View itemView) {
                 super(itemView);
-                tagTextView = (TextView) itemView.findViewById(R.id.deck_text);
+                tagTextView = (TextView) itemView.findViewById(R.id.tag_text);
+                tagCheckBox = (CheckBox) itemView.findViewById(R.id.tag_check_box);
             }
         }
 
@@ -174,10 +193,9 @@ public class FilterActivity extends BaseActivity {
             holder.imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new AlertDialog.Builder(v.getContext())
-                            .setTitle("Deck")
-                            .setMessage("TO IMPLEMENT")
-                            .show();
+                    Intent intent = new Intent(FilterActivity.this, TagsActivity.class);
+                    intent.putExtra("deckPath", deck.getDbPath());
+                    startActivity(intent);
                 }
             });
         }
