@@ -200,6 +200,9 @@ public class AnyMemo extends BaseActivity {
                         case R.id.misc_tab_menu:
                             tabLayout.getTabAt(3).select();
                             break;
+                        case R.id.account_tab_menu:
+                            startActivity(new Intent(tabLayout.getContext(), AccountPage.class));
+                            break;
                         case R.id.option_tab_menu:
                             startActivity(new Intent(tabLayout.getContext(), OptionScreen.class));
                             break;
