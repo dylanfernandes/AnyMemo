@@ -2,6 +2,7 @@ package org.liberty.android.fantastischmemo.dao;
 
 import com.j256.ormlite.dao.Dao;
 
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 
 import java.util.List;
@@ -14,6 +15,11 @@ public interface HelperDao<E, T> extends Dao<E, T> {
      * can use any other DAO.
      */
     void setHelper(AnyMemoDBOpenHelper helper);
+
+    /**
+     * Set CentralDbHelper so inherrited central DAO can use any other central DAO
+     */
+    void setCentralDbHelper(AnyMemoBaseDBOpenHelper centralDbHelper);
 
     /**
      * Override so it throws RuntimeException instead of SQLException
