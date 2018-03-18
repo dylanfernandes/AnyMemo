@@ -58,7 +58,8 @@ public class AccountPage extends BaseActivity{
 
         current_streak = (TextView)findViewById(R.id.account_current_streak);
         //current_streak.setText(String.valueOf(fakeUserStat.getCurrentStreak()));
-        current_streak.setText(userStat.getCurrentStreak());
+        current_streak.setText(String.valueOf(fakeUserStat.getStreak()));
+
 
     };
 

@@ -37,11 +37,6 @@ public class UserStatistics{
     @DatabaseField(defaultValue = "0")
     private Integer longestStreak;
 
-
-    @DatabaseField(defaultValue = "0")
-    private Integer currentStreak;
-
-
     @DatabaseField(defaultValue = "0")
 
     private Integer weeks;
@@ -59,7 +54,7 @@ public class UserStatistics{
     //fake UserStatistics for AccountPage
     public UserStatistics(Integer longest, Integer current){
         this.longestStreak = longest;
-        this.currentStreak = current;
+        this.streak = current;
     }
 
     //Getters and Setters
@@ -109,14 +104,6 @@ public class UserStatistics{
 
     public void setLongestStreak(Integer longestStreak) {
         this.longestStreak = longestStreak;
-    }
-
-    public Integer getCurrentStreak() {
-        return currentStreak;
-    }
-
-    public void setCurrentStreak(Integer currentStreak) {
-        this.currentStreak = currentStreak;
     }
 
     public Integer getWeeks() {
