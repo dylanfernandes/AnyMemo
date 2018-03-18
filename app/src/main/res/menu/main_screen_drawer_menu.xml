@@ -24,6 +24,11 @@
     <group android:id="@+id/option_tabs_group"
         android:checkableBehavior="single">
         <item
+            android:id="@+id/account_tab_menu"
+            android:icon="@drawable/person"
+            android:title="@string/account"/>
+        
+        <item
             android:id="@+id/option_tab_menu"
             android:icon="@drawable/options"
             android:title="@string/option_button_text"/>
