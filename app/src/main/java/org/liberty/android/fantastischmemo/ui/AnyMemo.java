@@ -331,17 +331,6 @@ public class AnyMemo extends BaseActivity {
                 FileUtils.copyInputStreamToFile(in2, new File(emptyDbPath));
                 in2.close();
 
-                helper = AnyMemoBaseDBOpenHelperManager.getHelper(AnyMemo.this, centralDbDest);
-
-                userDao = helper.getUserDao();
-                userStatisticsDao = helper.getUserStatisticsDao();
-
-                User defaultUser = userDao.createOrReturn("DefaultUser");
-                defaultUser.setName("DefaultUser");
-                defaultUser.setSurname("DefaultSurname");
-                userDao.update(defaultUser);
-                userStatisticsDao.createOrReturn(defaultUser);
-
             } catch(IOException e){
                 Log.e(TAG, "Copy file error", e);
 
