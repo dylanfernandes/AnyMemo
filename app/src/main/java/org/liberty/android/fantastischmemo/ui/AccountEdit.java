@@ -25,12 +25,15 @@ public class AccountEdit extends BaseActivity {
     private EditText updateNameEntry;
     private Button updateButton;
 
-    private String currentName;
+    String currentName;
 
     private AnyMemoBaseDBOpenHelper helper;
     private UserDao userdao;
 
     private InitTask initTask;
+
+    protected String dbPath = null;
+    public static String EXTRA_DBPATH = "dbpath";
 
 
     @Override
@@ -76,7 +79,6 @@ public class AccountEdit extends BaseActivity {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
                 dbPath = extras.getString(EXTRA_DBPATH);
-                dbName = FilenameUtils.getName(dbPath);
             }
 
             progressDialog = new ProgressDialog(AccountEdit.this);
@@ -102,7 +104,8 @@ public class AccountEdit extends BaseActivity {
             currentNameEntry = (EditText)findViewById(R.id.edit_profile_current_name_entry);
             updateNameEntry = (EditText)findViewById(R.id.edit_profile_update_name_entry);
 
-            currentNameEntry.setText(userdao.createOrReturn(""));
+            currentName = getIntent().getStringExtra("CURRENT_USER_NAME");
+            currentNameEntry.setText(userdao.createOrReturn(currentName).getName());
             currentNameEntry.setEnabled(false);
 
             progressDialog.dismiss();
@@ -136,9 +139,8 @@ public class AccountEdit extends BaseActivity {
         @Override
         public void onPostExecute(Void result){
             currentNameEntry.setEnabled(true);
-            currentNameEntry.setText(userdao.createOrReturn(""));
+            currentNameEntry.setText(userdao.createOrReturn(currentName).getName());
         }
     }
-
 
 }

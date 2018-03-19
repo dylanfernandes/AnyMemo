@@ -107,6 +107,8 @@
         <activity
             android:name=".ui.AccountPage" />
         <activity
+            android:name=".ui.AccountEdit"></activity>
+        <activity
             android:name=".ui.OptionScreen" />
         <activity 
             android:name=".ui.AlgorithmCustomizationScreen"
