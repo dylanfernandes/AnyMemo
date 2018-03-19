@@ -17,6 +17,7 @@ public class AbstractExistingDBTest extends BaseTest {
 
     protected AnyMemoDBOpenHelper helper;
 
+
     @Before
     public void setUp() throws Exception {
         Context testContext = getContext();
@@ -36,4 +37,5 @@ public class AbstractExistingDBTest extends BaseTest {
         File outFile = new File(TestHelper.SAMPLE_DB_PATH);
         outFile.delete();
     }
+
 }

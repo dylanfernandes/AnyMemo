@@ -1,7 +1,7 @@
 package org.liberty.android.fantastischmemo.common;
 
 import android.content.Context;
-import android.database.Cursor;
+
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -10,6 +10,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
 
+import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
 import org.liberty.android.fantastischmemo.dao.DeckDao;
 import org.liberty.android.fantastischmemo.dao.TagDao;
 import org.liberty.android.fantastischmemo.dao.UserDao;
@@ -18,6 +19,7 @@ import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.entity.User;
 import org.liberty.android.fantastischmemo.entity.UserStatistics;
+import org.liberty.android.fantastischmemo.entity.AchievementPoint;
 
 import java.sql.SQLException;
 
@@ -29,17 +31,19 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private final String TAG = getClass().getSimpleName();
 
-    private static final int CURRENT_VERSION = 3;
+    private static final int CURRENT_VERSION = 4;
 
-    private final String dbPath;
+    private String dbPath = "";
 
     private DeckDao deckDao = null;
 
     private TagDao tagDao = null;
 
+    private UserStatisticsDao userStatisticsDao = null;
+
     private UserDao userDao = null;
 
-    private UserStatisticsDao userStatisticsDao = null;
+    private AchievementPointDao apDao = null;
 
     private boolean isReleased = false;
 
@@ -51,6 +55,9 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.createTable(connectionSource, Deck.class);
             TableUtils.createTable(connectionSource, Tag.class);
+            TableUtils.createTable(connectionSource, UserStatistics.class);
+            TableUtils.createTable(connectionSource, User.class);
+            TableUtils.createTable(connectionSource, AchievementPoint.class);
 
         } catch (SQLException e) {
             throw new RuntimeException("Database creation error: " + e.toString());
@@ -82,15 +89,14 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 oldVersion = 3;
             }
         }
-
         if (oldVersion <= 4) {
-
-            userDao.createOrReturn("someUsername");
-            User randomUser = new User();
-            randomUser.setName("someName");
-            randomUser.setSurname("someSurname");
-            userDao.update(randomUser);
-            oldVersion = 4;
+            try {
+                TableUtils.createTable(connectionSource, AchievementPoint.class);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                oldVersion = 4;
+            }
         }
         database.setVersion(oldVersion);
     }
@@ -138,6 +144,19 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    public synchronized UserStatisticsDao getUserStatisticsDao() {
+        try {
+            if (userStatisticsDao == null) {
+                userStatisticsDao = getDao(UserStatistics.class);
+                userStatisticsDao.setCentralDbHelper(this);
+            }
+            return userStatisticsDao;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public synchronized UserDao getUserDao() {
         try {
             if (userDao == null) {
@@ -156,6 +175,17 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 userStatisticsDao = getDao(UserStatistics.class);
             }
             return userStatisticsDao;
+        } catch (SQLException e) {
+            throw new RuntimeException();
+        }
+    }
+
+    public synchronized AchievementPointDao getAchievementPointDao() {
+        try {
+            if (apDao == null) {
+                apDao = getDao(AchievementPoint.class);
+            }
+            return apDao;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
