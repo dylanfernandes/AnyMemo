@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CheckedTextView;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -26,9 +26,12 @@ import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.Tag;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FilterActivity extends BaseActivity {
+    private List<Integer> filteredChecked = new ArrayList<>();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +81,7 @@ public class FilterActivity extends BaseActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         List<Tag> list = loadTags();
-        final FilterAdapter filterAdapter = new FilterAdapter(list);
+        final FilterAdapter filterAdapter = new FilterAdapter(list, filteredChecked);
         recyclerView.setAdapter(filterAdapter);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -88,7 +91,7 @@ public class FilterActivity extends BaseActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // do the filtering logic
-
+                filteredChecked = filterAdapter.getCheckedTags();
             }
         });
         builder.setNegativeButton(getString(R.string.cancel_text), new DialogInterface.OnClickListener() {
@@ -133,9 +136,11 @@ public class FilterActivity extends BaseActivity {
         }
 
         private List<Tag> tags;
+        private List<Integer> filteredTagIds;
 
-        FilterAdapter(List<Tag> tags) {
+        FilterAdapter(List<Tag> tags, List<Integer> checked) {
             this.tags = tags;
+            this.filteredTagIds = checked;
         }
 
         @Override
@@ -148,11 +153,27 @@ public class FilterActivity extends BaseActivity {
         public void onBindViewHolder(FilterViewHolder holder, int position) {
             final Tag tag = tags.get(position);
             holder.tagTextView.setText(tag.getName());
+            holder.tagCheckBox.setChecked(filteredTagIds.contains(tag.getId()));
+            holder.tagCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        filteredTagIds.add(tag.getId());
+                    } else {
+                        int index = filteredTagIds.indexOf(tag.getId());
+                        filteredTagIds.remove(index);
+                    }
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
             return tags.size();
+        }
+
+        List<Integer> getCheckedTags() {
+            return this.filteredTagIds;
         }
     }
 
