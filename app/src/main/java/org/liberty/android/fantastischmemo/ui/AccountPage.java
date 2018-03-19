@@ -1,6 +1,9 @@
 package org.liberty.android.fantastischmemo.ui;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 import org.liberty.android.fantastischmemo.common.AMEnv;
 
@@ -32,11 +35,13 @@ public class AccountPage extends BaseActivity{
     private String dbPath = AMEnv.CENTRAL_DB_NAME;
     public static String EXTRA_DBPATH = "dbpath";
 
+
     User fakeUser = new User("Thomas", "blue_fish");
     UserStatistics fakeUserStat = new UserStatistics(17, 3);
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activityComponents().inject(this);
         setContentView(R.layout.account_page_tab);
 
         Bundle extras = getIntent().getExtras();
@@ -48,14 +53,16 @@ public class AccountPage extends BaseActivity{
         userDao = baseHelper.getUserDao();
         userStatDao = baseHelper.getUserStatisticsDao();
 
-        User defaultUser = userDao.createOrReturn("DefaultUsername");
-        defaultUser.setName("DefaultName");
-        defaultUser.setSurname("DefaultSurname");
-        userDao.update(defaultUser);
-        userStatDao.createOrReturn(defaultUser);
-
         user = userDao.queryForId(1);
         userStat = userStatDao.queryForId(1);
+
+        if(user == null) {
+            User defaultUser = userDao.createOrReturn("DefaultUsername");
+            defaultUser.setName("DefaultName");
+            defaultUser.setSurname("DefaultSurname");
+            userDao.update(defaultUser);
+            userStatDao.createOrReturn(defaultUser);
+        }
 
         user_Name = (TextView)findViewById(R.id.account_user_name);
         user_Name.setText(user.getName());
