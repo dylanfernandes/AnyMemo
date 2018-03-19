@@ -124,12 +124,6 @@ public class AccountEdit extends BaseActivity {
 
         @Override
         public void onPreExecute() {
-            progressDialog = new ProgressDialog(AccountEdit.this);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setTitle(getString(R.string.loading_please_wait));
-            progressDialog.setMessage(getString(R.string.updating_database));
-            progressDialog.setCancelable(false);
-            progressDialog.show();
         }
 
         @Override
