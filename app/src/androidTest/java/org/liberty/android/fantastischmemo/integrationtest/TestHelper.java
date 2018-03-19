@@ -19,6 +19,8 @@ public class TestHelper {
     public static final String SAMPLE_DB_PATH = "/sdcard/anymemo/french-body-parts.db";
     public static final String SAMPLE_DB_NAME= "french-body-parts.db";
 
+
+
     private Context mTargetContext;
 
     public TestHelper(Instrumentation ins) {
