@@ -104,7 +104,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
             userDao.createOrReturn("Default Username");
             User defaultUser = new User();
             defaultUser.setName("Default Name");
-            defaultUser.setSurname("Defailt Surname");
+            defaultUser.setSurname("Default Surname");
             userDao.update(defaultUser);
             userStatisticsDao.createOrReturn(defaultUser);
             oldVersion = 5;
