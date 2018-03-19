@@ -60,22 +60,6 @@ public abstract class AbstractHelperDaoImpl<E, T> extends BaseDaoImpl<E, T> {
         }
     }
 
-    protected AnyMemoBaseDBOpenHelper getCentralHelper() {
-        if (centralHelper != null) {
-            return centralHelper;
-        } else {
-            throw new IllegalStateException("Must set the helper in order to use");
-        }
-    }
-
-    public void setHelper(AnyMemoBaseDBOpenHelper helper){
-        if (this.centralHelper == null) {
-            this.centralHelper = helper;
-        } else {
-            throw new RuntimeException("Set the helper for DAO twice!");
-        }
-    }
-
     /**
      * Override so it throws RuntimeException instead of SQLException
      */

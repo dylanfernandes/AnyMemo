@@ -166,7 +166,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
         try {
             if (userDao == null) {
                 userDao = getDao(User.class);
-                userDao.setHelper(this);
+                userDao.setCentralDbHelper(this);
             }
             return userDao;
         } catch (SQLException e) {

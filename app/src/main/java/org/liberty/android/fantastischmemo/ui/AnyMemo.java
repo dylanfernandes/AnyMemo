@@ -334,7 +334,7 @@ public class AnyMemo extends BaseActivity {
                 helper = AnyMemoBaseDBOpenHelperManager.getHelper(AnyMemo.this, centralDbDest);
 
                 userDao = helper.getUserDao();
-                userStatisticsDao = helper.getUserStatisticDao();
+                userStatisticsDao = helper.getUserStatisticsDao();
 
                 User defaultUser = userDao.createOrReturn("DefaultUser");
                 defaultUser.setName("DefaultUser");
@@ -372,7 +372,7 @@ public class AnyMemo extends BaseActivity {
             helper = AnyMemoBaseDBOpenHelperManager.getHelper(AnyMemo.this, centralDbDest);
 
             userDao = helper.getUserDao();
-            userStatisticsDao = helper.getUserStatisticDao();
+            userStatisticsDao = helper.getUserStatisticsDao();
 
             User defaultUser = userDao.createOrReturn("DefaultUser");
             defaultUser.setName("DefaultUser");
