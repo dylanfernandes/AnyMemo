@@ -50,11 +50,11 @@ public class UserDaoImpl extends AbstractHelperDaoImpl<User, Integer> implements
         }
     }
 
-    public void editName(String username, String name){
+    public void editName(String username, String newName){
         try {
             UpdateBuilder<User, Integer> ub = updateBuilder();
             ub.where().eq("username", username);
-            ub.updateColumnValue("name" , name);
+            ub.updateColumnValue("name" , newName);
             ub.update();
         } catch (SQLException e) {
             throw new RuntimeException(e);

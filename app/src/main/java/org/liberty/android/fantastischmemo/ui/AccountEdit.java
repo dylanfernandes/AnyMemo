@@ -3,6 +3,7 @@ package org.liberty.android.fantastischmemo.ui;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
@@ -25,14 +27,15 @@ public class AccountEdit extends BaseActivity {
     private EditText updateNameEntry;
     private Button updateButton;
 
-    String currentName;
+    protected String currentName;
+    protected String updatedName;
 
     private AnyMemoBaseDBOpenHelper helper;
     private UserDao userdao;
 
     private InitTask initTask;
 
-    protected String dbPath = null;
+    protected String dbPath = "";
     public static String EXTRA_DBPATH = "dbpath";
 
 
@@ -61,6 +64,10 @@ public class AccountEdit extends BaseActivity {
                             public void onClick(DialogInterface  d, int which){
                                 UpdateTask updatetask = new UpdateTask();
                                 updatetask.execute();
+
+                                Intent intent = new Intent(AccountEdit.this, AccountPage.class);
+                                startActivity(intent);
+                                
                             }
                         }).setTitle(R.string.warning_text)
 
@@ -76,10 +83,8 @@ public class AccountEdit extends BaseActivity {
         @Override
         public void onPreExecute() {
             setTitle(R.string.memo_edit_dialog_title);
-            Bundle extras = getIntent().getExtras();
-            if (extras != null) {
-                dbPath = extras.getString(EXTRA_DBPATH);
-            }
+
+            dbPath = AMEnv.CENTRAL_DB_NAME;
 
             progressDialog = new ProgressDialog(AccountEdit.this);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -104,8 +109,9 @@ public class AccountEdit extends BaseActivity {
             currentNameEntry = (EditText)findViewById(R.id.edit_profile_current_name_entry);
             updateNameEntry = (EditText)findViewById(R.id.edit_profile_update_name_entry);
 
+            currentNameEntry.setEnabled(true);
             currentName = getIntent().getStringExtra("CURRENT_USER_NAME");
-            currentNameEntry.setText(userdao.createOrReturn(currentName).getName());
+            currentNameEntry.setText(currentName);
             currentNameEntry.setEnabled(false);
 
             progressDialog.dismiss();
@@ -114,32 +120,26 @@ public class AccountEdit extends BaseActivity {
 
     private class UpdateTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
-        private String updatedName;
 
         @Override
         public void onPreExecute() {
-            progressDialog = new ProgressDialog(AccountEdit.this);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setTitle(getString(R.string.loading_please_wait));
-            progressDialog.setMessage(getString(R.string.loading_database));
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-
-            updatedName = updateNameEntry.getText().toString();
         }
 
         @Override
         public Void doInBackground(Void... params) {
             //Update user name
-            userdao.editName("","");
-
+            String username = getIntent().getStringExtra("CURRENT_USERNAME");
+            updatedName = updateNameEntry.getText().toString();
+            userdao.editName(username,updatedName);
             return null;
         }
 
         @Override
         public void onPostExecute(Void result){
             currentNameEntry.setEnabled(true);
-            currentNameEntry.setText(userdao.createOrReturn(currentName).getName());
+            currentNameEntry.setText(updatedName);
+            currentNameEntry.setEnabled(false);
+            updateNameEntry.setText("");
         }
     }
 

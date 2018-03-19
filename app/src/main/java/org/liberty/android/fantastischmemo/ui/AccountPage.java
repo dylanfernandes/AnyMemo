@@ -57,11 +57,14 @@ public class AccountPage extends BaseActivity{
         userDao = baseHelper.getUserDao();
         userStatDao = baseHelper.getUserStatisticsDao();
 
-        User defaultUser = userDao.createOrReturn("DefaultUsername");
-        defaultUser.setName("DefaultName");
-        defaultUser.setSurname("DefaultSurname");
-        userDao.update(defaultUser);
-        userStatDao.createOrReturn(defaultUser);
+        if(userDao.queryForId(1) == null){
+            User defaultUser = userDao.createOrReturn("DefaultUsername");
+            defaultUser.setName("DefaultName");
+            defaultUser.setSurname("DefaultSurname");
+            userDao.update(defaultUser);
+            userStatDao.createOrReturn(defaultUser);
+        }
+
 
         user = userDao.queryForId(1);
         userStat = userStatDao.queryForId(1);
@@ -84,6 +87,7 @@ public class AccountPage extends BaseActivity{
             public void onClick(View view) {
                 Intent intent = new Intent(AccountPage.this, AccountEdit.class);
                 intent.putExtra("CURRENT_USER_NAME",user_Name.getText().toString());
+                intent.putExtra("CURRENT_USERNAME",username.getText().toString());
                 startActivity(intent);}
         });
     }

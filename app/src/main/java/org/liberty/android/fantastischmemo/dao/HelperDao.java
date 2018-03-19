@@ -22,7 +22,7 @@ public interface HelperDao<E, T> extends Dao<E, T> {
      * can use any other DAO.
      */
     void setHelper(AnyMemoBaseDBOpenHelper helper);
-    
+
     /**
      * Override so it throws RuntimeException instead of SQLException
      */
