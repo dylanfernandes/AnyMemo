@@ -64,12 +64,9 @@ public class UserDaoImpl extends AbstractHelperDaoImpl<User, Integer> implements
     @Override
     public int delete(User user) {
         UserStatistics userStat = user.getUserStatistics();
-
         AnyMemoBaseDBOpenHelper dbHelper = AnyMemoBaseDBOpenHelperManager.getHelper("central.db");
         UserStatisticsDao userStatsDao = dbHelper.getUserStatisticsDao();
         userStatsDao.delete(userStat);
-
-
         return super.delete(user);
     }
 }

@@ -1,6 +1,13 @@
 package org.liberty.android.fantastischmemo.ui;
 
+import android.accounts.Account;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import org.liberty.android.fantastischmemo.common.AMEnv;
 
@@ -23,6 +30,7 @@ public class AccountPage extends BaseActivity{
     private TextView username;
     private TextView longest_streak;
     private TextView current_streak;
+    private ImageButton edit_button;
 
     private User user;
     private UserStatistics userStat;
@@ -35,6 +43,7 @@ public class AccountPage extends BaseActivity{
     User fakeUser = new User("Thomas", "blue_fish");
     UserStatistics fakeUserStat = new UserStatistics(17, 3);
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_page_tab);
@@ -61,7 +70,15 @@ public class AccountPage extends BaseActivity{
 
         current_streak = (TextView)findViewById(R.id.account_current_streak);
         current_streak.setText(String.valueOf(userStat.getStreak()));
-    };
 
+        edit_button = (ImageButton)findViewById(R.id.edit_account);
+        edit_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AccountPage.this, AccountEdit.class);
+                intent.putExtra("CURRENT_USER_NAME",user_Name.getText().toString());
+                startActivity(intent);}
+        });
+    }
 
 }
