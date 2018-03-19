@@ -47,6 +47,13 @@ public class AccountPage extends BaseActivity{
         baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(AccountPage.this, dbPath);
         userDao = baseHelper.getUserDao();
         userStatDao = baseHelper.getUserStatisticsDao();
+
+        User defaultUser = userDao.createOrReturn("DefaultUsername");
+        defaultUser.setName("DefaultName");
+        defaultUser.setSurname("DefaultSurname");
+        userDao.update(defaultUser);
+        userStatDao.createOrReturn(defaultUser);
+
         user = userDao.queryForId(1);
         userStat = userStatDao.queryForId(1);
 
