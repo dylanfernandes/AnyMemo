@@ -222,13 +222,6 @@ public class FileBrowserFragment extends BaseDialogFragment {
         fileListAdapter = new FileBrowserAdapter(this);
         filesListRecyclerView.setAdapter(fileListAdapter);
 
-        try {
-            List<Deck> decks = AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getDeckDao().queryForAll();
-            Toast.makeText(getContext(), "decks: " + decks.size(), Toast.LENGTH_LONG).show();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
         return v;
     }
 

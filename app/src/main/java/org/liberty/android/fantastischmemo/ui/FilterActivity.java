@@ -48,13 +48,6 @@ public class FilterActivity extends BaseActivity {
 
         decksAdapter = new DecksAdapter(decks);
         decksRecyclerView.setAdapter(decksAdapter);
-
-        /*DeckDao deckDao = AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getDeckDao();
-        try {
-            deckDao.delete(deckDao.queryForAll());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }*/
     }
 
     @Override
@@ -187,8 +180,6 @@ public class FilterActivity extends BaseActivity {
                     if (isChecked) {
                         filteredTags.add(tag);
                     } else {
-//                        int index = filteredTags.indexOf(tag.getId());
-//                        filteredTags.remove(index);
                         filteredTags.remove(tag);
                     }
                 }
