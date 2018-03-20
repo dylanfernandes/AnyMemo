@@ -33,8 +33,6 @@ public class AccountPage extends BaseActivity{
     private UserStatisticsDao userStatDao;
     private AnyMemoBaseDBOpenHelper baseHelper;
     private String dbPath = AMEnv.CENTRAL_DB_NAME;
-    public static String EXTRA_DBPATH = "dbpath";
-
 
     User fakeUser = new User("Thomas", "blue_fish");
     UserStatistics fakeUserStat = new UserStatistics(17, 3);
@@ -43,11 +41,6 @@ public class AccountPage extends BaseActivity{
         super.onCreate(savedInstanceState);
         activityComponents().inject(this);
         setContentView(R.layout.account_page_tab);
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            dbPath = extras.getString(EXTRA_DBPATH);
-        }
 
         baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(AccountPage.this, dbPath);
         userDao = baseHelper.getUserDao();
