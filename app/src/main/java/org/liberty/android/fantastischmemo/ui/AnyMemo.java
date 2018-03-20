@@ -58,13 +58,8 @@ import org.liberty.android.fantastischmemo.BuildConfig;
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
-import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
-import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
-import org.liberty.android.fantastischmemo.dao.UserDao;
-import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.databinding.MainTabsBinding;
-import org.liberty.android.fantastischmemo.entity.User;
 import org.liberty.android.fantastischmemo.receiver.SetAlarmReceiver;
 import org.liberty.android.fantastischmemo.service.AnyMemoService;
 import org.liberty.android.fantastischmemo.ui.loader.MultipleLoaderManager;
@@ -273,9 +268,6 @@ public class AnyMemo extends BaseActivity {
 
     private void prepareFirstTimeRun() {
         File sdPath = new File(AMEnv.DEFAULT_ROOT_PATH);
-        AnyMemoBaseDBOpenHelper helper;
-        UserDao userDao;
-        UserStatisticsDao userStatisticsDao;
 
         //Check the version, if it is updated from an older version it will show a dialog
         int savedVersionCode = settings.getInt(AMPrefKeys.SAVED_VERSION_CODE_KEY, 1);
@@ -331,17 +323,6 @@ public class AnyMemo extends BaseActivity {
                 FileUtils.copyInputStreamToFile(in2, new File(emptyDbPath));
                 in2.close();
 
-                helper = AnyMemoBaseDBOpenHelperManager.getHelper(AnyMemo.this, centralDbDest);
-
-                userDao = helper.getUserDao();
-                userStatisticsDao = helper.getUserStatisticDao();
-
-                User defaultUser = userDao.createOrReturn("DefaultUser");
-                defaultUser.setName("DefaultUser");
-                defaultUser.setSurname("DefaultSurname");
-                userDao.update(defaultUser);
-                userStatisticsDao.createOrReturn(defaultUser);
-
             } catch(IOException e){
                 Log.e(TAG, "Copy file error", e);
 
@@ -368,17 +349,6 @@ public class AnyMemo extends BaseActivity {
                 }
                 databaseUtil.setupDatabase(centralDbDest);
             }
-
-            helper = AnyMemoBaseDBOpenHelperManager.getHelper(AnyMemo.this, centralDbDest);
-
-            userDao = helper.getUserDao();
-            userStatisticsDao = helper.getUserStatisticDao();
-
-            User defaultUser = userDao.createOrReturn("DefaultUser");
-            defaultUser.setName("DefaultUser");
-            defaultUser.setSurname("DefaultSurname");
-            userDao.update(defaultUser);
-            userStatisticsDao.createOrReturn(defaultUser);
 
             SharedPreferences.Editor editor = settings.edit();
             /* save new version number */
