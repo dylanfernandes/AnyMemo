@@ -30,7 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FilterActivity extends BaseActivity {
-    private List<Integer> filteredChecked = new ArrayList<>();
+    private List<Tag> filteredChecked = new ArrayList<>();
+    private DecksAdapter decksAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,9 +44,9 @@ public class FilterActivity extends BaseActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         decksRecyclerView.setLayoutManager(linearLayoutManager);
 
-        List<Deck> decks = loadDecks();
+        List<Deck> decks = filterDecks();
 
-        DecksAdapter decksAdapter = new DecksAdapter(decks);
+        decksAdapter = new DecksAdapter(decks);
         decksRecyclerView.setAdapter(decksAdapter);
 
         /*DeckDao deckDao = AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getDeckDao();
@@ -90,8 +91,10 @@ public class FilterActivity extends BaseActivity {
         builder.setPositiveButton(getString(R.string.filter_text), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // do the filtering logic
-                filteredChecked = filterAdapter.getCheckedTags();
+                filteredChecked.clear();
+                filteredChecked.addAll(filterAdapter.getCheckedTags());
+                decksAdapter.setDecks(filterDecks());
+                decksAdapter.notifyDataSetChanged();
             }
         });
         builder.setNegativeButton(getString(R.string.cancel_text), new DialogInterface.OnClickListener() {
@@ -102,6 +105,29 @@ public class FilterActivity extends BaseActivity {
         });
 
         return builder.create();
+    }
+
+    private List<Deck> filterDecks() {
+        List<Deck> allDecks = loadDecks();
+
+        if (filteredChecked.isEmpty()) {
+            return allDecks;
+        } else {
+            List<Deck> filteredDecks = new ArrayList<>();
+
+            for (Tag tag : filteredChecked) {
+                List<Deck> decksTagBelongTo = tag.getDecks();
+                for (Deck deck : allDecks) {
+                    for (Deck taggedDecks : decksTagBelongTo) {
+                        if (taggedDecks.getId().intValue() == deck.getId().intValue()) {
+                            filteredDecks.add(deck);
+                        }
+                    }
+                }
+            }
+
+            return filteredDecks;
+        }
     }
 
     private List<Deck> loadDecks() {
@@ -136,11 +162,12 @@ public class FilterActivity extends BaseActivity {
         }
 
         private List<Tag> tags;
-        private List<Integer> filteredTagIds;
+        private List<Tag> filteredTags;
 
-        FilterAdapter(List<Tag> tags, List<Integer> checked) {
+        FilterAdapter(List<Tag> tags, List<Tag> checked) {
             this.tags = tags;
-            this.filteredTagIds = checked;
+            this.filteredTags = new ArrayList<>();
+            this.filteredTags.addAll(checked);
         }
 
         @Override
@@ -153,15 +180,16 @@ public class FilterActivity extends BaseActivity {
         public void onBindViewHolder(FilterViewHolder holder, int position) {
             final Tag tag = tags.get(position);
             holder.tagTextView.setText(tag.getName());
-            holder.tagCheckBox.setChecked(filteredTagIds.contains(tag.getId()));
+            holder.tagCheckBox.setChecked(filteredTags.contains(tag));
             holder.tagCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
-                        filteredTagIds.add(tag.getId());
+                        filteredTags.add(tag);
                     } else {
-                        int index = filteredTagIds.indexOf(tag.getId());
-                        filteredTagIds.remove(index);
+//                        int index = filteredTags.indexOf(tag.getId());
+//                        filteredTags.remove(index);
+                        filteredTags.remove(tag);
                     }
                 }
             });
@@ -172,8 +200,8 @@ public class FilterActivity extends BaseActivity {
             return tags.size();
         }
 
-        List<Integer> getCheckedTags() {
-            return this.filteredTagIds;
+        List<Tag> getCheckedTags() {
+            return this.filteredTags;
         }
     }
 
@@ -219,6 +247,10 @@ public class FilterActivity extends BaseActivity {
                     startActivity(intent);
                 }
             });
+        }
+
+        public void setDecks(List<Deck> decks) {
+            this.decks = decks;
         }
     }
 }
