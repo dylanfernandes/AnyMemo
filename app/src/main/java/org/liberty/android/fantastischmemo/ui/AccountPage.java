@@ -49,14 +49,6 @@ public class AccountPage extends BaseActivity{
         user = userDao.queryForId(1);
         userStat = userStatDao.queryForId(1);
 
-        if(user == null) {
-            User defaultUser = userDao.createOrReturn("DefaultUsername");
-            defaultUser.setName("DefaultName");
-            defaultUser.setSurname("DefaultSurname");
-            userDao.update(defaultUser);
-            userStatDao.createOrReturn(defaultUser);
-        }
-
         user_Name = (TextView)findViewById(R.id.account_user_name);
         user_Name.setText(user.getName());
 
