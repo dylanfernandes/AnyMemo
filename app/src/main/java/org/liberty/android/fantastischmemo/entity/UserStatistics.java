@@ -45,7 +45,6 @@ public class UserStatistics {
     @DatabaseField(defaultValue = "0")
     private Integer weeks = 0;
 
-
     @DatabaseField(defaultValue = "0")
     private Integer months = 0;
 
