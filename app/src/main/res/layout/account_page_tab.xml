@@ -31,7 +31,6 @@
             android:layout_height="fill_parent"
             app:srcCompat="@drawable/ic_menu_edit"/>
         </LinearLayout>
-
     </LinearLayout>
 
         <ImageView

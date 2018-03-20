@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.app.Activity;
+import android.widget.Button;
 import android.widget.TextView;
 import org.liberty.android.fantastischmemo.common.AMEnv;
 
@@ -35,7 +37,6 @@ public class AccountPage extends BaseActivity{
     private UserStatisticsDao userStatDao;
     private AnyMemoBaseDBOpenHelper baseHelper;
     private String dbPath = AMEnv.CENTRAL_DB_NAME;
-    public static String EXTRA_DBPATH = "dbpath";
 
     User fakeUser = new User("Thomas", "blue_fish");
     UserStatistics fakeUserStat = new UserStatistics(17, 3);
@@ -43,12 +44,8 @@ public class AccountPage extends BaseActivity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activityComponents().inject(this);
         setContentView(R.layout.account_page_tab);
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            dbPath = extras.getString(EXTRA_DBPATH);
-        }
 
         baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(AccountPage.this, dbPath);
         userDao = baseHelper.getUserDao();
@@ -61,7 +58,6 @@ public class AccountPage extends BaseActivity{
             userDao.update(defaultUser);
             userStatDao.createOrReturn(defaultUser);
         }
-
 
         user = userDao.queryForId(1);
         userStat = userStatDao.queryForId(1);
