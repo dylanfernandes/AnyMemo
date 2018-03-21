@@ -17,7 +17,6 @@ public interface HelperDao<E, T> extends Dao<E, T> {
     void setHelper(AnyMemoDBOpenHelper helper);
 
     /**
-<<<<<<< HEAD
      * Set the AnyMemoBaseDBOpenHelper so the inherrited DAO
      * can use any other DAO.
      */
