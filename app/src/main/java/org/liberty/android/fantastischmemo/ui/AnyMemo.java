@@ -268,6 +268,7 @@ public class AnyMemo extends BaseActivity {
 
     private void prepareFirstTimeRun() {
         File sdPath = new File(AMEnv.DEFAULT_ROOT_PATH);
+
         //Check the version, if it is updated from an older version it will show a dialog
         int savedVersionCode = settings.getInt(AMPrefKeys.SAVED_VERSION_CODE_KEY, 1);
 
@@ -321,6 +322,7 @@ public class AnyMemo extends BaseActivity {
                 String emptyDbPath = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + AMEnv.EMPTY_DB_NAME;
                 FileUtils.copyInputStreamToFile(in2, new File(emptyDbPath));
                 in2.close();
+
             } catch(IOException e){
                 Log.e(TAG, "Copy file error", e);
 

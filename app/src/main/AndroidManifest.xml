@@ -112,6 +112,8 @@
             android:value=".ui.AnyMemo" />
         </activity>
         <activity
+            android:name=".ui.AccountEdit"></activity>
+        <activity
             android:name=".ui.OptionScreen" />
         <activity 
             android:name=".ui.AlgorithmCustomizationScreen"

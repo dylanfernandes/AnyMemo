@@ -188,6 +188,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 oldVersion = 5;
             }
         }
+        database.setVersion(oldVersion);
     }
 
     @Override

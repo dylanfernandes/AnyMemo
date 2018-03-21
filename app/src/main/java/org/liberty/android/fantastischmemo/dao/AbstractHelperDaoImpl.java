@@ -18,7 +18,7 @@ import java.util.concurrent.Callable;
 public abstract class AbstractHelperDaoImpl<E, T> extends BaseDaoImpl<E, T> {
     private static final String TAG = AbstractHelperDaoImpl.class.getSimpleName();
     private AnyMemoDBOpenHelper helper = null;
-    private AnyMemoBaseDBOpenHelper centralDbHelper = null;
+    private AnyMemoBaseDBOpenHelper centralHelper = null;
 
     protected AbstractHelperDaoImpl(ConnectionSource connectionSource, DatabaseTableConfig<E> config)
         throws SQLException {
@@ -28,21 +28,6 @@ public abstract class AbstractHelperDaoImpl<E, T> extends BaseDaoImpl<E, T> {
     protected AbstractHelperDaoImpl(ConnectionSource connectionSource, Class<E> clazz)
         throws SQLException {
         super(connectionSource, clazz);
-    }
-
-    protected AnyMemoBaseDBOpenHelper getCentralDbHelper() {
-        if (centralDbHelper != null) {
-            return centralDbHelper;
-        } else {
-            throw new IllegalStateException("Must set the centralDbHelper in order to use");
-        }
-    }
-    public void setCentralDbHelper(AnyMemoBaseDBOpenHelper centralDbHelper) {
-        if (this.centralDbHelper == null) {
-            this.centralDbHelper = centralDbHelper;
-        } else {
-            throw new RuntimeException("Set the centralDbHelper for DAO twice!");
-        }
     }
 
     protected AnyMemoDBOpenHelper getHelper() {
@@ -55,6 +40,22 @@ public abstract class AbstractHelperDaoImpl<E, T> extends BaseDaoImpl<E, T> {
     public void setHelper(AnyMemoDBOpenHelper helper) {
         if (this.helper == null) {
             this.helper = helper;
+        } else {
+            throw new RuntimeException("Set the helper for DAO twice!");
+        }
+    }
+
+    protected AnyMemoBaseDBOpenHelper getCentralHelper() {
+        if (centralHelper != null) {
+            return centralHelper;
+        } else {
+            throw new IllegalStateException("Must set the helper in order to use");
+        }
+    }
+
+    public void setHelper(AnyMemoBaseDBOpenHelper helper){
+        if (this.centralHelper == null) {
+            this.centralHelper = helper;
         } else {
             throw new RuntimeException("Set the helper for DAO twice!");
         }
