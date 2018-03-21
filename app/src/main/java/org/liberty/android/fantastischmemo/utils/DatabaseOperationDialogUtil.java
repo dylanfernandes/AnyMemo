@@ -7,12 +7,12 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.EditText;
 
-import org.apache.commons.io.FileUtils;
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.modules.PerActivity;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.inject.Inject;
 
@@ -60,9 +60,12 @@ public class DatabaseOperationDialogUtil extends GenericDatabaseDialogUtil {
                                         amFileUtil.deleteFileWithBackup(newDbFile.getAbsolutePath());
                                     }
                                     databaseUtil.setupDatabase(newDbFile.toString());
+                                    addDeckToCentralDB(newDbFile.toString());
                                     emitter.onSuccess(newDbFile);
                                 } catch (IOException e) {
                                     Log.e(TAG, "Fail to create file", e);
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
                                 }
                             }
                         })
