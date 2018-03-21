@@ -337,34 +337,6 @@ public class FileBrowserFragment extends BaseDialogFragment {
         });
 
         filter.clear();
-        /*selectedTags = new HashSet<>();
-        TagDao tagDao = AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getTagDao();
-        List<Tag> tags = null;
-        try {
-            tags = tagDao.queryForAll();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        tagCount = 0;
-        if (tags != null) {
-            for (final Tag tag : tags) {
-                filter.add(0, Menu.FIRST + tagCount, Menu.NONE, tag.getName());
-                final MenuItem tagOption = filter.findItem(Menu.FIRST + tagCount);
-                tagOption.setCheckable(true);
-                tagOption.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (!item.isChecked()) {
-                            Toast.makeText(getContext(), "Checked " + tag.getDecks(), Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getContext(), "Unchecked " + tag.getName(), Toast.LENGTH_LONG).show();
-                        }
-                        return false;
-                    }
-                });
-                tagCount++;
-            }
-        }*/
         super.onCreateOptionsMenu(menu, inflater);
     }
 
