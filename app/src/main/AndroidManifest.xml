@@ -104,7 +104,16 @@
         <activity 
             android:name=".ui.FileBrowserActivity"
             android:configChanges="orientation|keyboardHidden" />
-        <activity 
+        <activity
+            android:name=".ui.AccountPage"
+            android:parentActivityName=".ui.AnyMemo">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".ui.AnyMemo" />
+        </activity>
+        <activity
+            android:name=".ui.AccountEdit"></activity>
+        <activity
             android:name=".ui.OptionScreen" />
         <activity 
             android:name=".ui.AlgorithmCustomizationScreen"

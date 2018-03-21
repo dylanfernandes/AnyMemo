@@ -11,6 +11,7 @@ import org.liberty.android.fantastischmemo.downloader.oauth.Oauth2TokenUtil;
 import org.liberty.android.fantastischmemo.downloader.quizlet.QuizletDownloadHelper;
 import org.liberty.android.fantastischmemo.entity.Option;
 import org.liberty.android.fantastischmemo.scheduler.Scheduler;
+import org.liberty.android.fantastischmemo.ui.AccountPage;
 import org.liberty.android.fantastischmemo.ui.AnyMemo;
 import org.liberty.android.fantastischmemo.ui.CardEditor;
 import org.liberty.android.fantastischmemo.ui.CardListActivity;
@@ -105,4 +106,6 @@ public interface ActivityComponents {
     void inject(SettingsScreen activity);
 
     void inject(ShareScreen activity);
+
+    void inject(AccountPage activity);
 }

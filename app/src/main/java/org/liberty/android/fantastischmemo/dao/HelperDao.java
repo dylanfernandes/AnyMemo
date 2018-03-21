@@ -17,9 +17,10 @@ public interface HelperDao<E, T> extends Dao<E, T> {
     void setHelper(AnyMemoDBOpenHelper helper);
 
     /**
-     * Set CentralDbHelper so inherrited central DAO can use any other central DAO
+     * Set the AnyMemoBaseDBOpenHelper so the inherrited DAO
+     * can use any other DAO.
      */
-    void setCentralDbHelper(AnyMemoBaseDBOpenHelper centralDbHelper);
+    void setHelper(AnyMemoBaseDBOpenHelper helper);
 
     /**
      * Override so it throws RuntimeException instead of SQLException

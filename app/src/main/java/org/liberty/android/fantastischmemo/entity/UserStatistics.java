@@ -55,6 +55,12 @@ public class UserStatistics {
 
     public UserStatistics() {}
 
+    //fake UserStatistics for AccountPage
+    public UserStatistics(Integer longest, Integer current){
+        this.longestStreak = longest;
+        this.streak = current;
+    }
+
     //Getters and Setters
     public Integer getId() {
         return this.id;
