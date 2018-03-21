@@ -111,16 +111,23 @@ public class FilterActivity extends BaseActivity {
             for (Tag tag : filteredChecked) {
                 List<Deck> decksTagBelongTo = tag.getDecks();
                 for (Deck deck : allDecks) {
-                    for (Deck taggedDecks : decksTagBelongTo) {
-                        if (taggedDecks.getId().intValue() == deck.getId().intValue()) {
-                            filteredDecks.add(deck);
-                        }
+                    if (deckExistsById(deck.getId(), decksTagBelongTo) && !deckExistsById(deck.getId(), filteredDecks)) {
+                        filteredDecks.add(deck);
                     }
                 }
             }
 
             return filteredDecks;
         }
+    }
+
+    private boolean deckExistsById(int id, List<Deck> decks) {
+        for (Deck deck : decks) {
+            if (id == deck.getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private List<Deck> loadDecks() {
@@ -240,7 +247,7 @@ public class FilterActivity extends BaseActivity {
             });
         }
 
-        public void setDecks(List<Deck> decks) {
+        void setDecks(List<Deck> decks) {
             this.decks = decks;
         }
     }
