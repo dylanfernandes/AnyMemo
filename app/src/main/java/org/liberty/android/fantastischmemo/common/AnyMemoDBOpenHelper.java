@@ -10,6 +10,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
 
+import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
 import org.liberty.android.fantastischmemo.dao.CardDao;
 import org.liberty.android.fantastischmemo.dao.CategoryDao;
 import org.liberty.android.fantastischmemo.dao.DeckDao;
@@ -17,6 +18,7 @@ import org.liberty.android.fantastischmemo.dao.FilterDao;
 import org.liberty.android.fantastischmemo.dao.LearningDataDao;
 import org.liberty.android.fantastischmemo.dao.SettingDao;
 import org.liberty.android.fantastischmemo.dao.TagDao;
+import org.liberty.android.fantastischmemo.entity.AchievementPoint;
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
 import org.liberty.android.fantastischmemo.entity.Deck;
@@ -24,6 +26,7 @@ import org.liberty.android.fantastischmemo.entity.Filter;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.entity.Setting;
 import org.liberty.android.fantastischmemo.entity.Tag;
+
 
 import java.sql.SQLException;
 
@@ -64,6 +67,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Category.class);
             TableUtils.createTable(connectionSource, LearningData.class);
             TableUtils.createTable(connectionSource, Tag.class);
+
 
             getSettingDao().create(new Setting());
             getCategoryDao().create(new Category());
@@ -179,6 +183,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 TableUtils.createTable(connectionSource, Tag.class);
             } catch (SQLException e) {
                 Log.e(TAG, "Upgrading failed, the tags table might already exist.", e);
+                e.printStackTrace();
             } finally {
                 oldVersion = 5;
             }
@@ -255,6 +260,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         try {
             if (categoryDao == null) {
                 categoryDao = getDao(Category.class);
+                categoryDao.setHelper(this);
             }
             return categoryDao;
         } catch (SQLException e) {
@@ -279,10 +285,12 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 tagDao = getDao(Tag.class);
             }
             return tagDao;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     /*
      * Override the finalize in case the helper is not release.
@@ -310,4 +318,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
     String getDbPath() {
         return dbPath;
     }
+
+
 }
+

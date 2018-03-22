@@ -79,6 +79,7 @@ public class TagsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 final EditText input = new EditText(v.getContext());
+                input.setTag("create_tag_input");
                 new AlertDialog.Builder(v.getContext())
                         .setTitle("Create Tag")
                         .setMessage("Enter new name for tag below.")

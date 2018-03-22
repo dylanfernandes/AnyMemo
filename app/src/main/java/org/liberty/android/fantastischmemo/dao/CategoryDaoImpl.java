@@ -1,7 +1,9 @@
 package org.liberty.android.fantastischmemo.dao;
 
 import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.PreparedUpdate;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTableConfig;
 
@@ -44,11 +46,17 @@ public class CategoryDaoImpl extends AbstractHelperDaoImpl<Category, Integer> im
         }
     }
 
-    public void removeCategory(Category c) {
+    @Override
+    public int delete(Category c) {
         try {
-            Integer id = c.getId();
-            this.delete(c);
-            updateRaw("update cards set category_id = 1 where category_id = ?", id.toString());
+            // Set all cards that use this category to 1
+            CardDao cardDao = getHelper().getCardDao();
+            UpdateBuilder<Card, Integer> cardUpdateBuilder = cardDao.updateBuilder();
+            cardUpdateBuilder.where().eq("category_id", c.getId());
+            cardUpdateBuilder.updateColumnValue("category_id", 1);
+            cardDao.update(cardUpdateBuilder.prepare());
+            // It's ok to delete now
+            return super.delete(c);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

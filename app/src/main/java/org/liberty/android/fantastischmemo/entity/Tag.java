@@ -22,7 +22,7 @@ import java.util.List;
  */
 
 @DatabaseTable(tableName = "tags", daoClass = TagDaoImpl.class)
-public class Tag {
+public class Tag implements Serializable {
     @DatabaseField(generatedId = true)
     private Integer id;
 

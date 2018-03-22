@@ -273,6 +273,7 @@ public class AnyMemo extends BaseActivity {
 
     private void prepareFirstTimeRun() {
         File sdPath = new File(AMEnv.DEFAULT_ROOT_PATH);
+
         //Check the version, if it is updated from an older version it will show a dialog
         int savedVersionCode = settings.getInt(AMPrefKeys.SAVED_VERSION_CODE_KEY, 1);
 

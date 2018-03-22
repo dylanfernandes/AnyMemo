@@ -27,6 +27,9 @@ android {
         enabled = true
     }
 
+    testOptions{
+        animationsDisabled = true
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
@@ -99,6 +102,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:10.2.6'
     provided 'javax.annotation:jsr250-api:1.0'
 
+    testCompile 'junit:junit:4.12'
     androidTestCompile 'com.crittercism.dexmaker:dexmaker:1.4'
     androidTestCompile 'com.crittercism.dexmaker:dexmaker-dx:1.4'
     androidTestCompile 'com.crittercism.dexmaker:dexmaker-mockito:1.4'

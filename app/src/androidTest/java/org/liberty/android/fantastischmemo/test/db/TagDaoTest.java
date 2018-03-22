@@ -18,7 +18,6 @@ import static org.junit.Assert.assertNotNull;
 
 public class TagDaoTest extends AbstractExistingDBTest {
 
-    @SmallTest
     @Test
     public void testAddTags() throws Exception {
         TagDao tagDao = helper.getTagDao();
@@ -29,7 +28,6 @@ public class TagDaoTest extends AbstractExistingDBTest {
         assertEquals(t1.getName(), "t1");
     }
 
-    @SmallTest
     @Test
     public void testAddDuplicateTags() throws Exception {
         TagDao tagDao = helper.getTagDao();
@@ -47,7 +45,6 @@ public class TagDaoTest extends AbstractExistingDBTest {
         assertEquals(tags.size(), initsize + 2);
     }
 
-    @SmallTest
     @Test
     public void testDeleteTags() throws Exception {
         TagDao tagDao = helper.getTagDao();
@@ -59,8 +56,7 @@ public class TagDaoTest extends AbstractExistingDBTest {
         tags = tagDao.queryForAll();
         assertEquals(tags.size(), initsize+1);
     }
-
-    @SmallTest
+    
     @Test
     public void testTagMaintainOrdinal() throws Exception {
         TagDao tagDao = helper.getTagDao();
