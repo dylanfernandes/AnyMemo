@@ -1,17 +1,14 @@
 package org.liberty.android.fantastischmemo.entity;
 
-import android.util.Log;
-
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.dao.DeckDao;
 import org.liberty.android.fantastischmemo.dao.TagDao;
 import org.liberty.android.fantastischmemo.dao.TagDaoImpl;
-
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,7 +19,7 @@ import java.util.List;
  */
 
 @DatabaseTable(tableName = "tags", daoClass = TagDaoImpl.class)
-public class Tag implements Serializable {
+public class Tag {
     @DatabaseField(generatedId = true)
     private Integer id;
 
