@@ -50,24 +50,16 @@ import org.greenrobot.eventbus.Subscribe;
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
-import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseDialogFragment;
-import org.liberty.android.fantastischmemo.dao.TagDao;
-import org.liberty.android.fantastischmemo.entity.Deck;
-import org.liberty.android.fantastischmemo.entity.DeckMap;
-import org.liberty.android.fantastischmemo.entity.DeckMock;
 import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -259,8 +251,6 @@ public class FileBrowserFragment extends BaseDialogFragment {
     private void fill(File[] files){
         this.directoryEntries.clear();
 
-        HashMap<String, DeckMock> filteredDecks = DeckMap.getInstance().filterDecksByTags(selectedTags);
-
         if(this.currentDirectory.getParent() != null){
             this.directoryEntries.add(UP_ONE_LEVEL_DIR);
         }
@@ -282,19 +272,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
                 else{
                     for(String fileExtension : fileExtensions){
                         if(file.getName().toLowerCase().endsWith(fileExtension.toLowerCase())){
-                            String filepath = file.getAbsolutePath();
-                            // If there is a filter by tags on the decks
-                            if(filteredDecks.size() > 0) {
-                                // If file is a deck, check if it is allowed to be displayed
-                                if(file.getAbsolutePath().endsWith(".db")) {
-                                    if(filteredDecks.containsKey(filepath))
-                                        this.directoryEntries.add(filepath.substring(currentPathStringLength));
-                                }
-                                else  // If not a file then just add it
-                                    this.directoryEntries.add(filepath.substring(currentPathStringLength));
-                            }
-                            else  // No filter on decks
-                                this.directoryEntries.add(filepath.substring(currentPathStringLength));
+                            this.directoryEntries.add(file.getAbsolutePath().substring(currentPathStringLength));
                         }
                     }
                 }
@@ -372,19 +350,6 @@ public class FileBrowserFragment extends BaseDialogFragment {
                 })
             );
             return true;
-        }
-        else if (itemId > 0 && itemId <= tagCount) {
-            Boolean checked = !item.isChecked();
-            item.setChecked(checked);
-            String selectedTagName = item.getTitle().toString();
-            Tag selectedTag = DeckMap.getInstance().getTagByName(selectedTagName);
-            if(item.isChecked())
-                selectedTags.add(selectedTag);
-            else
-                selectedTags.remove(selectedTag);
-
-            browseTo(currentDirectory);  // Refresh file explorer with new filter info
-            return false;
         }
         return false;
     }
@@ -487,8 +452,6 @@ public class FileBrowserFragment extends BaseDialogFragment {
             }
 
             holder.setText(displayFileName);
-            DeckMap deckMap = DeckMap.getInstance();
-            final DeckMock deckMock = deckMap.findOrCreate(new DeckMock(displayFileName, fragment.currentDirectory.getAbsolutePath() + selectedFileName));
 
             // Set click listeners
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -528,8 +491,8 @@ public class FileBrowserFragment extends BaseDialogFragment {
                                         public void onClick(DialogInterface dialog, int which) {
                                             if (which == 0) {
                                                 Intent intent = new Intent(fragment.getActivity(), TagsActivity.class);
-//                                                intent.putExtra("DeckMock", deckMock);
-                                                intent.putExtra("deckPath", deckMock.getDbPath());
+                                                String deckPath = fragment.currentDirectory.getAbsolutePath() + selectedFileName;
+                                                intent.putExtra("deckPath", deckPath);
                                                 fragment.startActivity(intent);
                                             } else if (which == 1) {
                                                 fragment.disposables.add(fragment.activityComponents().databaseOperationDialogUtil().showDeleteDbDialog(clickedFile)
