@@ -165,12 +165,20 @@ public class RecentListFragment extends BaseFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         inflater.inflate(R.menu.open_screen_menu, menu);
-        menu.addSubMenu(Menu.NONE, R.id.filter_menu, Menu.NONE, "");
+        menu.addSubMenu(Menu.NONE, R.id.filter_menu, Menu.NONE, "Search Decks");
         SubMenu filter = menu.findItem(R.id.filter_menu).getSubMenu();
 
         MenuItem filterWrapper = filter.getItem();
-        filterWrapper.setIcon(R.drawable.ic_menu_filter);
+        filterWrapper.setIcon(R.drawable.ic_menu_search);
         filterWrapper.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        filterWrapper.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(getActivity(), FilterActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
         
         filter.clear();
         HashSet<Tag> tags = DeckMap.getInstance().getAllTags();tagCount = 0;

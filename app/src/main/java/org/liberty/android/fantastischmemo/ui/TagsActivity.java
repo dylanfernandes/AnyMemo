@@ -35,7 +35,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class TagsActivity extends BaseActivity {
-    private DeckMock deck;
     private RecyclerView tagsAddRecyclerView;
     private LinearLayoutManager linearAddLayoutManager;
     boolean isFABOpen;
@@ -55,7 +54,7 @@ public class TagsActivity extends BaseActivity {
 
         String deckPath = getIntent().getStringExtra("deckPath");
 
-        deck = DeckMap.getInstance().getDecksMap().get(deckPath);
+        DeckMock deck = DeckMap.getInstance().getDecksMap().get(deckPath);
         setTitle("Tags for: " + deck.getName());
 
         Bundle bundle = new Bundle();
