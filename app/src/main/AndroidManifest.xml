@@ -147,6 +147,8 @@
             android:name=".ui.CardPlayerActivity" />
         <activity
             android:name=".ui.TagsActivity" />
+        <activity
+            android:name=".ui.FilterActivity" />
         <receiver
             android:name=".receiver.AlarmReceiver"
             android:process=":remote" />

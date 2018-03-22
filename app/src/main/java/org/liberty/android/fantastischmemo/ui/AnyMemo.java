@@ -66,6 +66,7 @@ import org.liberty.android.fantastischmemo.ui.loader.MultipleLoaderManager;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.AboutUtil;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
+import org.liberty.android.fantastischmemo.utils.GenericDatabaseDialogUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListActionModeUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 import org.liberty.android.fantastischmemo.widget.AnyMemoWidgetProvider;
@@ -73,6 +74,7 @@ import org.liberty.android.fantastischmemo.widget.AnyMemoWidgetProvider;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
 
 import javax.inject.Inject;
 
@@ -81,7 +83,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 
 public class AnyMemo extends BaseActivity {
-    private static final String WEBSITE_VERSION="https://anymemo.org/versions-view";
+    private static final String WEBSITE_VERSION = "https://anymemo.org/versions-view";
 
     private SharedPreferences settings;
 
@@ -89,17 +91,23 @@ public class AnyMemo extends BaseActivity {
 
     private MainTabsBinding binding;
 
-    @Inject AMFileUtil amFileUtil;
+    @Inject
+    AMFileUtil amFileUtil;
 
-    @Inject RecentListUtil recentListUtil;
+    @Inject
+    RecentListUtil recentListUtil;
 
-    @Inject DatabaseUtil databaseUtil;
+    @Inject
+    DatabaseUtil databaseUtil;
 
-    @Inject MultipleLoaderManager multipleLoaderManager;
+    @Inject
+    MultipleLoaderManager multipleLoaderManager;
 
-    @Inject AboutUtil aboutUtil;
+    @Inject
+    AboutUtil aboutUtil;
 
-    @Inject RecentListActionModeUtil recentListActionModeUtil;
+    @Inject
+    RecentListActionModeUtil recentListActionModeUtil;
 
     private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 1;
 
@@ -184,64 +192,61 @@ public class AnyMemo extends BaseActivity {
         final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         navigationView.setNavigationItemSelectedListener(
-            new NavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(MenuItem menuItem) {
-                    switch (menuItem.getItemId()) {
-                        case R.id.recent_tab_menu:
-                            tabLayout.getTabAt(0).select();
-                            break;
-                        case R.id.open_tab_menu:
-                            tabLayout.getTabAt(1).select();
-                            break;
-                        case R.id.download_tab_menu:
-                            tabLayout.getTabAt(2).select();
-                            break;
-                        case R.id.misc_tab_menu:
-                            tabLayout.getTabAt(3).select();
-                            break;
-                        case R.id.account_tab_menu:
-                            startActivity(new Intent(tabLayout.getContext(), AccountPage.class));
-                            break;
-                        case R.id.option_tab_menu:
-                            startActivity(new Intent(tabLayout.getContext(), OptionScreen.class));
-                            break;
-                        case R.id.about_tab_menu:
-                            aboutUtil.createAboutDialog();
-                            break;
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.recent_tab_menu:
+                                tabLayout.getTabAt(0).select();
+                                break;
+                            case R.id.open_tab_menu:
+                                tabLayout.getTabAt(1).select();
+                                break;
+                            case R.id.download_tab_menu:
+                                tabLayout.getTabAt(2).select();
+                                break;
+                            case R.id.misc_tab_menu:
+                                tabLayout.getTabAt(3).select();
+                                break;
+                            case R.id.option_tab_menu:
+                                startActivity(new Intent(tabLayout.getContext(), OptionScreen.class));
+                                break;
+                            case R.id.about_tab_menu:
+                                aboutUtil.createAboutDialog();
+                                break;
+                        }
+                        menuItem.setChecked(true);
+                        binding.drawerLayout.closeDrawers();
+                        return true;
                     }
-                    menuItem.setChecked(true);
-                    binding.drawerLayout.closeDrawers();
-                    return true;
                 }
-            }
         );
-        
+
 
         // Change the selected navigation view
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-              @Override
-              public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                  // Nothing
-              }
+                                              @Override
+                                              public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                                                  // Nothing
+                                              }
 
-              @Override
-              public void onPageSelected(int position) {
-                  navigationView.getMenu().getItem(position).setChecked(true);
+                                              @Override
+                                              public void onPageSelected(int position) {
+                                                  navigationView.getMenu().getItem(position).setChecked(true);
 
-                  // Only add db FAB show in the file browser fragment
-                  if (position == 1) {
-                      binding.addDbFab.setVisibility(View.VISIBLE);
-                  } else {
-                      binding.addDbFab.setVisibility(View.GONE);
-                  }
-              }
+                                                  // Only add db FAB show in the file browser fragment
+                                                  if (position == 1) {
+                                                      binding.addDbFab.setVisibility(View.VISIBLE);
+                                                  } else {
+                                                      binding.addDbFab.setVisibility(View.GONE);
+                                                  }
+                                              }
 
-              @Override
-              public void onPageScrollStateChanged(int state) {
-                  // Nothing
-              }
-          }
+                                              @Override
+                                              public void onPageScrollStateChanged(int state) {
+                                                  // Nothing
+                                              }
+                                          }
         );
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
@@ -251,18 +256,18 @@ public class AnyMemo extends BaseActivity {
     private void prepareStoreage() {
         File sdPath = new File(AMEnv.DEFAULT_ROOT_PATH);
         sdPath.mkdir();
-        if(!sdPath.canRead()){
-            DialogInterface.OnClickListener exitButtonListener = new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface arg0, int arg1){
+        if (!sdPath.canRead()) {
+            DialogInterface.OnClickListener exitButtonListener = new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface arg0, int arg1) {
                     finish();
                 }
             };
             new AlertDialog.Builder(this)
-                .setTitle(R.string.sdcard_not_available_warning_title)
-                .setMessage(R.string.sdcard_not_available_warning_message)
-                .setNeutralButton(R.string.exit_text, exitButtonListener)
-                .create()
-                .show();
+                    .setTitle(R.string.sdcard_not_available_warning_title)
+                    .setMessage(R.string.sdcard_not_available_warning_message)
+                    .setNeutralButton(R.string.exit_text, exitButtonListener)
+                    .create()
+                    .show();
         }
     }
 
@@ -272,7 +277,7 @@ public class AnyMemo extends BaseActivity {
         //Check the version, if it is updated from an older version it will show a dialog
         int savedVersionCode = settings.getInt(AMPrefKeys.SAVED_VERSION_CODE_KEY, 1);
 
-        int thisVersionCode; 
+        int thisVersionCode;
         try {
             thisVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
         } catch (PackageManager.NameNotFoundException e) {
@@ -295,12 +300,12 @@ public class AnyMemo extends BaseActivity {
         /* First time installation! It will install the sample db
          * to /sdcard/AnyMemo
          */
-        if(firstTime == true){
+        if (firstTime == true) {
 
-            if(!new File(AMEnv.HIDDEN_DB_FOLDER_PATH).exists()){
-                try{
+            if (!new File(AMEnv.HIDDEN_DB_FOLDER_PATH).exists()) {
+                try {
                     FileUtils.forceMkdir(new File(AMEnv.HIDDEN_DB_FOLDER_PATH));
-                }catch(IOException e){
+                } catch (IOException e) {
                     Log.e(TAG, "Error creating centralDB directory", e);
                 }
             }
@@ -310,39 +315,39 @@ public class AnyMemo extends BaseActivity {
             editor.commit();
             try {
                 String dest = sdPath + "/" + AMEnv.DEFAULT_DB_NAME;
-                amFileUtil.copyFileFromAsset(AMEnv.DEFAULT_DB_NAME,  new File(dest));
+                amFileUtil.copyFileFromAsset(AMEnv.DEFAULT_DB_NAME, new File(dest));
                 databaseUtil.setupDatabase(dest);
 
                 String centralDbDest = AMEnv.HIDDEN_DB_FOLDER_PATH + AMEnv.CENTRAL_DB_NAME;
-                amFileUtil.copyFileFromAsset(AMEnv.CENTRAL_DB_NAME,new File(centralDbDest));
+                amFileUtil.copyFileFromAsset(AMEnv.CENTRAL_DB_NAME, new File(centralDbDest));
                 databaseUtil.setupDatabase(centralDbDest);
-
+                GenericDatabaseDialogUtil.addDeckToCentralDB(dest);
 
                 InputStream in2 = getResources().getAssets().open(AMEnv.EMPTY_DB_NAME);
                 String emptyDbPath = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + AMEnv.EMPTY_DB_NAME;
                 FileUtils.copyInputStreamToFile(in2, new File(emptyDbPath));
                 in2.close();
-
-            } catch(IOException e){
+            } catch (IOException e) {
                 Log.e(TAG, "Copy file error", e);
-
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         /* Detect an update */
         if (savedVersionCode != thisVersionCode) {
-            if(!new File(AMEnv.HIDDEN_DB_FOLDER_PATH).exists()){
-                try{
+            if (!new File(AMEnv.HIDDEN_DB_FOLDER_PATH).exists()) {
+                try {
                     FileUtils.forceMkdir(new File(AMEnv.HIDDEN_DB_FOLDER_PATH));
-                }catch(IOException e){
+                } catch (IOException e) {
                     Log.e(TAG, "Error creating centralDB directory", e);
                 }
             }
 
             String centralDbDest = AMEnv.HIDDEN_DB_FOLDER_PATH + AMEnv.CENTRAL_DB_NAME;
-            
-            if(!new File(centralDbDest).exists()){
+
+            if (!new File(centralDbDest).exists()) {
                 try {
-                    amFileUtil.copyFileFromAsset(AMEnv.CENTRAL_DB_NAME,new File(centralDbDest));
+                    amFileUtil.copyFileFromAsset(AMEnv.CENTRAL_DB_NAME, new File(centralDbDest));
                     databaseUtil.setupDatabase(centralDbDest);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -356,24 +361,24 @@ public class AnyMemo extends BaseActivity {
             editor.commit();
 
             View alertView = View.inflate(this, R.layout.link_alert, null);
-            TextView textView = (TextView)alertView.findViewById(R.id.link_alert_message);
+            TextView textView = (TextView) alertView.findViewById(R.id.link_alert_message);
             textView.setText(Html.fromHtml(getString(R.string.what_is_new_message)));
             textView.setMovementMethod(LinkMovementMethod.getInstance());
             new AlertDialog.Builder(this)
-                .setView(alertView)
-                .setTitle(getString(R.string.what_is_new))
-                .setPositiveButton(getString(R.string.ok_text), null)
-                .setNegativeButton(getString(R.string.about_version), new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1){
-                        Intent myIntent = new Intent();
-                        myIntent.setAction(Intent.ACTION_VIEW);
-                        myIntent.addCategory(Intent.CATEGORY_BROWSABLE);
-                        myIntent.setData(Uri.parse(WEBSITE_VERSION));
-                        startActivity(myIntent);
-                    }
-                })
-            .show();
+                    .setView(alertView)
+                    .setTitle(getString(R.string.what_is_new))
+                    .setPositiveButton(getString(R.string.ok_text), null)
+                    .setNegativeButton(getString(R.string.about_version), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            Intent myIntent = new Intent();
+                            myIntent.setAction(Intent.ACTION_VIEW);
+                            myIntent.addCategory(Intent.CATEGORY_BROWSABLE);
+                            myIntent.setData(Uri.parse(WEBSITE_VERSION));
+                            startActivity(myIntent);
+                        }
+                    })
+                    .show();
         }
     }
 
@@ -387,7 +392,7 @@ public class AnyMemo extends BaseActivity {
      */
     private void handleOpenIntent() {
         multipleLoaderManager.registerLoaderCallbacks(1, new HandleOpenIntentLoaderCallbacks(getIntent().getData()), false);
-        multipleLoaderManager.registerLoaderCallbacks(2, new HandleOpenIntentLoaderCallbacksHiddenFolder(getIntent().getData()),false);
+        multipleLoaderManager.registerLoaderCallbacks(2, new HandleOpenIntentLoaderCallbacksHiddenFolder(getIntent().getData()), false);
         multipleLoaderManager.startLoading();
     }
 
@@ -405,13 +410,13 @@ public class AnyMemo extends BaseActivity {
             @Override
             public void onClick(View v) {
                 disposables.add(activityComponents().databaseOperationDialogUtil().showCreateDbDialog(AMEnv.DEFAULT_ROOT_PATH)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<File>() {
-                    @Override
-                    public void accept(File file) throws Exception {
-                        appComponents().eventBus().post(new FileBrowserFragment.RefreshFileListEvent(file.getParentFile()));
-                    }
-                }));
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<File>() {
+                            @Override
+                            public void accept(File file) throws Exception {
+                                appComponents().eventBus().post(new FileBrowserFragment.RefreshFileListEvent(file.getParentFile()));
+                            }
+                        }));
             }
         });
     }
@@ -488,7 +493,8 @@ public class AnyMemo extends BaseActivity {
                         Log.e(TAG, "Database is corrupted: " + newFile.getAbsolutePath());
                         newFile.delete();
                         return null;
-                    };
+                    }
+                    ;
 
                     return newFile;
                 }
