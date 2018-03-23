@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 import android.view.View;
 
 import org.hamcrest.Matcher;
@@ -18,17 +16,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.dao.TagDao;
-import org.liberty.android.fantastischmemo.entity.DeckMap;
-import org.liberty.android.fantastischmemo.entity.DeckMock;
-import org.liberty.android.fantastischmemo.entity.Tag;
-import org.liberty.android.fantastischmemo.integrationtest.TestHelper;
 import org.liberty.android.fantastischmemo.test.AbstractExistingDBTest;
 import org.liberty.android.fantastischmemo.ui.TagsActivity;
 
 import java.sql.SQLException;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -59,7 +52,6 @@ public class CreateTagInDeckUITest extends AbstractExistingDBTest {
     public void testCreateNewTag() {
         Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         TagDao tagDao = helper.getTagDao();
-        DeckMap.getInstance().findOrCreate(new DeckMock("french-body-parts.db", TestHelper.SAMPLE_DB_PATH));
         Intent intent = new Intent(targetContext, TagsActivity.class);
         intent.putExtra("deckPath", "/sdcard/anymemo/french-body-parts.db");
         mActivityRule.launchActivity(intent);
