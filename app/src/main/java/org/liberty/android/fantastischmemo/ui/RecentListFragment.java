@@ -53,9 +53,8 @@ import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseFragment;
-import org.liberty.android.fantastischmemo.entity.Tag;
-import org.liberty.android.fantastischmemo.entity.DeckMap;
 import org.liberty.android.fantastischmemo.dao.CardDao;
+import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.ui.helper.SelectableAdapter;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListActionModeUtil;
@@ -181,13 +180,6 @@ public class RecentListFragment extends BaseFragment {
         });
         
         filter.clear();
-        HashSet<Tag> tags = DeckMap.getInstance().getAllTags();tagCount = 0;
-        for (Tag tag : tags) {
-            filter.add(0, Menu.FIRST + tagCount, Menu.NONE, tag.getName());
-            MenuItem tagOption = filter.findItem(Menu.FIRST + tagCount);
-            tagOption.setCheckable(true);
-            tagCount++;
-        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -198,18 +190,6 @@ public class RecentListFragment extends BaseFragment {
             recentListUtil.clearRecentList();
             onResume();
             return true;  // Prevent default on-selected action
-        }
-        // Dynamic count of checkable elements in Tag Filter
-        else if(itemId > 0 && itemId <= tagCount) {
-            Boolean checked = !item.isChecked();
-            item.setChecked(checked);
-            String selectedTagName = item.getTitle().toString();
-            Tag selectedTag = DeckMap.getInstance().getTagByName(selectedTagName);
-            if (checked)
-                selectedTags.add(selectedTag);
-            else
-                selectedTags.remove(selectedTag);
-            return false;
         }
         return false;  // Default case: Allow default on-selected action to occur
     }

@@ -11,8 +11,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -26,10 +24,9 @@ import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
 import org.liberty.android.fantastischmemo.dao.TagDao;
-import org.liberty.android.fantastischmemo.entity.DeckMap;
-import org.liberty.android.fantastischmemo.entity.DeckMock;
 import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.ui.adapters.AbstractTagsAdapter;
+import org.liberty.android.fantastischmemo.utils.GenericDatabaseDialogUtil;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -53,9 +50,8 @@ public class TagsActivity extends BaseActivity {
         centralTagDao = helper.getTagDao();
 
         String deckPath = getIntent().getStringExtra("deckPath");
-
-        DeckMock deck = DeckMap.getInstance().getDecksMap().get(deckPath);
-        setTitle("Tags for: " + deck.getName());
+        String deckName = GenericDatabaseDialogUtil.getDeckNameFromPath(deckPath);
+        setTitle("Tags for: " + deckName);
 
         Bundle bundle = new Bundle();
         bundle.putString("deckPath", deckPath);
@@ -185,36 +181,12 @@ public class TagsActivity extends BaseActivity {
         });
     }
 
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.tag_activity_menu, menu);
         return true;
-    }
-
-    /*
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case R.id.tag_search:
-            {
-                tags = loadAllTags();
-                tagsAdapter = new TagsAdapter(tags);
-                tagsRecyclerView.setAdapter(tagsAdapter);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public List<Tag> loadAllTags(){
-        ArrayList<Tag> tagList = new ArrayList<Tag>();
-        HashMap<String, DeckMock> deckList = DeckMap.getInstance().getDecksMap();
-
-        for(DeckMock deck : deckList.values()){
-            tagList.addAll(deck.getTags());
-        }
-        return tagList;
     }
     */
 

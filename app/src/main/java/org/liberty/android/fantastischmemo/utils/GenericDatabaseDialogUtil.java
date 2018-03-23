@@ -219,7 +219,7 @@ public class GenericDatabaseDialogUtil {
         }
     }
 
-    private static String getDeckNameFromPath(String path) {
+    public static String getDeckNameFromPath(String path) {
         String[] pathSplit = path.split("/");
         return pathSplit[pathSplit.length - 1];
     }
