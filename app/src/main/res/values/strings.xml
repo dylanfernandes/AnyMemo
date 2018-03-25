@@ -492,4 +492,6 @@
     <string name="current_login_streak">Current login streak</string>
     <string name="view_statistic">View statistic</string>
     <string name="updating_database">Updating database...</string>
+    <string name="edit_account">Edit Account</string>
+    <string name="delete_account">Delete Account</string>
 </resources>
