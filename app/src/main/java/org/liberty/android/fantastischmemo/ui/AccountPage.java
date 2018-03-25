@@ -51,28 +51,10 @@ public class AccountPage extends BaseActivity{
         activityComponents().inject(this);
         setContentView(R.layout.account_page_tab);
 
+
         baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(AccountPage.this, dbPath);
         userDao = baseHelper.getUserDao();
         userStatDao = baseHelper.getUserStatisticsDao();
-
-        Collection<User> userlist = userDao.queryForAll();
-        if(userlist.size() == 0){
-            User defaultUser = userDao.createOrReturn("DefaultUsername");
-            defaultUser.setName("DefaultName");
-            defaultUser.setSurname("DefaultSurname");
-            userDao.update(defaultUser);
-            userStatDao.createOrReturn(defaultUser);
-        }
-
-        /*
-        if(userDao.queryForId(1) == null){
-            User defaultUser = userDao.createOrReturn("DefaultUsername");
-            defaultUser.setName("DefaultName");
-            defaultUser.setSurname("DefaultSurname");
-            userDao.update(defaultUser);
-            userStatDao.createOrReturn(defaultUser);
-        }
-        */
 
         user = userDao.createOrReturn("DefaultUsername");
         userStat = userStatDao.createOrReturn(user);
