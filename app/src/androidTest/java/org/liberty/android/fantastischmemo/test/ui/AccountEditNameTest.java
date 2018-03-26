@@ -59,18 +59,6 @@ public class AccountEditNameTest {
 
         Log.i("ACCOUNT_NAME_TEST", "Succeeded in clicking main menu (Step 1)");
 
-        ViewInteraction checkedTextView = onView(
-                allOf(withId(R.id.design_menu_item_text),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.design_navigation_view),
-                                        6),
-                                0),
-                        isDisplayed()));
-        checkedTextView.check(matches(isDisplayed()));
-
-        Log.i("ACCOUNT_NAME_TEST", "Account menu option exists (Step 1.5)");
-
         ViewInteraction navigationMenuItemView = onView(
                 allOf(childAtPosition(
                         allOf(withId(R.id.design_navigation_view),
@@ -133,11 +121,13 @@ public class AccountEditNameTest {
         ViewInteraction appCompatButton3 = onView(
                 allOf(withId(android.R.id.button1), withText("Yes"),
                         childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                3)));
-        appCompatButton3.perform(scrollTo(), click());
+                                allOf(withClassName(is("android.widget.LinearLayout")),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.LinearLayout")),
+                                                3)),
+                                3),
+                        isDisplayed()));
+        appCompatButton3.perform(click());
 
         Log.i("ACCOUNT_NAME_TEST", "Step 7");
 
