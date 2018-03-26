@@ -43,7 +43,7 @@ public class AccountEditNameTest {
     public ActivityTestRule<AnyMemo> mActivityTestRule = new ActivityTestRule<>(AnyMemo.class);
 
     @Test
-    public void accountEditNameTest() {
+    public void accountEditNameTest() throws InterruptedException {
         Log.i("ACCOUNT_NAME_TEST", "Starting Test (Step 0)");
 
         ViewInteraction appCompatImageButton = onView(
@@ -56,6 +56,8 @@ public class AccountEditNameTest {
                                 1),
                         isDisplayed()));
         appCompatImageButton.perform(click());
+
+        Thread.sleep(3000);
 
         Log.i("ACCOUNT_NAME_TEST", "Succeeded in clicking main menu (Step 1)");
 
