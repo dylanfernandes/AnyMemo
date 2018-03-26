@@ -5,6 +5,7 @@ import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -54,6 +55,8 @@ public class AccountEditNameTest {
                         isDisplayed()));
         appCompatImageButton.perform(click());
 
+        Log.i("ACCOUNT_NAME_TEST", "Succeeded in clicking main menu (Step 1)");
+
         ViewInteraction navigationMenuItemView = onView(
                 allOf(childAtPosition(
                         allOf(withId(R.id.design_navigation_view),
@@ -64,6 +67,8 @@ public class AccountEditNameTest {
                         isDisplayed()));
         navigationMenuItemView.perform(click());
 
+        Log.i("ACCOUNT_NAME_TEST", "Succeeded in clicking account heading in menu (Step 2)");
+
         ViewInteraction appCompatImageButton2 = onView(
                 allOf(withId(R.id.edit_account),
                         childAtPosition(
@@ -72,6 +77,8 @@ public class AccountEditNameTest {
                                         1),
                                 0)));
         appCompatImageButton2.perform(scrollTo(), click());
+
+        Log.i("ACCOUNT_NAME_TEST", "Succeeded in clicking edit button (Step 3)");
 
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.edit_profile_update_name_entry),
@@ -83,6 +90,8 @@ public class AccountEditNameTest {
                         isDisplayed()));
         appCompatEditText.perform(replaceText("test"), closeSoftKeyboard());
 
+        Log.i("ACCOUNT_NAME_TEST", "Step 4");
+
         ViewInteraction appCompatEditText2 = onView(
                 allOf(withId(R.id.edit_profile_update_name_entry), withText("test"),
                         childAtPosition(
@@ -92,6 +101,8 @@ public class AccountEditNameTest {
                                 0),
                         isDisplayed()));
         appCompatEditText2.perform(pressImeActionButton());
+
+        Log.i("ACCOUNT_NAME_TEST", "Step 5");
 
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.update_profile_button), withText("Update"),
@@ -103,6 +114,8 @@ public class AccountEditNameTest {
                         isDisplayed()));
         appCompatButton2.perform(click());
 
+        Log.i("ACCOUNT_NAME_TEST", "Step 6");
+
         ViewInteraction appCompatButton3 = onView(
                 allOf(withId(android.R.id.button1), withText("Yes"),
                         childAtPosition(
@@ -111,6 +124,8 @@ public class AccountEditNameTest {
                                         0),
                                 3)));
         appCompatButton3.perform(scrollTo(), click());
+
+        Log.i("ACCOUNT_NAME_TEST", "Step 7");
 
         ViewInteraction textView = onView(
                 allOf(withId(R.id.account_user_name), withText("test"),
@@ -121,6 +136,8 @@ public class AccountEditNameTest {
                                 1),
                         isDisplayed()));
         textView.check(matches(withText("test")));
+
+        Log.i("ACCOUNT_NAME_TEST", "Step 8");
 
     }
 
