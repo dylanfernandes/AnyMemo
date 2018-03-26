@@ -44,6 +44,8 @@ public class AccountEditNameTest {
 
     @Test
     public void accountEditNameTest() {
+        Log.i("ACCOUNT_NAME_TEST", "Starting Test (Step 0)");
+
         ViewInteraction appCompatImageButton = onView(
                 allOf(withContentDescription("Navigate up"),
                         childAtPosition(
