@@ -59,6 +59,18 @@ public class AccountEditNameTest {
 
         Log.i("ACCOUNT_NAME_TEST", "Succeeded in clicking main menu (Step 1)");
 
+        ViewInteraction checkedTextView = onView(
+                allOf(withId(R.id.design_menu_item_text),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.design_navigation_view),
+                                        6),
+                                0),
+                        isDisplayed()));
+        checkedTextView.check(matches(isDisplayed()));
+
+        Log.i("ACCOUNT_NAME_TEST", "Account menu option exists (Step 1.5)");
+
         ViewInteraction navigationMenuItemView = onView(
                 allOf(childAtPosition(
                         allOf(withId(R.id.design_navigation_view),
