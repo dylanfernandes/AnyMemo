@@ -14,6 +14,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsInstanceOf;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,6 +43,7 @@ public class AccountEditNameTest {
     @Rule
     public ActivityTestRule<AnyMemo> mActivityTestRule = new ActivityTestRule<>(AnyMemo.class);
 
+    @Ignore
     @Test
     public void accountEditNameTest() throws InterruptedException {
         Log.i("ACCOUNT_NAME_TEST", "Starting Test (Step 0)");
@@ -56,8 +58,6 @@ public class AccountEditNameTest {
                                 1),
                         isDisplayed()));
         appCompatImageButton.perform(click());
-
-        Thread.sleep(3000);
 
         Log.i("ACCOUNT_NAME_TEST", "Succeeded in clicking main menu (Step 1)");
 
