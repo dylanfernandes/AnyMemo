@@ -59,5 +59,11 @@ public class DeckTest {
 
     }
 
+    @Test
+    public void testGetSetRating(){
+        deck.setRating(3);
+        assertEquals(3,deck.getRating());
+    }
+
 
 }
