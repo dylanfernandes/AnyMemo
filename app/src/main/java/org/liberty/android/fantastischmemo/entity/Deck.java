@@ -29,8 +29,8 @@ public class Deck implements Serializable{
     @DatabaseField(version = true, format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType=DataType.DATE_STRING)
     private Date updateDate;
 
-    @DatabaseField(defaultValue = "0")
-    private Integer rating;
+    @DatabaseField(defaultValue = "0.0")
+    private Double rating;
 
     public Deck() {}
 
@@ -82,7 +82,7 @@ public class Deck implements Serializable{
         this.dbPath = dbPath;
     }
 
-    public Integer getRating() {return this.rating;}
+    public Double getRating() {return this.rating;}
 
-    public void setRating(int rating) {this.rating = rating;}
+    public void setRating(Double rating) {this.rating = rating;}
 }

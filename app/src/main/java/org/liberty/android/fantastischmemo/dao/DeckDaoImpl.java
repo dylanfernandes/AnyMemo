@@ -43,7 +43,7 @@ public class DeckDaoImpl extends BaseDaoImpl<Deck, Integer> implements DeckDao {
             }
             Deck newDeck = new Deck();
             newDeck.setName(deckName);
-            newDeck.setRating(0);
+            newDeck.setRating(0.0);
             create(newDeck);
             // Create new one and it should exist
             deck = queryForFirst(pq);

@@ -505,6 +505,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
                                                 final DeckDao deckDao = helper.getDeckDao();
                                                 final EditText ratingInput = new EditText(fragment.getContext());
                                                 Deck currentDeck = deckDao.createOrReturn(selectedFileName);
+                                                int currentRating = (int) Math.round(currentDeck.getRating());
 
                                                 ratingInput.setText(currentDeck.getRating().toString());
 
@@ -516,11 +517,12 @@ public class FileBrowserFragment extends BaseDialogFragment {
                                                             @Override
                                                             public void onClick(DialogInterface dialog, int which) {
                                                                 try {
-                                                                    int updatedValue = Integer.parseInt(ratingInput.getText().toString());
+                                                                    double updatedValue = Double.parseDouble(ratingInput.getText().toString());
                                                                     if( updatedValue < 1 || updatedValue > 5 ){
                                                                         Toast.makeText(fragment.getContext(),R.string.invalid_rating_given,Toast.LENGTH_SHORT).show();
                                                                     } else if(updatedValue >= 1 && updatedValue <= 5) {
-                                                                        deckDao.updateRating(selectedFileName, updatedValue);
+                                                                        int roundedValue = (int)Math.round(updatedValue);
+                                                                        deckDao.updateRating(selectedFileName, roundedValue);
                                                                     }
                                                                 } catch(NumberFormatException e){
                                                                     Toast.makeText(fragment.getContext(),R.string.invalid_rating_given,Toast.LENGTH_SHORT).show();

@@ -61,8 +61,8 @@ public class DeckTest {
 
     @Test
     public void testGetSetRating(){
-        deck.setRating(3);
-        assertEquals((Integer)3,((Integer)deck.getRating()));
+        deck.setRating(3.0);
+        assertEquals((Double)3.0,(Double)(deck.getRating()));
     }
 
 
