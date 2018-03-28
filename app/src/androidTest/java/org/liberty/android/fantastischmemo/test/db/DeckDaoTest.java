@@ -24,11 +24,11 @@ public class DeckDaoTest extends AbstractExistingBaseDBTest{
     public void testUpdateRating(){
         DeckDao deckdao = centralDbHelper.getDeckDao();
         Deck newDeck = deckdao.createOrReturn("testingDeck");
-        newDeck.setRating(3);
-        assertEquals((Integer)3,(Integer)newDeck.getRating());
+        newDeck.setRating(3.0);
+        assertEquals((Double)3.0,(Double)newDeck.getRating());
         deckdao.updateRating("testingDeck",5);
         //Re-querry for updated value
         newDeck = deckdao.createOrReturn("testingDeck");
-        assertEquals((Integer)5,newDeck.getRating());
+        assertEquals((Double)5.0,newDeck.getRating());
     }
 }
