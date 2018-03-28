@@ -39,6 +39,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,13 +51,18 @@ import org.greenrobot.eventbus.Subscribe;
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseDialogFragment;
+import org.liberty.android.fantastischmemo.dao.DeckDao;
+import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -495,6 +501,40 @@ public class FileBrowserFragment extends BaseDialogFragment {
                                                 intent.putExtra("deckPath", deckPath);
                                                 fragment.startActivity(intent);
                                             } else if (which == 1) {
+                                                AnyMemoBaseDBOpenHelper helper = AnyMemoBaseDBOpenHelperManager.getHelper("central.db");
+                                                final DeckDao deckDao = helper.getDeckDao();
+                                                final EditText ratingInput = new EditText(fragment.getContext());
+                                                Deck currentDeck = deckDao.createOrReturn(selectedFileName);
+
+                                                ratingInput.setText(currentDeck.getRating().toString());
+
+                                                new AlertDialog.Builder(fragment.getContext())
+                                                        .setTitle("Set Rating")
+                                                        .setMessage("Please enter an integer between 1 and 5.")
+                                                        .setView(ratingInput)
+                                                        .setPositiveButton("Confirm Rating", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                try {
+                                                                    int updatedValue = Integer.parseInt(ratingInput.getText().toString());
+                                                                    if( updatedValue < 1 || updatedValue > 5 ){
+                                                                        Toast.makeText(fragment.getContext(),R.string.invalid_rating_given,Toast.LENGTH_SHORT).show();
+                                                                    } else if(updatedValue >= 1 && updatedValue <= 5) {
+                                                                        deckDao.updateRating(selectedFileName, updatedValue);
+                                                                    }
+                                                                } catch(NumberFormatException e){
+                                                                    Toast.makeText(fragment.getContext(),R.string.invalid_rating_given,Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            }
+                                                        })
+                                                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                dialog.dismiss();
+                                                            }
+                                                        })
+                                                        .show();
+                                            } else if (which == 2) {
                                                 fragment.disposables.add(fragment.activityComponents().databaseOperationDialogUtil().showDeleteDbDialog(clickedFile)
                                                         .observeOn(AndroidSchedulers.mainThread())
                                                         .subscribe(new Consumer<File>() {
@@ -503,7 +543,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
                                                                 fragment.browseTo(file.getParentFile());
                                                             }
                                                         }));
-                                            } else if (which == 2) {
+                                            } else if (which == 3) {
                                                 fragment.disposables.add(fragment.activityComponents().databaseOperationDialogUtil().showCloneDbDialog(clickedFile)
                                                         .observeOn(AndroidSchedulers.mainThread())
                                                         .subscribe(new Consumer<File>() {
@@ -512,7 +552,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
                                                                 fragment.browseTo(file.getParentFile());
                                                             }
                                                         }));
-                                            } else if (which == 3) {
+                                            } else if (which == 4) {
                                                 fragment.disposables.add(fragment.activityComponents().databaseOperationDialogUtil().showRenameDbDialog(clickedFile)
                                                         .observeOn(AndroidSchedulers.mainThread())
                                                         .subscribe(new Consumer<File>() {

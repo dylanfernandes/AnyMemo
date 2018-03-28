@@ -30,7 +30,7 @@ public class Deck implements Serializable{
     private Date updateDate;
 
     @DatabaseField(defaultValue = "0")
-    private int rating;
+    private Integer rating;
 
     public Deck() {}
 
@@ -82,7 +82,7 @@ public class Deck implements Serializable{
         this.dbPath = dbPath;
     }
 
-    public int getRating() {return this.rating;}
+    public Integer getRating() {return this.rating;}
 
     public void setRating(int rating) {this.rating = rating;}
 }
