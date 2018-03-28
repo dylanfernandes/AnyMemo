@@ -11,6 +11,9 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -51,7 +54,8 @@ public class TagsActivity extends BaseActivity {
 
         String deckPath = getIntent().getStringExtra("deckPath");
         String deckName = GenericDatabaseDialogUtil.getDeckNameFromPath(deckPath);
-        setTitle("Tags for: " + deckName);
+        setTitle("Tags");
+        this.getSupportActionBar().setSubtitle(deckName);
 
         Bundle bundle = new Bundle();
         bundle.putString("deckPath", deckPath);
@@ -181,14 +185,35 @@ public class TagsActivity extends BaseActivity {
         });
     }
 
-    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.tag_activity_menu, menu);
         return true;
     }
-    */
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+//            case R.id.view_all_tags:
+//            {
+//                List<Tag> tags = loadAllTags();
+//                tagsAdapter = new TagsFragment.TagsAdapter(tags);
+//                tagsRecyclerView.setAdapter(tagsAdapter);
+//                return true;
+//            }
+        }
+        return false;
+    }
+
+    private List<Tag> loadAllTags() {
+        try {
+            List<Tag> tags = centralTagDao.queryForAll();
+            return tags;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public List<Tag> loadAllTagsExceptInDeck(){
         try {

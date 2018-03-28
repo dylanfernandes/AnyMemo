@@ -7,4 +7,8 @@
         android:icon="@drawable/ic_menu_search"
         anymemo:showAsAction="ifRoom"
         android:title="@string/tags_search" />
+
+    <item android:id="@+id/all_tags"
+        anymemo:showAsAction="collapseActionView"
+        android:title="@string/all_tags_menu_option" />
 </menu>
