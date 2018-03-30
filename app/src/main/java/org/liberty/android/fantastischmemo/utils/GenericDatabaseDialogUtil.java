@@ -206,13 +206,13 @@ public class GenericDatabaseDialogUtil {
     }
 
     private static boolean deckExistsInCentralDB(String dbPath) throws SQLException {
-        DeckDao deckDao = AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getDeckDao();
+        DeckDao deckDao = AnyMemoBaseDBOpenHelperManager.getHelper().getDeckDao();
         List<Deck> decks = deckDao.queryForEq("dbPath", dbPath);
         return decks.size() != 0;
     }
 
     private static void deleteDeckFromCentralDB(String path) throws SQLException {
-        DeckDao deckDao = AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getDeckDao();
+        DeckDao deckDao = AnyMemoBaseDBOpenHelperManager.getHelper().getDeckDao();
         if (deckExistsInCentralDB(path)) {
             Deck deck = deckDao.queryForEq("dbPath", path).get(0);
             deckDao.delete(deck);
@@ -225,7 +225,7 @@ public class GenericDatabaseDialogUtil {
     }
 
     public static void addDeckToCentralDB(String path) throws SQLException {
-        DeckDao deckDao = AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getDeckDao();
+        DeckDao deckDao = AnyMemoBaseDBOpenHelperManager.getHelper().getDeckDao();
         if (!deckExistsInCentralDB(path)) {
             Deck deck = new Deck();
             deck.setDbPath(path);
