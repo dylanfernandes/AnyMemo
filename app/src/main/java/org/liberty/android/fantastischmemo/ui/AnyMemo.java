@@ -147,7 +147,14 @@ public class AnyMemo extends BaseActivity {
         userStatDao = baseHelper.getUserStatisticsDao();
 
         Collection<User> userlist = userDao.queryForAll();
+
         if(userlist.size() == 0){
+            AccountRegisterFragment df = new AccountRegisterFragment();
+            Bundle b = new Bundle();
+            b.putString(AccountRegisterFragment.EXTRA_DBPATH, dbPath);
+            df.setArguments(b);
+            df.show(getSupportFragmentManager(), "AccountRegisterDialog");
+
             User defaultUser = userDao.createOrReturn("DefaultUsername");
             defaultUser.setName("DefaultName");
             defaultUser.setSurname("DefaultSurname");

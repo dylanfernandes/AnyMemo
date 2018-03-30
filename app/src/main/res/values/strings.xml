@@ -494,4 +494,6 @@
     <string name="updating_database">Updating database...</string>
     <string name="edit_account">Edit Account</string>
     <string name="delete_account">Delete Account</string>
+    <string name="account_register">Register</string>
+    <string name="confirm">Confirm</string>
 </resources>
