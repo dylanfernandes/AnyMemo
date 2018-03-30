@@ -58,8 +58,14 @@ import org.liberty.android.fantastischmemo.BuildConfig;
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
+import org.liberty.android.fantastischmemo.dao.UserDao;
+import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.databinding.MainTabsBinding;
+import org.liberty.android.fantastischmemo.entity.User;
+import org.liberty.android.fantastischmemo.entity.UserStatistics;
 import org.liberty.android.fantastischmemo.receiver.SetAlarmReceiver;
 import org.liberty.android.fantastischmemo.service.AnyMemoService;
 import org.liberty.android.fantastischmemo.ui.loader.MultipleLoaderManager;
@@ -91,6 +97,18 @@ public class AnyMemo extends BaseActivity {
 
     private MainTabsBinding binding;
 
+    private UserDao userDao;
+
+    private UserStatisticsDao statsDao;
+
+    private User user;
+
+    private UserStatistics stats;
+
+    private AnyMemoBaseDBOpenHelper baseHelper;
+
+    private String dbPath = AMEnv.CENTRAL_DB_NAME;
+
     @Inject
     AMFileUtil amFileUtil;
 
@@ -117,6 +135,11 @@ public class AnyMemo extends BaseActivity {
         activityComponents().inject(this);
         disposables = new CompositeDisposable();
 
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(AnyMemo.this, dbPath);
+        userDao = baseHelper.getUserDao();
+        statsDao = baseHelper.getUserStatisticsDao();
+
+        verifyDailyPoints();
         binding = DataBindingUtil.setContentView(this, R.layout.main_tabs);
 
         // Request storage permission
@@ -129,6 +152,14 @@ public class AnyMemo extends BaseActivity {
             loadUiComponents();
         }
         recentListActionModeUtil.registerForActivity();
+    }
+
+    private void verifyDailyPoints() {
+        //implemented until user creation upon login is completed
+        user = userDao.createOrReturn("Test");
+        stats = statsDao.createOrReturn(user);
+        Toast.makeText(this, "Daily Points Obtained!", Toast.LENGTH_LONG).show();
+        userDao.delete(user);
     }
 
     @Override
