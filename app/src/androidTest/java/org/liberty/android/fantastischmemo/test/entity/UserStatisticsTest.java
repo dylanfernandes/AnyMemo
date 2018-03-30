@@ -180,4 +180,18 @@ public class UserStatisticsTest {
             assertEquals(userPoints.get(i).getValue(), retrievedPoints.get(i).getValue());
         }
     }
+
+    @Test
+    public void testGetLatestPoint() {
+        AchievementPoint a1 = new AchievementPoint();
+        AchievementPoint a2 = new AchievementPoint();
+        a1.setValue(1);
+        a2.setValue(2);
+        //returns null when no points
+        assertEquals(null, us.getLatestPoint());
+
+        us.addPoint(a1);
+        us.addPoint(a2);
+        assertEquals(a2.getValue(), us.getLatestPoint().getValue());
+    }
 }

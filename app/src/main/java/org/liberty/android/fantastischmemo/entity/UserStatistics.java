@@ -1,6 +1,8 @@
 package org.liberty.android.fantastischmemo.entity;
 
 
+import android.graphics.Point;
+
 import com.j256.ormlite.field.DataType;
 
 
@@ -13,6 +15,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDaoImpl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -53,12 +56,13 @@ public class UserStatistics {
     public final static long MILLIS_PER_DAY = 24*60*60*1000L;
 
 
-    public UserStatistics() {}
+    public UserStatistics() { points = new ArrayList<AchievementPoint>();}
 
     //fake UserStatistics for AccountPage
     public UserStatistics(Integer longest, Integer current){
         this.longestStreak = longest;
         this.streak = current;
+        points = new ArrayList<AchievementPoint>();
     }
 
     //Getters and Setters
@@ -77,6 +81,17 @@ public class UserStatistics {
     public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
     }
+
+    public boolean hasPoints() {return points.size() > 0;}
+
+    public AchievementPoint getLatestPoint() {
+        if(hasPoints()) {
+            return points.get(points.size() - 1);
+        }
+        return null;
+    }
+
+    public void addPoint(AchievementPoint point) { points.add(point);}
 
     public List<AchievementPoint> getPoints() {
         return points;
