@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.app.Activity;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import org.liberty.android.fantastischmemo.common.AMEnv;
 
 import org.liberty.android.fantastischmemo.R;
@@ -91,6 +92,10 @@ public class AccountPage extends BaseActivity{
             }
             case R.id.delete_account:{
                 userDao.delete(user);
+                Toast.makeText(this, R.string.delete_account_message, Toast.LENGTH_LONG)
+                        .show();
+                Intent intent = new Intent(AccountPage.this, AnyMemo.class);
+                startActivity(intent);
                 return true;
             }
         }
