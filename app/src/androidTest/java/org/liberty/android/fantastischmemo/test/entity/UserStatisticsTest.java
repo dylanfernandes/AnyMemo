@@ -150,10 +150,10 @@ public class UserStatisticsTest {
         Date lastLogin = calendar.getTime();
 
         us.setLastLogin(today);
-        assertFalse(us.checkStreak(today));
+        assertTrue(us.checkStreak(today));
 
         us.setLastLogin(lastLogin);
-        assertTrue(us.checkStreak(today));
+        assertFalse(us.checkStreak(today));
 
     }
 

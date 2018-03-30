@@ -1,8 +1,6 @@
 package org.liberty.android.fantastischmemo.entity;
 
 
-import android.graphics.Point;
-
 import com.j256.ormlite.field.DataType;
 
 
@@ -189,7 +187,7 @@ public class UserStatistics {
 
     public void updateStreaks() {
         Date today = new Date();
-        if(checkStreak(today)) {
+        if(!checkStreak(today)) {
             streak = 0;
             longestStreak = 0;
             weeks = 0;
@@ -200,7 +198,7 @@ public class UserStatistics {
     }
 
     public boolean checkStreak(Date date) {
-        return Math.abs(date.getTime() - lastLogin.getTime()) > MILLIS_PER_DAY;
+        return Math.abs(date.getTime() - lastLogin.getTime()) < MILLIS_PER_DAY;
     }
 
 }
