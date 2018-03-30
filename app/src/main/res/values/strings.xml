@@ -492,4 +492,5 @@
     <string name="current_login_streak">Current login streak</string>
     <string name="view_statistic">View statistic</string>
     <string name="updating_database">Updating database...</string>
+    <string name="invalid_rating_given">Invalid rating</string>
 </resources>
