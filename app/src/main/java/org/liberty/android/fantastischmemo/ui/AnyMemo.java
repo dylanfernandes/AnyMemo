@@ -317,14 +317,15 @@ public class AnyMemo extends BaseActivity {
             editor.putString(AMPrefKeys.getRecentPathKey(0), AMEnv.DEFAULT_ROOT_PATH + AMEnv.DEFAULT_DB_NAME);
             editor.commit();
             try {
+                //set the filepath of french body parts db and call setupDatabase for creation
                 String dest = sdPath + "/" + AMEnv.DEFAULT_DB_NAME;
                 amFileUtil.copyFileFromAsset(AMEnv.DEFAULT_DB_NAME, new File(dest));
                 databaseUtil.setupDatabase(dest);
 
+                //set the filepath of the central db and call setupCentralDatabase for creation
                 String centralDbDest = AMEnv.HIDDEN_DB_FOLDER_PATH + AMEnv.CENTRAL_DB_NAME;
-                amFileUtil.copyFileFromAsset(AMEnv.CENTRAL_DB_NAME, new File(centralDbDest));
-                databaseUtil.setupDatabase(centralDbDest);
-                GenericDatabaseDialogUtil.addDeckToCentralDB(dest);
+                databaseUtil.setupCentralDatabase(centralDbDest);
+                GenericDatabaseDialogUtil.addDeckToCentralDB(dest); //add frenchbodyparts to the centraldb
 
                 InputStream in2 = getResources().getAssets().open(AMEnv.EMPTY_DB_NAME);
                 String emptyDbPath = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + AMEnv.EMPTY_DB_NAME;
@@ -350,12 +351,11 @@ public class AnyMemo extends BaseActivity {
 
             if (!new File(centralDbDest).exists()) {
                 try {
-                    amFileUtil.copyFileFromAsset(AMEnv.CENTRAL_DB_NAME, new File(centralDbDest));
-                    databaseUtil.setupDatabase(centralDbDest);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    databaseUtil.setupCentralDatabase(centralDbDest);
+                } catch (Exception e) {
+                    Log.e(TAG, "Error creating centralDB", e);
                 }
-                databaseUtil.setupDatabase(centralDbDest);
+                databaseUtil.setupCentralDatabase(centralDbDest);
             }
 
             SharedPreferences.Editor editor = settings.edit();

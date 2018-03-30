@@ -132,7 +132,7 @@ public class FilterActivity extends BaseActivity {
 
     private List<Deck> loadDecks() {
         try {
-            return AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getDeckDao().queryForAll();
+            return AnyMemoBaseDBOpenHelperManager.getHelper().getDeckDao().queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -141,7 +141,7 @@ public class FilterActivity extends BaseActivity {
 
     private List<Tag> loadTags() {
         try {
-            return AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getTagDao().queryForAll();
+            return AnyMemoBaseDBOpenHelperManager.getHelper().getTagDao().queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }
