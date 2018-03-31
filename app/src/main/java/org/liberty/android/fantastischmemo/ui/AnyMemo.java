@@ -64,6 +64,7 @@ import org.liberty.android.fantastischmemo.common.BaseActivity;
 import org.liberty.android.fantastischmemo.dao.UserDao;
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.databinding.MainTabsBinding;
+import org.liberty.android.fantastischmemo.entity.AchievementPoint;
 import org.liberty.android.fantastischmemo.entity.User;
 import org.liberty.android.fantastischmemo.entity.UserStatistics;
 import org.liberty.android.fantastischmemo.receiver.SetAlarmReceiver;
@@ -80,6 +81,7 @@ import org.liberty.android.fantastischmemo.widget.AnyMemoWidgetProvider;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.sql.SQLException;
 
 import javax.inject.Inject;
@@ -158,8 +160,15 @@ public class AnyMemo extends BaseActivity {
         //implemented until user creation upon login is completed
         user = userDao.createOrReturn("Test");
         stats = statsDao.createOrReturn(user);
-        Toast.makeText(this, "Daily Points Obtained!", Toast.LENGTH_LONG).show();
-        userDao.delete(user);
+        AchievementPoint recent = stats.getLatestPoint();
+        Date now = new Date();
+        if(recent == null || stats.checkStreak(now)) {
+            AchievementPoint dp = new AchievementPoint();
+            dp.setValue(5);
+            stats.addPoint(dp);
+            Toast.makeText(this, "Daily Points Obtained! Points: " + dp.getValue(), Toast.LENGTH_LONG).show();
+        }
+        //userDao.delete(user);
     }
 
     @Override

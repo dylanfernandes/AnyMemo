@@ -210,5 +210,6 @@ public class UserStatisticsTest {
         us.addPoint(a1);
         us.addPoint(a2);
         assertEquals(a2.getValue(), us.getLatestPoint().getValue());
+        assertEquals(2,us.getPoints().size());
     }
 }
