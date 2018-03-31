@@ -14,6 +14,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDaoImpl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -197,8 +198,23 @@ public class UserStatistics {
         }
     }
 
+    //returns true if streak is still active
+    //An active streak is defined as:
+    //  1)Less than 24 hours has passed between the last login
+    //  2)The most recent login is one a different day than the previous login
     public boolean checkStreak(Date date) {
-        return Math.abs(date.getTime() - lastLogin.getTime()) < MILLIS_PER_DAY;
+        Calendar recent = Calendar.getInstance();
+        Calendar last = Calendar.getInstance();
+        boolean differentDay;
+        boolean lessThanDay;
+
+        recent.setTime(date);
+        last.setTime(lastLogin);
+
+        differentDay = recent.get(Calendar.DAY_OF_YEAR) != last.get(Calendar.DAY_OF_YEAR);
+        lessThanDay = Math.abs(date.getTime() - lastLogin.getTime()) < MILLIS_PER_DAY;
+
+        return differentDay && lessThanDay;
     }
 
 }

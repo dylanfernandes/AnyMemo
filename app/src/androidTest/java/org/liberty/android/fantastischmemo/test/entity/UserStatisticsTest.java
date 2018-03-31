@@ -115,11 +115,18 @@ public class UserStatisticsTest {
 
 
         Date today = new Date();
+
         long todayInMillis = today.getTime();
         long twoDaysAgo = todayInMillis - (2*us.MILLIS_PER_DAY);
+        long withinDay = todayInMillis - (us.MILLIS_PER_DAY - 10);
+
         Calendar calendar = Calendar.getInstance();
+
         calendar.setTimeInMillis(twoDaysAgo);
         Date lastLogin = calendar.getTime();
+
+        calendar.setTimeInMillis(withinDay);
+        Date inDay = calendar.getTime();
 
         us.setLastLogin(lastLogin);
         us.setStreak(10);
@@ -127,12 +134,13 @@ public class UserStatisticsTest {
         us.setWeeks(10);
         us.setMonths(10);
         us.updateStreaks();
+
         assertEquals(0, (int)us.getStreak());
         assertEquals(0, (int)us.getLongestStreak());
         assertEquals(0, (int)us.getWeeks());
         assertEquals(0, (int)us.getMonths());
 
-        us.setLastLogin(today);
+        us.setLastLogin(inDay);
         us.updateStreaks();
         assertEquals(1, (int)us.getStreak());
 
@@ -144,16 +152,25 @@ public class UserStatisticsTest {
 
         Date today = new Date();
         long todayInMillis = today.getTime();
-        long twoDaysAgo = todayInMillis - (2*us.MILLIS_PER_DAY);
+        long withinDay = todayInMillis - (us.MILLIS_PER_DAY - 10);
+        long twoDaysAgo = todayInMillis + (2*us.MILLIS_PER_DAY);
+
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(twoDaysAgo);
+
+        calendar.setTimeInMillis(withinDay);
         Date lastLogin = calendar.getTime();
 
+        calendar.setTimeInMillis(twoDaysAgo);
+        Date twoDaysAfter = calendar.getTime();
+
         us.setLastLogin(today);
-        assertTrue(us.checkStreak(today));
+        assertFalse(us.checkStreak(today));
+
+        us.setLastLogin(twoDaysAfter);
+        assertFalse(us.checkStreak(today));
 
         us.setLastLogin(lastLogin);
-        assertFalse(us.checkStreak(today));
+        assertTrue(us.checkStreak(today));
 
     }
 
