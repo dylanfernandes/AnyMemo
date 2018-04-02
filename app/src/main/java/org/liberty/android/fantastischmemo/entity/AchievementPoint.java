@@ -3,11 +3,9 @@ package org.liberty.android.fantastischmemo.entity;
 import java.io.Serializable;
 import java.util.Date;
 import com.j256.ormlite.field.DataType;
-import java.lang.Math;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
 import org.liberty.android.fantastischmemo.dao.AchievementPointDaoImpl;
 
 /**
@@ -18,12 +16,16 @@ import org.liberty.android.fantastischmemo.dao.AchievementPointDaoImpl;
 public class AchievementPoint implements Serializable, VersionableDomainObject{
     @DatabaseField(generatedId = true)
     private Integer id;
+
     @DatabaseField(version = true, format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
     private Date time;
+
     @DatabaseField(defaultValue = "1")
     private Integer value;
-    //@DatabaseField(foreign=true)
-    //private UserStatistics stats;
+
+    @DatabaseField(foreign=true)
+    private UserStatistics stats;
+
     @DatabaseField(foreign = true)
     private Tag tag;
 
@@ -60,6 +62,14 @@ public class AchievementPoint implements Serializable, VersionableDomainObject{
 
     public void setValue(Integer value) {
         this.value = value;
+    }
+
+    public UserStatistics getStats() {
+        return stats;
+    }
+
+    public void setStats(UserStatistics stats) {
+        this.stats = stats;
     }
 
     public Tag getTag() {
