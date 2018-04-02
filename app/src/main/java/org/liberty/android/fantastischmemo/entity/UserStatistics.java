@@ -1,19 +1,19 @@
 package org.liberty.android.fantastischmemo.entity;
 
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 
-
-import java.io.Serializable;
 import java.lang.Math;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
-
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDaoImpl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -22,6 +22,7 @@ import java.util.List;
 
 @DatabaseTable(tableName = "userstatistics", daoClass = UserStatisticsDaoImpl.class)
 public class UserStatistics {
+
 
     //Attributes
     @DatabaseField(generatedId = true)
@@ -48,7 +49,8 @@ public class UserStatistics {
     @DatabaseField(defaultValue = "0")
     private Integer months = 0;
 
-    public List<AchievementPoint> points;
+    @ForeignCollectionField
+    private ForeignCollection<AchievementPoint> points;
 
     public final static long MILLIS_PER_DAY = 24*60*60*1000L;
 
@@ -79,11 +81,12 @@ public class UserStatistics {
     }
 
     public List<AchievementPoint> getPoints() {
-        return points;
-    }
-
-    public void setPoints(List<AchievementPoint> points) {
-        this.points = points;
+        Iterator<AchievementPoint> pointIterator = this.points.iterator();
+        List<AchievementPoint> pointList = new ArrayList<>();
+        while(pointIterator.hasNext()) {
+            pointList.add(pointIterator.next());
+        }
+        return pointList;
     }
 
     public Integer getMultiplier() {
