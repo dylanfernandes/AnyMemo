@@ -1,6 +1,7 @@
 package org.liberty.android.fantastischmemo.entity;
 
 
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 
@@ -56,7 +57,8 @@ public class UserStatistics {
     public final static long MILLIS_PER_DAY = 24*60*60*1000L;
 
 
-    public UserStatistics() {}
+    public UserStatistics() {
+    }
 
     //fake UserStatistics for AccountPage
     public UserStatistics(Integer longest, Integer current){
@@ -81,7 +83,11 @@ public class UserStatistics {
         this.lastLogin = lastLogin;
     }
 
-    public boolean hasPoints() {return points.size() > 0;}
+    public boolean hasPoints() {
+        if(points == null)
+            return false;
+
+        return points.size() > 0;}
 
     public AchievementPoint getLatestPoint() {
         if(hasPoints()) {
@@ -100,8 +106,6 @@ public class UserStatistics {
 
         return lastElement;
     }
-
-    public void addPoint(AchievementPoint point) { points.add(point);}
 
     public List<AchievementPoint> getPoints() {
         Iterator<AchievementPoint> pointIterator = this.points.iterator();

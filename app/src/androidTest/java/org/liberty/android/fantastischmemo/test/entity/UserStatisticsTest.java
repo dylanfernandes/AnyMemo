@@ -227,16 +227,30 @@ public class UserStatisticsTest extends AbstractExistingBaseDBTest {
 
     @Test
     public void testGetLatestPoint() {
+        UserDao userDao = centralDbHelper.getUserDao();
+        User user = userDao.createOrReturn("test");
+
+        UserStatisticsDao userStatsDao = centralDbHelper.getUserStatisticsDao();
+        UserStatistics stats =  userStatsDao.createOrReturn(user);
+
+        AchievementPointDao achPointsDao = centralDbHelper.getAchievementPointDao();
         AchievementPoint a1 = new AchievementPoint();
         AchievementPoint a2 = new AchievementPoint();
         a1.setValue(1);
         a2.setValue(2);
+        a1.setStats(stats);
+        a2.setStats(stats);
         //returns null when no points
-        assertEquals(null, us.getLatestPoint());
+        assertEquals(null, stats.getLatestPoint());
 
-        us.addPoint(a1);
-        us.addPoint(a2);
-        assertEquals(a2.getValue(), us.getLatestPoint().getValue());
-        assertEquals(2,us.getPoints().size());
+        try {
+            achPointsDao.create(a1);
+            achPointsDao.create(a2);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(a2.getValue(), stats.getLatestPoint().getValue());
+        assertEquals(2,stats.getPoints().size());
     }
 }
