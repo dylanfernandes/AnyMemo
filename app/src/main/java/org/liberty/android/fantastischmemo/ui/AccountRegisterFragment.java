@@ -11,9 +11,13 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseDialogFragment;
+import org.liberty.android.fantastischmemo.dao.UserDao;
+import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
+import org.liberty.android.fantastischmemo.entity.User;
 
 /**
  * Created by Emily on 2018-03-25.
@@ -27,8 +31,10 @@ public class AccountRegisterFragment extends BaseDialogFragment {
     private Button confirm;
 
     public static String EXTRA_DBPATH = "dbpath";
-    private String dbPath;
     private AnyMemoBaseDBOpenHelper baseDBOpenHelper;
+    private String dbPath = AMEnv.CENTRAL_DB_NAME;
+    private UserDao userDao;
+    private UserStatisticsDao userStatDao;
 
     public AccountRegisterFragment(){}
 
@@ -44,7 +50,10 @@ public class AccountRegisterFragment extends BaseDialogFragment {
         Bundle args = this.getArguments();
         dbPath = args.getString(EXTRA_DBPATH);
         baseDBOpenHelper = AnyMemoBaseDBOpenHelperManager.getHelper(mActivity, dbPath);
+        userDao = baseDBOpenHelper.getUserDao();
+        userStatDao = baseDBOpenHelper.getUserStatisticsDao();
         setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+
     }
 
     @Override
@@ -53,6 +62,19 @@ public class AccountRegisterFragment extends BaseDialogFragment {
         usernameInput = (EditText)v.findViewById(R.id.account_register_username);
         nameInput = (EditText)v.findViewById(R.id.account_register_name);
         confirm = (Button)v.findViewById(R.id.button_confirm);
+        confirm.setOnClickListener(registerButtonOnClickListener);
         return v;
     }
+
+    private View.OnClickListener registerButtonOnClickListener = new View.OnClickListener() {
+
+        public void onClick(View v) {
+            User newAcc = userDao.createOrReturn(usernameInput.getText().toString());
+            newAcc.setName(nameInput.getText().toString());
+            userDao.update(newAcc);
+            userStatDao.createOrReturn(newAcc);
+            dismiss();
+        }
+    };
+
 }

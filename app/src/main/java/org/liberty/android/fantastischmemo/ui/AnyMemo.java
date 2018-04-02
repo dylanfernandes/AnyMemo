@@ -101,7 +101,6 @@ public class AnyMemo extends BaseActivity {
     private String dbPath = AMEnv.CENTRAL_DB_NAME;
     private AnyMemoBaseDBOpenHelper baseHelper;
     private UserDao userDao;
-    private UserStatisticsDao userStatDao;
 
     @Inject
     AMFileUtil amFileUtil;
@@ -144,7 +143,6 @@ public class AnyMemo extends BaseActivity {
         //create default account
         baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(AnyMemo.this, dbPath);
         userDao = baseHelper.getUserDao();
-        userStatDao = baseHelper.getUserStatisticsDao();
 
         Collection<User> userlist = userDao.queryForAll();
 
@@ -154,12 +152,6 @@ public class AnyMemo extends BaseActivity {
             b.putString(AccountRegisterFragment.EXTRA_DBPATH, dbPath);
             df.setArguments(b);
             df.show(getSupportFragmentManager(), "AccountRegisterDialog");
-
-            User defaultUser = userDao.createOrReturn("DefaultUsername");
-            defaultUser.setName("DefaultName");
-            defaultUser.setSurname("DefaultSurname");
-            userDao.update(defaultUser);
-            userStatDao.createOrReturn(defaultUser);
         }
 
         recentListActionModeUtil.registerForActivity();

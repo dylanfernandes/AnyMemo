@@ -12,6 +12,10 @@ import android.app.Activity;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
+
 import org.liberty.android.fantastischmemo.common.AMEnv;
 
 import org.liberty.android.fantastischmemo.R;
@@ -57,7 +61,7 @@ public class AccountPage extends BaseActivity{
         userDao = baseHelper.getUserDao();
         userStatDao = baseHelper.getUserStatisticsDao();
 
-        user = userDao.createOrReturn("DefaultUsername");
+        user = userDao.returnFirstUser();
         userStat = userStatDao.createOrReturn(user);
 
         user_Name = (TextView)findViewById(R.id.account_user_name);
