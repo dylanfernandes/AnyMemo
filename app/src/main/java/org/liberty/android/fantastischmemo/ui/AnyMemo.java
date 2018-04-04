@@ -119,8 +119,6 @@ public class AnyMemo extends BaseActivity {
         super.onCreate(savedInstanceState);
         activityComponents().inject(this);
         disposables = new CompositeDisposable();
-        //used to show functionality, will be integrated into other tasks os story
-        showToast();
         binding = DataBindingUtil.setContentView(this, R.layout.main_tabs);
 
         // Request storage permission
@@ -135,22 +133,6 @@ public class AnyMemo extends BaseActivity {
         recentListActionModeUtil.registerForActivity();
     }
 
-    //used to show functionality, will be integrated into other tasks os story
-    private void showToast() {
-        LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.custom_toast,
-                (ViewGroup) findViewById(R.id.toast_layout_root));
-
-        ImageView image = (ImageView) layout.findViewById(R.id.image);
-        image.setImageResource(R.drawable.ic_trophy);
-        TextView text = (TextView) layout.findViewById(R.id.text);
-        text.setText("Daily Point Toast");
-
-        Toast toast = new Toast(getApplicationContext());
-        toast.setDuration(Toast.LENGTH_LONG);
-        toast.setView(layout);
-        toast.show();
-    }
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {

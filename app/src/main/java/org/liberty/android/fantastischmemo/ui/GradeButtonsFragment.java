@@ -32,7 +32,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.base.Strings;
@@ -218,12 +220,28 @@ public class GradeButtonsFragment extends BaseFragment {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            Toast.makeText(getActivity(), "Correct Answer! Points Obtianed: " + dp.getValue(), Toast.LENGTH_LONG).show();
+            showToast(dp.getValue().toString());
     }
 
+    private void showToast(String points) {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View layout = inflater.inflate(R.layout.custom_toast,
+                (ViewGroup) getView().findViewById(R.id.toast_layout_root));
+
+        ImageView image = (ImageView) layout.findViewById(R.id.image);
+        image.setImageResource(R.drawable.ic_tick_inside_circle);
+        TextView text = (TextView) layout.findViewById(R.id.text);
+        text.setText("Points Earned: " + points);
+
+        Toast toast = new Toast(getActivity());
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
+    }
     private void setButtonOnClickListener(final Button button, final int grade) {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //button id for "remember" button
                 if(grade == 5)
                 {
                     allocatePoints();
