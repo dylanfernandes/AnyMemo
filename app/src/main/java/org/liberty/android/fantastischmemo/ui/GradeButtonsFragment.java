@@ -197,20 +197,16 @@ public class GradeButtonsFragment extends BaseFragment {
         onGradeButtonClickListener.onGradeButtonClick(grade);
     }
     private void allocatePoints(){
-        UserDao userDao;
-        UserStatisticsDao statsDao;
-        AchievementPointDao achPointsDao;
-        User user;
-        UserStatistics stats;
-        AnyMemoBaseDBOpenHelper baseHelper;
         String dbPath = AMEnv.CENTRAL_DB_NAME;
+        AnyMemoBaseDBOpenHelper baseHelper;
         baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(getActivity(), dbPath);
-        userDao = baseHelper.getUserDao();
-        statsDao = baseHelper.getUserStatisticsDao();
-        achPointsDao = baseHelper.getAchievementPointDao();
+        UserDao userDao = baseHelper.getUserDao();
+        UserStatisticsDao statsDao = baseHelper.getUserStatisticsDao();
+        AchievementPointDao achPointsDao = baseHelper.getAchievementPointDao();
         //implemented until user creation upon login is completed
-        user = userDao.createOrReturn("Test");
-        stats = statsDao.createOrReturn(user);
+        User user = userDao.createOrReturn("Test");
+        UserStatistics stats = statsDao.createOrReturn(user);
+
         AchievementPoint dp = new AchievementPoint();
         dp.setValue(1);
         dp.setStats(stats);
@@ -220,24 +216,10 @@ public class GradeButtonsFragment extends BaseFragment {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            showToast(dp.getValue().toString());
+            AnyMemo.showToast(dp.getValue().toString(),getActivity().getLayoutInflater(),getActivity(),getView(), R.drawable.ic_tick_inside_circle, "Points Earned: ");
     }
 
-    private void showToast(String points) {
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View layout = inflater.inflate(R.layout.custom_toast,
-                (ViewGroup) getView().findViewById(R.id.toast_layout_root));
 
-        ImageView image = (ImageView) layout.findViewById(R.id.image);
-        image.setImageResource(R.drawable.ic_tick_inside_circle);
-        TextView text = (TextView) layout.findViewById(R.id.text);
-        text.setText("Points Earned: " + points);
-
-        Toast toast = new Toast(getActivity());
-        toast.setDuration(Toast.LENGTH_SHORT);
-        toast.setView(layout);
-        toast.show();
-    }
     private void setButtonOnClickListener(final Button button, final int grade) {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
