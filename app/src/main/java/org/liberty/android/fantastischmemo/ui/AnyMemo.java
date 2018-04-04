@@ -101,6 +101,7 @@ public class AnyMemo extends BaseActivity {
     private String dbPath = AMEnv.CENTRAL_DB_NAME;
     private AnyMemoBaseDBOpenHelper baseHelper;
     private UserDao userDao;
+    Collection<User> userlist;
 
     @Inject
     AMFileUtil amFileUtil;
@@ -144,7 +145,7 @@ public class AnyMemo extends BaseActivity {
         baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(AnyMemo.this, dbPath);
         userDao = baseHelper.getUserDao();
 
-        Collection<User> userlist = userDao.queryForAll();
+        userlist = userDao.queryForAll();
 
         if(userlist.size() == 0){
             AccountRegisterFragment df = new AccountRegisterFragment();
@@ -235,7 +236,15 @@ public class AnyMemo extends BaseActivity {
                                 tabLayout.getTabAt(3).select();
                                 break;
                             case R.id.account_tab_menu:
-                                startActivity(new Intent(tabLayout.getContext(), AccountPage.class));
+                                if(userlist.size() == 0){
+                                    AccountRegisterFragment df = new AccountRegisterFragment();
+                                    Bundle b = new Bundle();
+                                    b.putString(AccountRegisterFragment.EXTRA_DBPATH, dbPath);
+                                    df.setArguments(b);
+                                    df.show(getSupportFragmentManager(), "AccountRegisterDialog");
+                                }else {
+                                    startActivity(new Intent(tabLayout.getContext(), AccountPage.class));
+                                }
                                 break;
                             case R.id.option_tab_menu:
                                 startActivity(new Intent(tabLayout.getContext(), OptionScreen.class));
