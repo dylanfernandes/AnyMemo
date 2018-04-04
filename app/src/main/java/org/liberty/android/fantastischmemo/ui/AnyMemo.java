@@ -236,6 +236,7 @@ public class AnyMemo extends BaseActivity {
                                 tabLayout.getTabAt(3).select();
                                 break;
                             case R.id.account_tab_menu:
+                                userlist = userDao.queryForAll();
                                 if(userlist.size() == 0){
                                     AccountRegisterFragment df = new AccountRegisterFragment();
                                     Bundle b = new Bundle();
