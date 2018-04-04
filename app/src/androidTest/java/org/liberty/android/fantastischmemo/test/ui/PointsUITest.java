@@ -39,16 +39,16 @@ public class PointsUITest {
 
     @Test
     public void pointsUITest() {
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(android.R.id.button1), withText("OK"),
-                        childAtPosition(
-                                allOf(withClassName(is("android.widget.LinearLayout")),
-                                        childAtPosition(
-                                                withClassName(is("android.widget.LinearLayout")),
-                                                3)),
-                                3),
-                        isDisplayed()));
-        appCompatButton.perform(click());
+//        ViewInteraction appCompatButton = onView(
+//                allOf(withId(android.R.id.button1), withText("OK"),
+//                        childAtPosition(
+//                                allOf(withClassName(is("android.widget.LinearLayout")),
+//                                        childAtPosition(
+//                                                withClassName(is("android.widget.LinearLayout")),
+//                                                3)),
+//                                3),
+//                        isDisplayed()));
+//        appCompatButton.perform(click());
 
         ViewInteraction appCompatImageButton = onView(
                 allOf(withContentDescription("Navigate up"),
