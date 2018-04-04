@@ -50,6 +50,16 @@ public class UserDaoImpl extends AbstractHelperDaoImpl<User, Integer> implements
         }
     }
 
+    public User returnFirstUser(){
+        try {
+            QueryBuilder<User, Integer> qb = queryBuilder();
+            PreparedQuery<User> pq = qb.prepare();
+            return queryForFirst(pq);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void editName(String username, String newName){
         try {
             UpdateBuilder<User, Integer> ub = updateBuilder();

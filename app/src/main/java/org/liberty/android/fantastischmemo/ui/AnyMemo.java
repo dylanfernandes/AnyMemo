@@ -58,8 +58,13 @@ import org.liberty.android.fantastischmemo.BuildConfig;
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
+import org.liberty.android.fantastischmemo.dao.UserDao;
+import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.databinding.MainTabsBinding;
+import org.liberty.android.fantastischmemo.entity.User;
 import org.liberty.android.fantastischmemo.receiver.SetAlarmReceiver;
 import org.liberty.android.fantastischmemo.service.AnyMemoService;
 import org.liberty.android.fantastischmemo.ui.loader.MultipleLoaderManager;
@@ -75,6 +80,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.Collection;
 
 import javax.inject.Inject;
 
@@ -90,6 +96,12 @@ public class AnyMemo extends BaseActivity {
     private CompositeDisposable disposables;
 
     private MainTabsBinding binding;
+
+    //default account
+    private String dbPath = AMEnv.CENTRAL_DB_NAME;
+    private AnyMemoBaseDBOpenHelper baseHelper;
+    private UserDao userDao;
+    Collection<User> userlist;
 
     @Inject
     AMFileUtil amFileUtil;
@@ -128,6 +140,21 @@ public class AnyMemo extends BaseActivity {
         } else {
             loadUiComponents();
         }
+
+        //create default account
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(AnyMemo.this, dbPath);
+        userDao = baseHelper.getUserDao();
+
+        userlist = userDao.queryForAll();
+
+        if(userlist.size() == 0){
+            AccountRegisterFragment df = new AccountRegisterFragment();
+            Bundle b = new Bundle();
+            b.putString(AccountRegisterFragment.EXTRA_DBPATH, dbPath);
+            df.setArguments(b);
+            df.show(getSupportFragmentManager(), "AccountRegisterDialog");
+        }
+
         recentListActionModeUtil.registerForActivity();
     }
 
@@ -209,7 +236,16 @@ public class AnyMemo extends BaseActivity {
                                 tabLayout.getTabAt(3).select();
                                 break;
                             case R.id.account_tab_menu:
-                                startActivity(new Intent(tabLayout.getContext(), AccountPage.class));
+                                userlist = userDao.queryForAll();
+                                if(userlist.size() == 0){
+                                    AccountRegisterFragment df = new AccountRegisterFragment();
+                                    Bundle b = new Bundle();
+                                    b.putString(AccountRegisterFragment.EXTRA_DBPATH, dbPath);
+                                    df.setArguments(b);
+                                    df.show(getSupportFragmentManager(), "AccountRegisterDialog");
+                                }else {
+                                    startActivity(new Intent(tabLayout.getContext(), AccountPage.class));
+                                }
                                 break;
                             case R.id.option_tab_menu:
                                 startActivity(new Intent(tabLayout.getContext(), OptionScreen.class));
