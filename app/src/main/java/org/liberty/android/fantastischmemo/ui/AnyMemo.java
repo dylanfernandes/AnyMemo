@@ -46,8 +46,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -146,6 +149,7 @@ public class AnyMemo extends BaseActivity {
         achPointsDao = baseHelper.getAchievementPointDao();
 
         verifyDailyPoints();
+
         binding = DataBindingUtil.setContentView(this, R.layout.main_tabs);
 
         // Request storage permission
@@ -176,9 +180,25 @@ public class AnyMemo extends BaseActivity {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            Toast.makeText(this, "Daily Points Obtained! Points: " + dp.getValue(), Toast.LENGTH_LONG).show();
+            showToast(dp.getValue().toString());
         }
-        //userDao.delete(user);
+    }
+
+    //used to show functionality, will be integrated into other tasks os story
+    public void showToast(String points) {
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.custom_toast,
+                (ViewGroup) findViewById(R.id.toast_layout_root));
+
+        ImageView image = (ImageView) layout.findViewById(R.id.image);
+        image.setImageResource(R.drawable.ic_trophy);
+        TextView text = (TextView) layout.findViewById(R.id.text);
+        text.setText("Daily Point Earned: " + points);
+
+        Toast toast = new Toast(getApplicationContext());
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(layout);
+        toast.show();
     }
 
     @Override
