@@ -21,6 +21,7 @@ package org.liberty.android.fantastischmemo.ui;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -88,6 +89,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.sql.SQLException;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -164,9 +166,12 @@ public class AnyMemo extends BaseActivity {
         recentListActionModeUtil.registerForActivity();
     }
 
+    public static void setUpPointsAllocation(){
+
+    }
     private void verifyDailyPoints() {
         //implemented until user creation upon login is completed
-        user = userDao.createOrReturn("Test");
+        user = userDao.createOrReturn("Blob1");
         stats = statsDao.createOrReturn(user);
         AchievementPoint recent = stats.getLatestPoint();
         Date now = new Date();
@@ -180,26 +185,27 @@ public class AnyMemo extends BaseActivity {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            showToast(dp.getValue().toString());
+            showToast(dp.getValue().toString(), getLayoutInflater(), getApplicationContext(), findViewById(android.R.id.content), R.drawable.ic_trophy, "Daily Points Earned: ");
         }
     }
 
     //used to show functionality, will be integrated into other tasks os story
-    public void showToast(String points) {
-        LayoutInflater inflater = getLayoutInflater();
+    public static void showToast(String points, LayoutInflater inflate, Context con, View v, int ressource, String message) {
+        LayoutInflater inflater = inflate;
         View layout = inflater.inflate(R.layout.custom_toast,
-                (ViewGroup) findViewById(R.id.toast_layout_root));
+                (ViewGroup) v.findViewById(R.id.toast_layout_root));
 
         ImageView image = (ImageView) layout.findViewById(R.id.image);
-        image.setImageResource(R.drawable.ic_trophy);
+        image.setImageResource(ressource);
         TextView text = (TextView) layout.findViewById(R.id.text);
-        text.setText("Daily Point Earned: " + points);
+        text.setText(message + points);
 
-        Toast toast = new Toast(getApplicationContext());
+        Toast toast = new Toast(con);
         toast.setDuration(Toast.LENGTH_LONG);
         toast.setView(layout);
         toast.show();
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
