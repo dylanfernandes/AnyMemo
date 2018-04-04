@@ -84,10 +84,18 @@ public class UserStatistics {
     }
 
     public boolean hasPoints() {
+        Boolean hasP = false;
         if(points == null)
-            return false;
+            return hasP;
 
-        return points.size() > 0;}
+        try {
+             hasP = points.size() > 0;
+        }
+    catch(Exception e){
+        String message = e.getMessage();
+    }
+        return hasP;
+    }
 
     public AchievementPoint getLatestPoint() {
         if(hasPoints()) {

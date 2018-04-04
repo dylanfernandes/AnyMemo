@@ -61,6 +61,7 @@ import org.liberty.android.fantastischmemo.common.AMPrefKeys;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
+import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
 import org.liberty.android.fantastischmemo.dao.UserDao;
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.databinding.MainTabsBinding;
@@ -103,6 +104,8 @@ public class AnyMemo extends BaseActivity {
 
     private UserStatisticsDao statsDao;
 
+    private AchievementPointDao achPointsDao;
+
     private User user;
 
     private UserStatistics stats;
@@ -140,6 +143,7 @@ public class AnyMemo extends BaseActivity {
         baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(AnyMemo.this, dbPath);
         userDao = baseHelper.getUserDao();
         statsDao = baseHelper.getUserStatisticsDao();
+        achPointsDao = baseHelper.getAchievementPointDao();
 
         verifyDailyPoints();
         binding = DataBindingUtil.setContentView(this, R.layout.main_tabs);
@@ -165,7 +169,13 @@ public class AnyMemo extends BaseActivity {
         if(recent == null || stats.checkStreak(now)) {
             AchievementPoint dp = new AchievementPoint();
             dp.setValue(5);
-            stats.addPoint(dp);
+            dp.setStats(stats);
+
+            try {
+                achPointsDao.create(dp);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             Toast.makeText(this, "Daily Points Obtained! Points: " + dp.getValue(), Toast.LENGTH_LONG).show();
         }
         //userDao.delete(user);
