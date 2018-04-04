@@ -61,8 +61,16 @@ import org.liberty.android.fantastischmemo.BuildConfig;
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
+import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
+import org.liberty.android.fantastischmemo.dao.UserDao;
+import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.databinding.MainTabsBinding;
+import org.liberty.android.fantastischmemo.entity.AchievementPoint;
+import org.liberty.android.fantastischmemo.entity.User;
+import org.liberty.android.fantastischmemo.entity.UserStatistics;
 import org.liberty.android.fantastischmemo.receiver.SetAlarmReceiver;
 import org.liberty.android.fantastischmemo.service.AnyMemoService;
 import org.liberty.android.fantastischmemo.ui.loader.MultipleLoaderManager;
@@ -77,6 +85,7 @@ import org.liberty.android.fantastischmemo.widget.AnyMemoWidgetProvider;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.sql.SQLException;
 
 import javax.inject.Inject;
@@ -93,6 +102,20 @@ public class AnyMemo extends BaseActivity {
     private CompositeDisposable disposables;
 
     private MainTabsBinding binding;
+
+    private UserDao userDao;
+
+    private UserStatisticsDao statsDao;
+
+    private AchievementPointDao achPointsDao;
+
+    private User user;
+
+    private UserStatistics stats;
+
+    private AnyMemoBaseDBOpenHelper baseHelper;
+
+    private String dbPath = AMEnv.CENTRAL_DB_NAME;
 
     @Inject
     AMFileUtil amFileUtil;
@@ -119,8 +142,14 @@ public class AnyMemo extends BaseActivity {
         super.onCreate(savedInstanceState);
         activityComponents().inject(this);
         disposables = new CompositeDisposable();
-        //used to show functionality, will be integrated into other tasks os story
-        showToast();
+
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(AnyMemo.this, dbPath);
+        userDao = baseHelper.getUserDao();
+        statsDao = baseHelper.getUserStatisticsDao();
+        achPointsDao = baseHelper.getAchievementPointDao();
+
+        verifyDailyPoints();
+
         binding = DataBindingUtil.setContentView(this, R.layout.main_tabs);
 
         // Request storage permission
@@ -135,8 +164,28 @@ public class AnyMemo extends BaseActivity {
         recentListActionModeUtil.registerForActivity();
     }
 
+    private void verifyDailyPoints() {
+        //implemented until user creation upon login is completed
+        user = userDao.createOrReturn("Test");
+        stats = statsDao.createOrReturn(user);
+        AchievementPoint recent = stats.getLatestPoint();
+        Date now = new Date();
+        if(recent == null || stats.checkStreak(now)) {
+            AchievementPoint dp = new AchievementPoint();
+            dp.setValue(5);
+            dp.setStats(stats);
+
+            try {
+                achPointsDao.create(dp);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            showToast(dp.getValue().toString());
+        }
+    }
+
     //used to show functionality, will be integrated into other tasks os story
-    private void showToast() {
+    public void showToast(String points) {
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.custom_toast,
                 (ViewGroup) findViewById(R.id.toast_layout_root));
@@ -144,13 +193,14 @@ public class AnyMemo extends BaseActivity {
         ImageView image = (ImageView) layout.findViewById(R.id.image);
         image.setImageResource(R.drawable.ic_trophy);
         TextView text = (TextView) layout.findViewById(R.id.text);
-        text.setText("Daily Point Toast");
+        text.setText("Daily Point Earned: " + points);
 
         Toast toast = new Toast(getApplicationContext());
         toast.setDuration(Toast.LENGTH_LONG);
         toast.setView(layout);
         toast.show();
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {

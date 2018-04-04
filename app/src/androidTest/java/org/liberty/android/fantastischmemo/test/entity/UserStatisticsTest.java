@@ -123,11 +123,18 @@ public class UserStatisticsTest extends AbstractExistingBaseDBTest {
 
 
         Date today = new Date();
+
         long todayInMillis = today.getTime();
         long twoDaysAgo = todayInMillis - (2*us.MILLIS_PER_DAY);
+        long withinDay = todayInMillis - (us.MILLIS_PER_DAY - 10);
+
         Calendar calendar = Calendar.getInstance();
+
         calendar.setTimeInMillis(twoDaysAgo);
         Date lastLogin = calendar.getTime();
+
+        calendar.setTimeInMillis(withinDay);
+        Date inDay = calendar.getTime();
 
         us.setLastLogin(lastLogin);
         us.setStreak(10);
@@ -135,12 +142,13 @@ public class UserStatisticsTest extends AbstractExistingBaseDBTest {
         us.setWeeks(10);
         us.setMonths(10);
         us.updateStreaks();
+
         assertEquals(0, (int)us.getStreak());
         assertEquals(0, (int)us.getLongestStreak());
         assertEquals(0, (int)us.getWeeks());
         assertEquals(0, (int)us.getMonths());
 
-        us.setLastLogin(today);
+        us.setLastLogin(inDay);
         us.updateStreaks();
         assertEquals(1, (int)us.getStreak());
 
@@ -152,12 +160,21 @@ public class UserStatisticsTest extends AbstractExistingBaseDBTest {
 
         Date today = new Date();
         long todayInMillis = today.getTime();
-        long twoDaysAgo = todayInMillis - (2*us.MILLIS_PER_DAY);
+        long withinDay = todayInMillis - (us.MILLIS_PER_DAY - 10);
+        long twoDaysAgo = todayInMillis + (2*us.MILLIS_PER_DAY);
+
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(twoDaysAgo);
+
+        calendar.setTimeInMillis(withinDay);
         Date lastLogin = calendar.getTime();
 
+        calendar.setTimeInMillis(twoDaysAgo);
+        Date twoDaysAfter = calendar.getTime();
+
         us.setLastLogin(today);
+        assertFalse(us.checkStreak(today));
+
+        us.setLastLogin(twoDaysAfter);
         assertFalse(us.checkStreak(today));
 
         us.setLastLogin(lastLogin);
@@ -206,5 +223,34 @@ public class UserStatisticsTest extends AbstractExistingBaseDBTest {
         assertEquals(newA3.getValue(), a3.getValue());
 
 
+    }
+
+    @Test
+    public void testGetLatestPoint() {
+        UserDao userDao = centralDbHelper.getUserDao();
+        User user = userDao.createOrReturn("test");
+
+        UserStatisticsDao userStatsDao = centralDbHelper.getUserStatisticsDao();
+        UserStatistics stats =  userStatsDao.createOrReturn(user);
+
+        AchievementPointDao achPointsDao = centralDbHelper.getAchievementPointDao();
+        AchievementPoint a1 = new AchievementPoint();
+        AchievementPoint a2 = new AchievementPoint();
+        a1.setValue(1);
+        a2.setValue(2);
+        a1.setStats(stats);
+        a2.setStats(stats);
+        //returns null when no points
+        assertEquals(null, stats.getLatestPoint());
+
+        try {
+            achPointsDao.create(a1);
+            achPointsDao.create(a2);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(a2.getValue(), stats.getLatestPoint().getValue());
+        assertEquals(2,stats.getPoints().size());
     }
 }
