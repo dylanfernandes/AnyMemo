@@ -38,16 +38,27 @@ import android.widget.Toast;
 import com.google.common.base.Strings;
 
 import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.common.AMEnv;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseFragment;
+import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
 import org.liberty.android.fantastischmemo.dao.CardDao;
 import org.liberty.android.fantastischmemo.dao.LearningDataDao;
+import org.liberty.android.fantastischmemo.dao.UserDao;
+import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
+import org.liberty.android.fantastischmemo.entity.AchievementPoint;
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.entity.Option;
+import org.liberty.android.fantastischmemo.entity.User;
+import org.liberty.android.fantastischmemo.entity.UserStatistics;
 import org.liberty.android.fantastischmemo.scheduler.Scheduler;
 import org.liberty.android.fantastischmemo.utils.AMDateUtil;
+
+import java.sql.SQLException;
 
 import javax.inject.Inject;
 
@@ -183,10 +194,40 @@ public class GradeButtonsFragment extends BaseFragment {
     public void gradeCurrentCard(int grade) {
         onGradeButtonClickListener.onGradeButtonClick(grade);
     }
+    private void allocatePoints(){
+        UserDao userDao;
+        UserStatisticsDao statsDao;
+        AchievementPointDao achPointsDao;
+        User user;
+        UserStatistics stats;
+        AnyMemoBaseDBOpenHelper baseHelper;
+        String dbPath = AMEnv.CENTRAL_DB_NAME;
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(getActivity(), dbPath);
+        userDao = baseHelper.getUserDao();
+        statsDao = baseHelper.getUserStatisticsDao();
+        achPointsDao = baseHelper.getAchievementPointDao();
+        //implemented until user creation upon login is completed
+        user = userDao.createOrReturn("Test");
+        stats = statsDao.createOrReturn(user);
+        AchievementPoint dp = new AchievementPoint();
+        dp.setValue(1);
+        dp.setStats(stats);
+
+            try {
+                achPointsDao.create(dp);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            Toast.makeText(getActivity(), "Correct Answer! Points Obtianed: " + dp.getValue(), Toast.LENGTH_LONG).show();
+    }
 
     private void setButtonOnClickListener(final Button button, final int grade) {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                if(grade == 5)
+                {
+                    allocatePoints();
+                }
                 onGradeButtonClickListener.onGradeButtonClick(grade);
             }
         });
