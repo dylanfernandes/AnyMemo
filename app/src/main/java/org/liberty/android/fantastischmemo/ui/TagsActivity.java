@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
@@ -194,25 +196,23 @@ public class TagsActivity extends BaseActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.view_all_tags:
-//            {
-//                List<Tag> tags = loadAllTags();
-//                tagsAdapter = new TagsFragment.TagsAdapter(tags);
-//                tagsRecyclerView.setAdapter(tagsAdapter);
-//                return true;
-//            }
+            case R.id.all_tags:
+            {
+                // Use french-body-parts for testing purposes;
+                // TODO: replace with a fragment for All Tags
+                Bundle bundle = new Bundle();
+                bundle.putString("deckPath", "/storage/emulated/0/anymemo/french-body-parts.db");
+                TagsFragment t = new TagsFragment();
+                t.setArguments(bundle);
+
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.add(R.id.tags_fragment_root, t);
+                transaction.addToBackStack(null);
+                transaction.commit();
+                return true;
+            }
         }
         return false;
-    }
-
-    private List<Tag> loadAllTags() {
-        try {
-            List<Tag> tags = centralTagDao.queryForAll();
-            return tags;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public List<Tag> loadAllTagsExceptInDeck(){
