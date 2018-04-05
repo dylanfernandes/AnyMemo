@@ -45,6 +45,7 @@ public class TagsActivity extends BaseActivity {
     View fabBGLayout;
     private TagDao centralTagDao;
     private TagsFragment tagsFragment;
+    private String deckName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class TagsActivity extends BaseActivity {
         centralTagDao = helper.getTagDao();
 
         String deckPath = getIntent().getStringExtra("deckPath");
-        String deckName = GenericDatabaseDialogUtil.getDeckNameFromPath(deckPath);
+        deckName = GenericDatabaseDialogUtil.getDeckNameFromPath(deckPath);
         setTitle("Tags");
         this.getSupportActionBar().setSubtitle(deckName);
 
@@ -198,17 +199,18 @@ public class TagsActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.all_tags:
             {
-                // Use french-body-parts for testing purposes;
-                // TODO: replace with a fragment for All Tags
                 Bundle bundle = new Bundle();
-                bundle.putString("deckPath", "/storage/emulated/0/anymemo/french-body-parts.db");
-                TagsFragment t = new TagsFragment();
-                t.setArguments(bundle);
+                bundle.putString("previousDeck", deckName);
+                AllTagsFragment allTagsFragment = new AllTagsFragment();
+                allTagsFragment.setArguments(bundle);
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.add(R.id.tags_fragment_root, t);
+                transaction.add(R.id.tags_fragment_root, allTagsFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
+
+                this.getSupportActionBar().setSubtitle("All Tags");
+
                 return true;
             }
         }
