@@ -100,9 +100,13 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
             }
         }
         if (oldVersion <= 4){
-                database.execSQL("alter table decks add column rating int");
-
+            try {
+                database.execSQL("alter table decks add column rating float");
+            } catch (Exception e){
+                e.printStackTrace();
+            } finally {
                 oldVersion = 4;
+            }
 
         }
         database.setVersion(oldVersion);

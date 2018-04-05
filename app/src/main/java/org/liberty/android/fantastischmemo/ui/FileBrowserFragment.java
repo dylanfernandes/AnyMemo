@@ -506,7 +506,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
                                                 final DeckDao deckDao = helper.getDeckDao();
                                                 final EditText ratingInput = new EditText(fragment.getContext());
                                                 Deck currentDeck = deckDao.createOrReturn(dbName);
-                                                int currentRating = (int) Math.round(currentDeck.getRating());
+                                                int currentRating = (int)Math.round(currentDeck.getRating());
 
                                                 ratingInput.setText(currentDeck.getRating().toString());
 
