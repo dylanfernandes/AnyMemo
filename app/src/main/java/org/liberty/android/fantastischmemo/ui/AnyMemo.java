@@ -348,15 +348,7 @@ public class AnyMemo extends BaseActivity {
             }
 
             String centralDbDest = AMEnv.HIDDEN_DB_FOLDER_PATH + AMEnv.CENTRAL_DB_NAME;
-
-            if (!new File(centralDbDest).exists()) {
-                try {
-                    databaseUtil.setupCentralDatabase(centralDbDest);
-                } catch (Exception e) {
-                    Log.e(TAG, "Error creating centralDB", e);
-                }
-                databaseUtil.setupCentralDatabase(centralDbDest);
-            }
+            databaseUtil.setupCentralDatabase(centralDbDest);
 
             SharedPreferences.Editor editor = settings.edit();
             /* save new version number */
