@@ -31,7 +31,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private final String TAG = getClass().getSimpleName();
 
-    private static final int CURRENT_VERSION = 4;
+    private static final int CURRENT_VERSION = 3;
 
     private String dbPath = "";
 
@@ -58,6 +58,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, UserStatistics.class);
             TableUtils.createTable(connectionSource, User.class);
             TableUtils.createTable(connectionSource, AchievementPoint.class);
+            database.setVersion(CURRENT_VERSION);
 
         } catch (SQLException e) {
             throw new RuntimeException("Database creation error: " + e.toString());
@@ -69,33 +70,33 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         Log.v(TAG, "Old version" + oldVersion + " new version: " + newVersion);
         // Update possible card with null category field
-        if (oldVersion <= 2) {
+        if (oldVersion <= 1) {
             try {
                 database.execSQL("alter table decks add column dbPath VARCHAR");
                 TableUtils.createTable(connectionSource, Tag.class);
             } catch (SQLException e) {
                 Log.e(TAG, "Upgrading failed, the tags table might already exist.", e);
             } finally {
-                oldVersion = 2;
+                oldVersion = 1;
             }
         }
-        if (oldVersion <= 3) {
+        if (oldVersion <= 2) {
             try {
                 TableUtils.createTable(connectionSource, User.class);
                 TableUtils.createTable(connectionSource, UserStatistics.class);
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
-                oldVersion = 3;
+                oldVersion = 2;
             }
         }
-        if (oldVersion <= 4) {
+        if (oldVersion <= 3) {
             try {
                 TableUtils.createTable(connectionSource, AchievementPoint.class);
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
-                oldVersion = 4;
+                oldVersion = 3;
             }
         }
         database.setVersion(oldVersion);
