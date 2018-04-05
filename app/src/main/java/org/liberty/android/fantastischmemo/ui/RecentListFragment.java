@@ -134,9 +134,11 @@ public class RecentListFragment extends BaseFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-
         if (recentListAdapter != null && !isVisibleToUser) {
             recentListAdapter.stopActionMode();
+        }
+        else{
+            getFragmentManager().beginTransaction().detach(this).attach(this).commit();
         }
 
 
@@ -254,7 +256,7 @@ public class RecentListFragment extends BaseFragment {
                 @Override
                 public List<RecentItem> loadInBackground() {
                     loadedVersion = recentListVersion.get();
-                    return loadRecentItemsWithDetails();
+                    return loadRecentItemsWithRatings();
                 }
             };
             loader.forceLoad();
@@ -321,11 +323,11 @@ public class RecentListFragment extends BaseFragment {
             }
         }
 
-        return loadRecentItemsWithRatings();
+        return ril;
     }
 
     private List<RecentItem> loadRecentItemsWithRatings() {
-        final List<RecentItem> ril = loadRecentItemsWithName();
+        final List<RecentItem> ril = loadRecentItemsWithDetails();
         for (final RecentItem ri : ril){
             try {
                 Context context = getContext();
