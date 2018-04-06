@@ -30,6 +30,7 @@ public class AccountPage extends BaseActivity{
     private TextView longest_streak;
     private TextView current_streak;
     private ImageButton edit_button;
+    private Button view_statistic;
 
     private User user;
     private UserStatistics userStat;
@@ -83,6 +84,16 @@ public class AccountPage extends BaseActivity{
                 intent.putExtra("CURRENT_USERNAME",username.getText().toString());
                 startActivity(intent);}
         });
+
+        view_statistic = (Button)findViewById(R.id.view_statistic);
+        view_statistic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AccountPage.this, PointStatisticActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
 
