@@ -145,13 +145,6 @@ public class AnyMemo extends BaseActivity {
         activityComponents().inject(this);
         disposables = new CompositeDisposable();
 
-        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(AnyMemo.this, dbPath);
-        userDao = baseHelper.getUserDao();
-        statsDao = baseHelper.getUserStatisticsDao();
-        achPointsDao = baseHelper.getAchievementPointDao();
-
-        verifyDailyPoints();
-
         binding = DataBindingUtil.setContentView(this, R.layout.main_tabs);
 
         // Request storage permission
@@ -164,6 +157,13 @@ public class AnyMemo extends BaseActivity {
             loadUiComponents();
         }
         recentListActionModeUtil.registerForActivity();
+
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
+        userDao = baseHelper.getUserDao();
+        statsDao = baseHelper.getUserStatisticsDao();
+        achPointsDao = baseHelper.getAchievementPointDao();
+
+        verifyDailyPoints();
     }
 
     public static void setUpPointsAllocation(){

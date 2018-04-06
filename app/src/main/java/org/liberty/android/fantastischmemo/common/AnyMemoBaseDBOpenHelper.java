@@ -31,7 +31,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private final String TAG = getClass().getSimpleName();
 
-    private static final int CURRENT_VERSION = 3;
+    private static final int CURRENT_VERSION = 4;
 
     private String dbPath = "";
 
@@ -99,6 +99,16 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 oldVersion = 3;
             }
         }
+        if(oldVersion <= 4){
+            try {
+                database.execSQL("alter table achievementpoints add column stats_id");
+            } catch (Exception e) {
+
+            } finally {
+                oldVersion = 4;
+            }
+        }
+
         database.setVersion(oldVersion);
     }
 

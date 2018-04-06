@@ -97,7 +97,7 @@ public class AccountEdit extends BaseActivity {
 
         @Override
         public Void doInBackground(Void... params) {
-            helper = AnyMemoBaseDBOpenHelperManager.getHelper(AccountEdit.this, dbPath);
+            helper = AnyMemoBaseDBOpenHelperManager.getHelper();
 
             userdao = helper.getUserDao();
             
