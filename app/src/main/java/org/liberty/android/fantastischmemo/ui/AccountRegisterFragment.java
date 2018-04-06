@@ -1,7 +1,9 @@
 package org.liberty.android.fantastischmemo.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -54,6 +56,7 @@ public class AccountRegisterFragment extends BaseDialogFragment {
         userStatDao = baseDBOpenHelper.getUserStatisticsDao();
         setStyle(DialogFragment.STYLE_NO_TITLE, 0);
 
+
     }
 
     @Override
@@ -69,11 +72,24 @@ public class AccountRegisterFragment extends BaseDialogFragment {
     private View.OnClickListener registerButtonOnClickListener = new View.OnClickListener() {
 
         public void onClick(View v) {
-            User newAcc = userDao.createOrReturn(usernameInput.getText().toString());
-            newAcc.setName(nameInput.getText().toString());
-            userDao.update(newAcc);
-            userStatDao.createOrReturn(newAcc);
-            dismiss();
+            if(usernameInput.getText().toString().equals("") || nameInput.getText().toString().equals("")){
+                AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
+                alertDialog.setTitle(getString(R.string.unable_to_register));
+                alertDialog.setMessage(getString(R.string.empty_field));
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }else {
+                User newAcc = userDao.createOrReturn(usernameInput.getText().toString());
+                newAcc.setName(nameInput.getText().toString());
+                userDao.update(newAcc);
+                userStatDao.createOrReturn(newAcc);
+                dismiss();
+            }
         }
     };
 

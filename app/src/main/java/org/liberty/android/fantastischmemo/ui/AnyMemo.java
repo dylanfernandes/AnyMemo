@@ -154,7 +154,7 @@ public class AnyMemo extends BaseActivity {
         statsDao = baseHelper.getUserStatisticsDao();
         achPointsDao = baseHelper.getAchievementPointDao();
 
-        verifyDailyPoints();
+        //verifyDailyPoints();
 
         binding = DataBindingUtil.setContentView(this, R.layout.main_tabs);
 
