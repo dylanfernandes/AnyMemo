@@ -241,11 +241,13 @@
     <string-array name="card_style_list">
         <item>@string/card_style_single</item>
         <item>@string/card_style_double</item>
+        <item>@string/card_style_multiple_choice</item>
     </string-array>
 
     <string-array name="card_style_list_values">
         <item>SINGLE_SIDED</item>
         <item>DOUBLE_SIDED</item>
+        <item>MULTIPLE_CHOICE</item>
     </string-array>
 
     <string-array name="card_field_list">
