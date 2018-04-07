@@ -90,7 +90,6 @@ import java.util.Date;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -149,13 +148,6 @@ public class AnyMemo extends BaseActivity {
         activityComponents().inject(this);
         disposables = new CompositeDisposable();
 
-        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
-        userDao = baseHelper.getUserDao();
-        statsDao = baseHelper.getUserStatisticsDao();
-        achPointsDao = baseHelper.getAchievementPointDao();
-
-        //verifyDailyPoints();
-
         binding = DataBindingUtil.setContentView(this, R.layout.main_tabs);
 
         // Request storage permission
@@ -168,34 +160,20 @@ public class AnyMemo extends BaseActivity {
             loadUiComponents();
         }
 
-        //create default account
-        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(AnyMemo.this, dbPath);
-        userDao = baseHelper.getUserDao();
-
-        userlist = userDao.queryForAll();
-
-        if(userlist.size() == 0){
-            AccountRegisterFragment df = new AccountRegisterFragment();
-            Bundle b = new Bundle();
-            b.putString(AccountRegisterFragment.EXTRA_DBPATH, dbPath);
-            df.setArguments(b);
-            df.show(getSupportFragmentManager(), "AccountRegisterDialog");
-        }
-
         recentListActionModeUtil.registerForActivity();
 
-        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
-        userDao = baseHelper.getUserDao();
-        statsDao = baseHelper.getUserStatisticsDao();
-        achPointsDao = baseHelper.getAchievementPointDao();
-
-        verifyDailyPoints();
     }
 
     public static void setUpPointsAllocation(){
 
     }
+
     private void verifyDailyPoints() {
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
+        userDao = baseHelper.getUserDao();
+        statsDao = baseHelper.getUserStatisticsDao();
+        achPointsDao = baseHelper.getAchievementPointDao();
+
         //implemented until user creation upon login is completed
         user = userDao.createOrReturn("Blob1");
         stats = statsDao.createOrReturn(user);
@@ -212,6 +190,20 @@ public class AnyMemo extends BaseActivity {
                 e.printStackTrace();
             }
             showToast(dp.getValue().toString(), getLayoutInflater(), getApplicationContext(), findViewById(android.R.id.content), R.drawable.ic_trophy, "Daily Points Earned: ");
+        }
+    }
+
+    private void registerAccountIfNoneExist(){
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
+        userDao = baseHelper.getUserDao();
+        userlist = userDao.queryForAll();
+
+        if(userlist.size() == 0){
+            AccountRegisterFragment df = new AccountRegisterFragment();
+            Bundle b = new Bundle();
+            b.putString(AccountRegisterFragment.EXTRA_DBPATH, dbPath);
+            df.setArguments(b);
+            df.show(getSupportFragmentManager(), "AccountRegisterDialog");
         }
     }
 
@@ -267,6 +259,8 @@ public class AnyMemo extends BaseActivity {
             // again when the screen is rotated
             getIntent().setAction(null);
         }
+
+        verifyDailyPoints();
     }
 
     /**
@@ -447,6 +441,8 @@ public class AnyMemo extends BaseActivity {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            registerAccountIfNoneExist();
+
         }
         /* Detect an update */
         if (savedVersionCode != thisVersionCode) {
@@ -460,6 +456,12 @@ public class AnyMemo extends BaseActivity {
 
             String centralDbDest = AMEnv.HIDDEN_DB_FOLDER_PATH + AMEnv.CENTRAL_DB_NAME;
             databaseUtil.setupCentralDatabase(centralDbDest);
+
+            if(firstTime != true) {
+               registerAccountIfNoneExist();
+            }
+
+            AnyMemoBaseDBOpenHelperManager.releaseHelper(baseHelper);
 
             SharedPreferences.Editor editor = settings.edit();
             /* save new version number */

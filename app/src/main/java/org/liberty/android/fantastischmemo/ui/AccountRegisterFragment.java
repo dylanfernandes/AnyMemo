@@ -51,7 +51,7 @@ public class AccountRegisterFragment extends BaseDialogFragment {
         super.onCreate(bundle);
         Bundle args = this.getArguments();
         dbPath = args.getString(EXTRA_DBPATH);
-        baseDBOpenHelper = AnyMemoBaseDBOpenHelperManager.getHelper(mActivity, dbPath);
+        baseDBOpenHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
         userDao = baseDBOpenHelper.getUserDao();
         userStatDao = baseDBOpenHelper.getUserStatisticsDao();
         setStyle(DialogFragment.STYLE_NO_TITLE, 0);
