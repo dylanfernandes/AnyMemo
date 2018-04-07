@@ -57,8 +57,7 @@ public class AccountPage extends BaseActivity{
         activityComponents().inject(this);
         setContentView(R.layout.account_page_tab);
 
-
-        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(AccountPage.this, dbPath);
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
         userDao = baseHelper.getUserDao();
         userStatDao = baseHelper.getUserStatisticsDao();
 

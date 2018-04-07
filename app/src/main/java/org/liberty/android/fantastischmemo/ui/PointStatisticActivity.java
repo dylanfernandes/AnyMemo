@@ -37,7 +37,7 @@ public class PointStatisticActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_stats);
-        helper = AnyMemoBaseDBOpenHelperManager.getHelper("central.db");
+        helper = AnyMemoBaseDBOpenHelperManager.getHelper();
         pointDao = helper.getAchievementPointDao();
 
         RecyclerView pointsRecyclerView = (RecyclerView) findViewById(R.id.stats_list);

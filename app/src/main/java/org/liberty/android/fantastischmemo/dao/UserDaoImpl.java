@@ -75,7 +75,7 @@ public class UserDaoImpl extends AbstractHelperDaoImpl<User, Integer> implements
     public int delete(User user) {
         UserStatistics userStat = user.getUserStatistics();
 
-        AnyMemoBaseDBOpenHelper dbHelper = AnyMemoBaseDBOpenHelperManager.getHelper("central.db");
+        AnyMemoBaseDBOpenHelper dbHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
         UserStatisticsDao userStatsDao = dbHelper.getUserStatisticsDao();
         userStatsDao.delete(userStat);
 
