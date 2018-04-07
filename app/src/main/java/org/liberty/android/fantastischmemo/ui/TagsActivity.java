@@ -10,7 +10,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -20,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
@@ -40,6 +45,7 @@ public class TagsActivity extends BaseActivity {
     View fabBGLayout;
     private TagDao centralTagDao;
     private TagsFragment tagsFragment;
+    private String deckName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,8 +56,9 @@ public class TagsActivity extends BaseActivity {
         centralTagDao = helper.getTagDao();
 
         String deckPath = getIntent().getStringExtra("deckPath");
-        String deckName = GenericDatabaseDialogUtil.getDeckNameFromPath(deckPath);
-        setTitle("Tags for: " + deckName);
+        deckName = GenericDatabaseDialogUtil.getDeckNameFromPath(deckPath);
+        setTitle("Tags");
+        this.getSupportActionBar().setSubtitle(deckName);
 
         Bundle bundle = new Bundle();
         bundle.putString("deckPath", deckPath);
@@ -181,14 +188,34 @@ public class TagsActivity extends BaseActivity {
         });
     }
 
-    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.tag_activity_menu, menu);
         return true;
     }
-    */
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.all_tags:
+            {
+                Bundle bundle = new Bundle();
+                bundle.putString("previousDeck", deckName);
+                AllTagsFragment allTagsFragment = new AllTagsFragment();
+                allTagsFragment.setArguments(bundle);
+
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.add(R.id.tags_fragment_root, allTagsFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+                this.getSupportActionBar().setSubtitle("All Tags");
+
+                return true;
+            }
+        }
+        return false;
+    }
 
     public List<Tag> loadAllTagsExceptInDeck(){
         try {
