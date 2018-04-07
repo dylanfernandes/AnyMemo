@@ -74,7 +74,7 @@ public class Tag {
     }
 
     public List<Deck> getDecks() {
-        DeckDao deckDao = AnyMemoBaseDBOpenHelperManager.getHelper("central.db").getDeckDao();
+        DeckDao deckDao = AnyMemoBaseDBOpenHelperManager.getHelper().getDeckDao();
         List<Deck> allDecks = null;
         List<Deck> decksToReturn = new ArrayList<>();
 
