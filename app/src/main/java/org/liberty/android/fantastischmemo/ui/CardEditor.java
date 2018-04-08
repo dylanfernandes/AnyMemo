@@ -28,11 +28,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -63,11 +66,14 @@ import org.liberty.android.fantastischmemo.ui.AudioRecorderFragment.AudioRecorde
 import org.liberty.android.fantastischmemo.ui.CategoryEditorFragment.CategoryEditorResultListener;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class CardEditor extends BaseActivity {
     private final int ACTIVITY_IMAGE_FILE = 1;
     private final int ACTIVITY_AUDIO_FILE = 2;
+    private final int REQUEST_IMAGE_CAPTURE = 3;
 
     private static final int PERMISSION_REQUEST_RECORD_AUDIO = 1;
 
@@ -217,6 +223,29 @@ public class CardEditor extends BaseActivity {
                     Intent myIntent = new Intent(this, FileBrowserActivity.class);
                     myIntent.putExtra(FileBrowserActivity.EXTRA_FILE_EXTENSIONS, ".png,.jpg,.tif,.bmp");
                     startActivityForResult(myIntent, ACTIVITY_IMAGE_FILE);
+                }
+                return true;
+
+            case R.id.editor_menu_new_image:
+                if(focusView == questionEdit || focusView ==answerEdit || focusView == noteEdit){
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+
+                        File imageFile = null;
+                        try {
+                            imageFile = createImageFile();
+                        } catch(IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (imageFile != null) {
+                            Uri imageURI = FileProvider.getUriForFile(this,
+                                    "com.example.android.fileprovider",
+                                    imageFile);
+                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
+                            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                        }
+                    }
                 }
                 return true;
 
@@ -443,6 +472,16 @@ public class CardEditor extends BaseActivity {
                         catch(Exception e){
                             Log.e(TAG, "Error copying image", e);
                         }
+                    }
+                }
+            break;
+            case REQUEST_IMAGE_CAPTURE:
+                if(resultCode == Activity.RESULT_OK){
+                    View focusView = getCurrentFocus();
+                    if(focusView == questionEdit || focusView ==answerEdit || focusView == noteEdit){
+                        path = data.getStringExtra(FileBrowserActivity.EXTRA_RESULT_PATH);
+                        name = FilenameUtils.getName(path);
+                        addTextToView((EditText)focusView, "<img src=\"" + name + "\" />");
                     }
                 }
             break;
@@ -724,4 +763,25 @@ public class CardEditor extends BaseActivity {
                 updateCategoryView();
             }
         };
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp;
+        String imageRoot = AMEnv.DEFAULT_IMAGE_PATH;
+        String imagePath = imageRoot + dbName + "/";
+
+        new File(imageRoot).mkdir();
+        File imageDirectory = new File(imagePath);
+        if (!imageDirectory.exists()){
+            imageDirectory.mkdir();
+        }
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                imageDirectory
+        );
+
+        return image;
+
+    }
 }
