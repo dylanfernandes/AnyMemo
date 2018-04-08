@@ -112,6 +112,8 @@ public class CardEditor extends BaseActivity {
     private String originalAnswer;
     private String originalNote;
 
+    private String currentImagePath;
+
     public static String EXTRA_DBPATH = "dbpath";
     public static String EXTRA_CARD_ID = "id";
     public static String EXTRA_RESULT_CARD_ID= "result_card_id";
@@ -218,6 +220,7 @@ public class CardEditor extends BaseActivity {
                 }
                 return true;
 
+            //Add existing image in the devices storage
             case R.id.editor_menu_image:
                 if(focusView == questionEdit || focusView ==answerEdit || focusView == noteEdit){
                     Intent myIntent = new Intent(this, FileBrowserActivity.class);
@@ -226,21 +229,24 @@ public class CardEditor extends BaseActivity {
                 }
                 return true;
 
+            //Add new image using built-in camera
             case R.id.editor_menu_new_image:
                 if(focusView == questionEdit || focusView ==answerEdit || focusView == noteEdit){
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-
+                        //get the location of the new picture to be taken
                         File imageFile = null;
                         try {
                             imageFile = createImageFile();
+                            currentImagePath = imageFile.getAbsolutePath();
                         } catch(IOException e) {
                             e.printStackTrace();
                         }
 
                         if (imageFile != null) {
+                            //using fileprovider, give the intent a file to put the new picture
                             Uri imageURI = FileProvider.getUriForFile(this,
-                                    "com.example.android.fileprovider",
+                                    this.getApplicationContext().getPackageName() + ".provider",
                                     imageFile);
                             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
                             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -479,7 +485,7 @@ public class CardEditor extends BaseActivity {
                 if(resultCode == Activity.RESULT_OK){
                     View focusView = getCurrentFocus();
                     if(focusView == questionEdit || focusView ==answerEdit || focusView == noteEdit){
-                        path = data.getStringExtra(FileBrowserActivity.EXTRA_RESULT_PATH);
+                        path = currentImagePath;
                         name = FilenameUtils.getName(path);
                         addTextToView((EditText)focusView, "<img src=\"" + name + "\" />");
                     }
@@ -765,16 +771,19 @@ public class CardEditor extends BaseActivity {
         };
 
     private File createImageFile() throws IOException {
+        //generate a unique name for picture based on time taken to avoid duplication
         String timeStamp = new SimpleDateFormat("yyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp;
         String imageRoot = AMEnv.DEFAULT_IMAGE_PATH;
         String imagePath = imageRoot + dbName + "/";
 
+        //create directories if they don't already exist
         new File(imageRoot).mkdir();
         File imageDirectory = new File(imagePath);
         if (!imageDirectory.exists()){
             imageDirectory.mkdir();
         }
+        //create temporary file for a placeholder for the new picture
         File image = File.createTempFile(
                 imageFileName,
                 ".jpg",
@@ -782,6 +791,5 @@ public class CardEditor extends BaseActivity {
         );
 
         return image;
-
     }
 }
