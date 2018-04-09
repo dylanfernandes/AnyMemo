@@ -47,6 +47,7 @@ import android.widget.Toast;
 import com.google.common.base.Strings;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMEnv;
@@ -62,7 +63,6 @@ import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -490,6 +490,8 @@ public class FileBrowserFragment extends BaseDialogFragment {
                             if(clickedFile.isDirectory()) {
                                 fragment.browseTo(clickedFile);
                             } else if (clickedFile.isFile()){
+                                final String deckPath = fragment.currentDirectory.getAbsolutePath() + selectedFileName;
+                                final String dbName = FilenameUtils.getName(deckPath);
                                 new AlertDialog.Builder(fragment.getContext())
                                     .setTitle(fragment.getContext().getString(R.string.fb_edit_dialog_title))
                                     .setItems(R.array.fb_dialog_list, new DialogInterface.OnClickListener() {
@@ -497,15 +499,14 @@ public class FileBrowserFragment extends BaseDialogFragment {
                                         public void onClick(DialogInterface dialog, int which) {
                                             if (which == 0) {
                                                 Intent intent = new Intent(fragment.getActivity(), TagsActivity.class);
-                                                String deckPath = fragment.currentDirectory.getAbsolutePath() + selectedFileName;
                                                 intent.putExtra("deckPath", deckPath);
                                                 fragment.startActivity(intent);
                                             } else if (which == 1) {
-                                                AnyMemoBaseDBOpenHelper helper = AnyMemoBaseDBOpenHelperManager.getHelper("central.db");
+                                                AnyMemoBaseDBOpenHelper helper = AnyMemoBaseDBOpenHelperManager.getHelper();
                                                 final DeckDao deckDao = helper.getDeckDao();
                                                 final EditText ratingInput = new EditText(fragment.getContext());
-                                                Deck currentDeck = deckDao.createOrReturn(selectedFileName);
-                                                int currentRating = (int) Math.round(currentDeck.getRating());
+                                                Deck currentDeck = deckDao.createOrReturn(dbName);
+                                                int currentRating = (int)Math.round(currentDeck.getRating());
 
                                                 ratingInput.setText(currentDeck.getRating().toString());
 
@@ -522,7 +523,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
                                                                         Toast.makeText(fragment.getContext(),R.string.invalid_rating_given,Toast.LENGTH_SHORT).show();
                                                                     } else if(updatedValue >= 1 && updatedValue <= 5) {
                                                                         int roundedValue = (int)Math.round(updatedValue);
-                                                                        deckDao.updateRating(selectedFileName, roundedValue);
+                                                                        deckDao.updateRating(dbName, roundedValue);
                                                                     }
                                                                 } catch(NumberFormatException e){
                                                                     Toast.makeText(fragment.getContext(),R.string.invalid_rating_given,Toast.LENGTH_SHORT).show();

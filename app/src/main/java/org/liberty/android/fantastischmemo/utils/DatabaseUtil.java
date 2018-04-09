@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.apache.commons.io.FilenameUtils;
 import org.liberty.android.fantastischmemo.common.AMEnv;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.dao.CardDao;
@@ -117,6 +119,21 @@ public class DatabaseUtil {
             if (helper != null) {
                 AnyMemoDBOpenHelperManager.releaseHelper(helper);
             }
+        }
+    }
+
+    public void setupCentralDatabase(String dbPath) {
+        //dbPath: full path of the central database
+        //setup for Central Database
+        //this function will create the database OR could be used to upgrade
+        AnyMemoBaseDBOpenHelper helper = null;
+        try {
+            helper = AnyMemoBaseDBOpenHelperManager.getHelper(mContext, dbPath);
+            helper.getWritableDatabase();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            AnyMemoBaseDBOpenHelperManager.releaseHelper(helper);
         }
     }
 }
