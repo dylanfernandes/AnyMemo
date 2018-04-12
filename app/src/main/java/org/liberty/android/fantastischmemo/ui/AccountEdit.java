@@ -1,6 +1,6 @@
 package org.liberty.android.fantastischmemo.ui;
 
-import android.accounts.Account;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -66,7 +66,8 @@ public class AccountEdit extends BaseActivity {
                                 updatetask.execute();
 
                                 Intent intent = new Intent(AccountEdit.this, AccountPage.class);
-                                startActivity(intent);
+                                setResult(Activity.RESULT_OK, intent);
+                                finish();
 
                             }
                         }).setTitle(R.string.warning_text)
