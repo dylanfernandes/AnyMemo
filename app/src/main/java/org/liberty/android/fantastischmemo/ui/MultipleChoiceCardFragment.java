@@ -35,10 +35,6 @@ public class MultipleChoiceCardFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle bundle) {
         super.onCreate(bundle);
-        int cardId = getArguments().getInt(ARGUMENT_KEY_CARD_ID);
-        String dbPath = getArguments().getString(ARGUMENT_KEY_DB_PATH);
-        answerCard = AnyMemoDBOpenHelperManager.getHelper(dbPath).getCardDao().getById(cardId);
-        choices = getMultipleChoices(dbPath);
     }
 
     @Nullable
@@ -100,6 +96,12 @@ public class MultipleChoiceCardFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
+        int cardId = getArguments().getInt(ARGUMENT_KEY_CARD_ID);
+        String dbPath = getArguments().getString(ARGUMENT_KEY_DB_PATH);
+        answerCard = AnyMemoDBOpenHelperManager.getHelper(dbPath).getCardDao().getById(cardId);
+        choices = getMultipleChoices(dbPath);
+
         if (activity instanceof StudyActivity) {
             changeCardTask = ((StudyActivity) activity).getOnCardCahngedListenerRunnable(answerCard);
         } else if (activity instanceof QuizActivity) {

@@ -123,7 +123,7 @@ public class StudyActivity extends QACardActivity {
         return new Runnable() {
             @Override
             public void run() {
-                onCardChangedListener.onCardChanged(updatedCard, updatedCard);
+                changeCard(updatedCard);
             }
         };
     }
@@ -664,6 +664,21 @@ public class StudyActivity extends QACardActivity {
                 }
             }
         };
+
+    public void changeCard(Card updatedCard) {
+        // Dequeue card and update the queue
+        queueManager.update(updatedCard);
+
+        Card nextCard = queueManager.dequeue();
+        queueManager.remove(nextCard);
+
+        if (nextCard == null) {
+            showNoItemDialog();
+        } else {
+            setCurrentCard(nextCard);
+            displayCard(false);
+        }
+    }
 
     private String getActivityTitleString() {
         StringBuilder sb = new StringBuilder();
