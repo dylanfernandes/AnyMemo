@@ -1,25 +1,36 @@
 package org.liberty.android.fantastischmemo.entity;
 
+import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.table.DatabaseTable;
+
+import org.liberty.android.fantastischmemo.dao.DeckPointsDaoImpl;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by dylanfernandes on 2018-04-12.
  */
 
+@DatabaseTable(tableName = "deckpoints", daoClass = DeckPointsDaoImpl.class)
 public class DeckPoints implements Serializable {
-
+    @DatabaseField(generatedId = true)
     private Integer id;
 
+    @DatabaseField(defaultValue = "", width = 8192)
     private String deckName;
 
-    private List<AchievementPoint> points;
+    @ForeignCollectionField
+    private ForeignCollection<AchievementPoint> points;
 
+    @DatabaseField(defaultValue = "0")
     private Integer sum;
 
     public DeckPoints () {
-        points = new ArrayList<AchievementPoint>();
         sum = 0;
     }
 
@@ -36,7 +47,12 @@ public class DeckPoints implements Serializable {
     }
 
     public List<AchievementPoint> getPoints() {
-        return points;
+        Iterator<AchievementPoint> pointIterator = this.points.iterator();
+        List<AchievementPoint> pointList = new ArrayList<>();
+        while(pointIterator.hasNext()) {
+            pointList.add(pointIterator.next());
+        }
+        return pointList;
     }
 
     public void setId(Integer id) {

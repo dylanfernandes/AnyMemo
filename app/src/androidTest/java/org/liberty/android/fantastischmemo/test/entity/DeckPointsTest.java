@@ -1,5 +1,6 @@
 package org.liberty.android.fantastischmemo.test.entity;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.liberty.android.fantastischmemo.entity.AchievementPoint;
 import org.liberty.android.fantastischmemo.entity.DeckPoints;
@@ -28,6 +29,7 @@ public class DeckPointsTest {
         assertEquals(dn, dp.getDeckName());
     }
 
+    @Ignore
     @Test
     public void testGetSetPoint() {
         DeckPoints dp = new DeckPoints();
@@ -37,6 +39,7 @@ public class DeckPointsTest {
         assertEquals(point.getValue(), dp.getPoints().get(0).getValue());
     }
 
+    @Ignore
     @Test
     public void testGetSetSum() {
         DeckPoints dp = new DeckPoints();

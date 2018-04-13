@@ -12,10 +12,12 @@ import com.j256.ormlite.table.TableUtils;
 
 import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
 import org.liberty.android.fantastischmemo.dao.DeckDao;
+import org.liberty.android.fantastischmemo.dao.DeckPointsDao;
 import org.liberty.android.fantastischmemo.dao.TagDao;
 import org.liberty.android.fantastischmemo.dao.UserDao;
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.entity.Deck;
+import org.liberty.android.fantastischmemo.entity.DeckPoints;
 import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.entity.User;
 import org.liberty.android.fantastischmemo.entity.UserStatistics;
@@ -45,6 +47,8 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private AchievementPointDao apDao = null;
 
+    private DeckPointsDao dpDao = null;
+
     private boolean isReleased = false;
 
     @Override
@@ -58,6 +62,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, UserStatistics.class);
             TableUtils.createTable(connectionSource, User.class);
             TableUtils.createTable(connectionSource, AchievementPoint.class);
+            TableUtils.createTable(connectionSource, DeckPoints.class);
             database.setVersion(CURRENT_VERSION);
 
         } catch (SQLException e) {
@@ -197,6 +202,17 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 apDao = getDao(AchievementPoint.class);
             }
             return apDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public synchronized DeckPointsDao getDeckPointsDao() {
+        try {
+            if (dpDao == null) {
+                dpDao = getDao(DeckPoints.class);
+            }
+            return dpDao;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
