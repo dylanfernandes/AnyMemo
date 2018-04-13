@@ -16,13 +16,24 @@ public class DeckPoints implements Serializable {
 
     private List<AchievementPoint> points;
 
-    public DeckPoints () { points = new ArrayList<AchievementPoint>();}
+    private Integer sum;
+
+    public DeckPoints () {
+        points = new ArrayList<AchievementPoint>();
+        sum = 0;
+    }
 
     public Integer getId() {
         return id;
     }
 
     public String getDeckName() { return deckName; }
+
+    public Integer getSum() { return sum;}
+
+    private void addSum(AchievementPoint p) {
+        sum += p.getValue();
+    }
 
     public List<AchievementPoint> getPoints() {
         return points;
@@ -38,5 +49,6 @@ public class DeckPoints implements Serializable {
 
     public void addPoint(AchievementPoint point) {
         this.points.add(point);
+        addSum(point);
     }
 }

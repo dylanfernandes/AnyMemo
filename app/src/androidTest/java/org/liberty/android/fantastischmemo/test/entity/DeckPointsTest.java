@@ -36,4 +36,16 @@ public class DeckPointsTest {
         dp.addPoint(point);
         assertEquals(point.getValue(), dp.getPoints().get(0).getValue());
     }
+
+    @Test
+    public void testGetSetSum() {
+        DeckPoints dp = new DeckPoints();
+        //test intialization of sum
+        assertEquals(0, (int)dp.getSum());
+        AchievementPoint point = new AchievementPoint();
+        point.setValue(5);
+        dp.addPoint(point);
+        //verify if sum is updated if a point is added to the object
+        assertEquals(point.getValue(), dp.getSum());
+    }
 }
