@@ -36,7 +36,7 @@ public class DeckPoints implements Serializable {
         this.deckName = deckName;
     }
 
-    public void setPoint(AchievementPoint point) {
+    public void addPoint(AchievementPoint point) {
         this.points.add(point);
     }
 }
