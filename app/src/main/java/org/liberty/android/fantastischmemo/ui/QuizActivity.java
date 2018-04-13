@@ -399,6 +399,10 @@ public class QuizActivity extends QACardActivity {
             }
         };
 
+    public ChangeCardTask getChangeCardTask(QuizActivity activity, Card updatedCard) {
+        return new ChangeCardTask(activity, updatedCard);
+    }
+
     private GradeButtonsFragment.OnCardChangedListener onCardChangedListener =
         new GradeButtonsFragment.OnCardChangedListener() {
             public void onCardChanged(Card prevCard, Card updatedCard) {
@@ -414,7 +418,7 @@ public class QuizActivity extends QACardActivity {
     // Task to change the card after a card is graded
     // It needs to update the old card and dequeue the new card
     // and display it.
-    private class ChangeCardTask extends AsyncTask<Void, Void, Card> {
+    public class ChangeCardTask extends AsyncTask<Void, Void, Card> {
 
         private int newQueueSizeBeforeDequeue;
 

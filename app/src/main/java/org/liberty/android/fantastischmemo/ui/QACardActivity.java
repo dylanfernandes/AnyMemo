@@ -380,7 +380,7 @@ public abstract class QACardActivity extends BaseActivity {
             ft.replace(R.id.card_root, fragment);
             ft.commit();
         } else if (setting.getCardStyle() == Setting.CardStyle.MULTIPLE_CHOICE) {
-            MultipleChoiceCardFragment fragment = new MultipleChoiceCardFragment();
+            MultipleChoiceCardFragment multipleChoiceCardFragment = new MultipleChoiceCardFragment();
             Bundle b = new Bundle();
             b.putInt(MultipleChoiceCardFragment.ARGUMENT_KEY_CARD_ID, currentCard.getId());
             b.putString(MultipleChoiceCardFragment.ARGUMENT_KEY_DB_PATH, dbPath);
@@ -388,11 +388,11 @@ public abstract class QACardActivity extends BaseActivity {
             CardFragment.Builder cardFragmentQuestionBuilder = new CardFragment.Builder(currentCard.getQuestion());
             b.putSerializable(MultipleChoiceCardFragment.EXTRA_FIELD1_CARD_FRAGMENT, cardFragmentQuestionBuilder);
 
-            fragment.setArguments(b);
+            multipleChoiceCardFragment.setArguments(b);
 
             configCardFragmentTransitionAnimation(ft);
 
-            ft.replace(R.id.card_root, fragment);
+            ft.replace(R.id.card_root, multipleChoiceCardFragment);
             ft.commit();
         } else {
             assert false : "Card logic not implemented for style: " + setting.getCardStyle();
@@ -505,7 +505,7 @@ public abstract class QACardActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    // Set the small title to display additional informaiton
+    // Set the small title to display additional information
     public void setSmallTitle(CharSequence text) {
         if (text != null && !Strings.isNullOrEmpty(text.toString())) {
             smallTitleBar.setText(text);

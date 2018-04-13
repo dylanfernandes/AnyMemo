@@ -1,5 +1,6 @@
 package org.liberty.android.fantastischmemo.ui;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,8 @@ public class MultipleChoiceCardFragment extends BaseFragment {
     private Card answerCard;
     private List<Choice> choices;
 
+    private Runnable changeCardTask;
+
     @Override
     public void onCreate(@Nullable Bundle bundle) {
         super.onCreate(bundle);
@@ -53,6 +56,7 @@ public class MultipleChoiceCardFragment extends BaseFragment {
                     @Override
                     public void onClick(View v) {
                         doCorrectAnswer();
+                        changeCardTask.run();
                     }
                 });
             } else {
@@ -60,6 +64,7 @@ public class MultipleChoiceCardFragment extends BaseFragment {
                     @Override
                     public void onClick(View v) {
                         doIncorrectAnswer();
+                        changeCardTask.run();
                     }
                 });
             }
@@ -90,6 +95,24 @@ public class MultipleChoiceCardFragment extends BaseFragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof StudyActivity) {
+            changeCardTask = ((StudyActivity) activity).getOnCardCahngedListenerRunnable(answerCard);
+        } else if (activity instanceof QuizActivity) {
+            final QuizActivity quizActivity = (QuizActivity) activity;
+            if (changeCardTask == null) {
+                changeCardTask = new Runnable() {
+                    @Override
+                    public void run() {
+                        quizActivity.getChangeCardTask(quizActivity, answerCard).execute();
+                    }
+                };
+            }
+        }
     }
 
     private void doCorrectAnswer() {

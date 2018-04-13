@@ -118,7 +118,16 @@ public class StudyActivity extends QACardActivity {
 
         startInit();
     }
-    
+
+    public Runnable getOnCardCahngedListenerRunnable(final Card updatedCard) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                onCardChangedListener.onCardChanged(updatedCard, updatedCard);
+            }
+        };
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
