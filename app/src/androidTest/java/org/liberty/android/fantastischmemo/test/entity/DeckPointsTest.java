@@ -28,27 +28,5 @@ public class DeckPointsTest {
         dp.setDeckName(dn);
         assertEquals(dn, dp.getDeckName());
     }
-
-    @Ignore
-    @Test
-    public void testGetSetPoint() {
-        DeckPoints dp = new DeckPoints();
-        AchievementPoint point = new AchievementPoint();
-        point.setValue(5);
-        dp.addPoint(point);
-        assertEquals(point.getValue(), dp.getPoints().get(0).getValue());
-    }
-
-    @Ignore
-    @Test
-    public void testGetSetSum() {
-        DeckPoints dp = new DeckPoints();
-        //test intialization of sum
-        assertEquals(0, (int)dp.getSum());
-        AchievementPoint point = new AchievementPoint();
-        point.setValue(5);
-        dp.addPoint(point);
-        //verify if sum is updated if a point is added to the object
-        assertEquals(point.getValue(), dp.getSum());
-    }
+    //adding achievement points and getting some tests are in DAO tests since they are dependent on ORM
 }

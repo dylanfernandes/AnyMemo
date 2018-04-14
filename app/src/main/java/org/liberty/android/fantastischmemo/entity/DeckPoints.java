@@ -17,7 +17,7 @@ import java.util.List;
  */
 
 @DatabaseTable(tableName = "deckpoints", daoClass = DeckPointsDaoImpl.class)
-public class DeckPoints implements Serializable {
+public class DeckPoints {
     @DatabaseField(generatedId = true)
     private Integer id;
 
@@ -40,10 +40,13 @@ public class DeckPoints implements Serializable {
 
     public String getDeckName() { return deckName; }
 
-    public Integer getSum() { return sum;}
-
-    private void addSum(AchievementPoint p) {
-        sum += p.getValue();
+    public Integer getSum() {
+        sum = 0;
+        Iterator<AchievementPoint> pointIterator = this.points.iterator();
+        while(pointIterator.hasNext()) {
+           sum += pointIterator.next().getValue();
+        }
+        return sum;
     }
 
     public List<AchievementPoint> getPoints() {
@@ -63,8 +66,5 @@ public class DeckPoints implements Serializable {
         this.deckName = deckName;
     }
 
-    public void addPoint(AchievementPoint point) {
-        this.points.add(point);
-        addSum(point);
-    }
+
 }

@@ -9,6 +9,6 @@ import org.liberty.android.fantastischmemo.entity.User;
  * Created by dylanfernandes on 2018-04-13.
  */
 
-public interface DeckPointsDao extends Dao<DeckPoints, Integer> {
+public interface DeckPointsDao extends HelperDao<DeckPoints, Integer> {
 
 }
