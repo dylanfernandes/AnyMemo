@@ -113,6 +113,16 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 oldVersion = 4;
             }
         }
+        if(oldVersion <= 5){
+            try {
+                TableUtils.createTable(connectionSource, DeckPoints.class);
+                database.execSQL("alter table achievementpoints add column deckpoints_id");
+            } catch (Exception e) {
+
+            } finally {
+                oldVersion = 5;
+            }
+        }
 
         database.setVersion(oldVersion);
     }
