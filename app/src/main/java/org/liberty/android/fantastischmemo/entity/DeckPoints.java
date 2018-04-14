@@ -17,50 +17,17 @@ import java.util.List;
  */
 
 @DatabaseTable(tableName = "deckpoints", daoClass = DeckPointsDaoImpl.class)
-public class DeckPoints {
-    @DatabaseField(generatedId = true)
-    private Integer id;
+public class DeckPoints extends PointGoruping{
 
     @DatabaseField(defaultValue = "", width = 8192)
     private String deckName;
 
-    @ForeignCollectionField
-    private ForeignCollection<AchievementPoint> points;
 
-    @DatabaseField(defaultValue = "0")
-    private Integer sum;
-
-    public DeckPoints () {
-        sum = 0;
-    }
-
-    public Integer getId() {
-        return id;
+    public DeckPoints() {
     }
 
     public String getDeckName() { return deckName; }
 
-    public Integer getSum() {
-        sum = 0;
-        Iterator<AchievementPoint> pointIterator = this.points.iterator();
-        while(pointIterator.hasNext()) {
-           sum += pointIterator.next().getValue();
-        }
-        return sum;
-    }
-
-    public List<AchievementPoint> getPoints() {
-        Iterator<AchievementPoint> pointIterator = this.points.iterator();
-        List<AchievementPoint> pointList = new ArrayList<>();
-        while(pointIterator.hasNext()) {
-            pointList.add(pointIterator.next());
-        }
-        return pointList;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public void setDeckName(String deckName) {
         this.deckName = deckName;
