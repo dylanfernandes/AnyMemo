@@ -1,0 +1,15 @@
+apply plugin: 'findbugs'
+
+task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
+    classes = fileTree("$project.buildDir/intermediates/classes/dev/debug/org/liberty/android/fantastischmemo")
+    source = fileTree("$project.rootDir/src/main/java/org/liberty/android/fantastischmemo")
+    classpath = files()
+    ignoreFailures = true
+    reportLevel = "low"
+    effort 'max'
+
+    reports {
+        xml.enabled = true
+        xml.destination = "$project.buildDir/outputs/findbugs/findbugs.xml"
+    }
+}
