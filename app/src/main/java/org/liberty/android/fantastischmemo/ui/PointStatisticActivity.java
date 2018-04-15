@@ -46,6 +46,7 @@ public class PointStatisticActivity extends BaseActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         pointsRecyclerView.setLayoutManager(linearLayoutManager);
 
+
         RadioButton tagButton = (RadioButton) findViewById(R.id.per_tag);
         RadioButton deckButton = (RadioButton) findViewById(R.id.per_deck);
         RadioButton dayButton = (RadioButton) findViewById(R.id.per_day);

@@ -3,8 +3,7 @@ package org.liberty.android.fantastischmemo.test.entity;
 import org.junit.Test;
 
 import org.liberty.android.fantastischmemo.entity.DailyPoints;
-import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
-import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
+import org.liberty.android.fantastischmemo.utils.DayDateUtil;
 
 import java.util.Date;
 
@@ -17,8 +16,6 @@ import static org.junit.Assert.assertEquals;
 public class DailyPointTest {
 
     DailyPoints dp = new DailyPoints();
-    AnyMemoBaseDBOpenHelperManager dbManager;
-    AnyMemoBaseDBOpenHelper baseHelper;
 
     @Test
     public void setGetTest() {
@@ -28,16 +25,10 @@ public class DailyPointTest {
 
     @Test
     public void setGetTimeTest() {
-        Date now = new Date();
-        dp.setTime(now);
+        Date now = DayDateUtil.getDayDate();
         assertEquals(now, dp.getTime());
     }
 
-    @Test
-    public void setGetTotalPoints() {
-        dp.setTotalPoints(50);
-        assertEquals(51, (int)dp.getTotalPoints()+1);
-    }
 
 
 }

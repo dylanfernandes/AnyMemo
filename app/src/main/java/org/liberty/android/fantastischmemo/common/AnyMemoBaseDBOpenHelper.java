@@ -12,12 +12,14 @@ import com.j256.ormlite.table.TableUtils;
 
 import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
 import org.liberty.android.fantastischmemo.dao.DeckDao;
+import org.liberty.android.fantastischmemo.dao.DeckPointsDao;
 import org.liberty.android.fantastischmemo.dao.TagDao;
 import org.liberty.android.fantastischmemo.dao.UserDao;
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.dao.DailyPointsDao;
 import org.liberty.android.fantastischmemo.entity.DailyPoints;
 import org.liberty.android.fantastischmemo.entity.Deck;
+import org.liberty.android.fantastischmemo.entity.DeckPoints;
 import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.entity.User;
 import org.liberty.android.fantastischmemo.entity.UserStatistics;
@@ -48,7 +50,10 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private AchievementPointDao apDao = null;
 
-    private DailyPointsDao dpDao = null;
+    private DailyPointsDao dailyPointsDao = null;
+
+    private DeckPointsDao dpDao = null;
+
 
     private boolean isReleased = false;
 
@@ -60,10 +65,15 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.createTable(connectionSource, Deck.class);
             TableUtils.createTable(connectionSource, Tag.class);
+            TableUtils.createTable(connectionSource, DailyPoints.class);
+            TableUtils.createTable(connectionSource, DeckPoints.class);
+            TableUtils.createTable(connectionSource, AchievementPoint.class);
             TableUtils.createTable(connectionSource, UserStatistics.class);
             TableUtils.createTable(connectionSource, User.class);
-            TableUtils.createTable(connectionSource, AchievementPoint.class);
-            TableUtils.createTable(connectionSource, DailyPoints.class);
+
+
+
+
             database.setVersion(CURRENT_VERSION);
 
         } catch (SQLException e) {
@@ -90,6 +100,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
             try {
                 TableUtils.createTable(connectionSource, User.class);
                 TableUtils.createTable(connectionSource, UserStatistics.class);
+
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
@@ -114,12 +125,15 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 oldVersion = 4;
             }
         }
-        if(oldVersion <= 5){
+        if(oldVersion <= 5) {
             try {
                 TableUtils.createTable(connectionSource, DailyPoints.class);
+                TableUtils.createTable(connectionSource, DeckPoints.class);
+                database.execSQL("alter table achievementpoints add column deckpoints_id");
                 database.execSQL("alter table achievementpoints add column dailypoints_id");
-            } catch (Exception e) {
 
+            } catch (Exception e) {
+                e.printStackTrace();
             } finally {
                 oldVersion = 5;
             }
@@ -220,8 +234,19 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     public synchronized DailyPointsDao getDailyPointsDao() {
         try {
+            if (dailyPointsDao == null) {
+                dailyPointsDao = getDao(DailyPoints.class);
+            }
+            return dailyPointsDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public synchronized DeckPointsDao getDeckPointsDao() {
+        try {
             if (dpDao == null) {
-                dpDao = getDao(DailyPoints.class);
+                dpDao = getDao(DeckPoints.class);
             }
             return dpDao;
         } catch (SQLException e) {
