@@ -29,6 +29,9 @@ public class AchievementPoint implements Serializable, VersionableDomainObject{
     @DatabaseField(foreign=true)
     private DeckPoints dp;
 
+    @DatabaseField(foreign=true)
+    private TagPoints tp;
+
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
     private Date creationDate;
 
@@ -77,6 +80,13 @@ public class AchievementPoint implements Serializable, VersionableDomainObject{
         this.dp = deckP;
     }
 
+    public TagPoints getTagPoints() {
+        return tp;
+    }
+
+    public void setTagPoints(TagPoints tagP) {
+        this.tp = tagP;
+    }
 
     @Override
     public Date getCreationDate() {
