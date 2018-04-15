@@ -43,10 +43,10 @@ public class AnyMemoBaseDBOpenHelperManager {
     private static volatile ReentrantLock bigLock = new ReentrantLock();
 
     /**
-     * Get a DBOpenHelper with application context.
+     * Get a BaseDBOpenHelper with application context.
      */
-    public static AnyMemoBaseDBOpenHelper getHelper(String dbpath) {
-        return getHelper(AMApplication.getCurrentApplicationContext(), dbpath);
+    public static AnyMemoBaseDBOpenHelper getHelper() {
+        return getHelper(AMApplication.getCurrentApplicationContext(), AMEnv.HIDDEN_DB_FOLDER_PATH + AMEnv.CENTRAL_DB_NAME);
     }
 
     /* Get a db open helper and return a cached one if it was called before for the same db */

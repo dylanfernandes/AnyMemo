@@ -46,7 +46,7 @@ public class TagsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_tags_layout);
 
-        AnyMemoBaseDBOpenHelper helper = AnyMemoBaseDBOpenHelperManager.getHelper("central.db");
+        AnyMemoBaseDBOpenHelper helper = AnyMemoBaseDBOpenHelperManager.getHelper();
         centralTagDao = helper.getTagDao();
 
         String deckPath = getIntent().getStringExtra("deckPath");
