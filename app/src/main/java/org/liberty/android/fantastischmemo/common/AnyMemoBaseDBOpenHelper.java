@@ -49,9 +49,9 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private AchievementPointDao apDao = null;
 
-    private DeckPointsDao dpDao = null;
+    private DeckPointsDao deckPointsDao = null;
 
-    private TagPointsDao tpDao = null;
+    private TagPointsDao tagPointsDao = null;
 
     private boolean isReleased = false;
 
@@ -226,10 +226,10 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     public synchronized DeckPointsDao getDeckPointsDao() {
         try {
-            if (dpDao == null) {
-                dpDao = getDao(DeckPoints.class);
+            if (deckPointsDao == null) {
+                deckPointsDao = getDao(DeckPoints.class);
             }
-            return dpDao;
+            return deckPointsDao;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -237,10 +237,10 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     public synchronized TagPointsDao getTagPointsDao() {
         try {
-            if (tpDao == null) {
-                tpDao = getDao(TagPoints.class);
+            if (tagPointsDao == null) {
+                tagPointsDao = getDao(TagPoints.class);
             }
-            return tpDao;
+            return tagPointsDao;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
