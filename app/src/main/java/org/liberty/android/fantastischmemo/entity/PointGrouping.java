@@ -12,7 +12,7 @@ import java.util.List;
  * Created by dylanfernandes on 2018-04-14.
  */
 
-public abstract class PointGoruping {
+public abstract class PointGrouping {
     @DatabaseField(generatedId = true)
     private Integer id;
 
@@ -26,7 +26,7 @@ public abstract class PointGoruping {
         return id;
     }
 
-    public PointGoruping () {
+    public PointGrouping() {
         sum = 0;
     }
     public void setId(Integer id) {
