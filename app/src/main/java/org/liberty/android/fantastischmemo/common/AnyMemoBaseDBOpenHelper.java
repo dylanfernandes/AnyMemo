@@ -36,7 +36,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private final String TAG = getClass().getSimpleName();
 
-    private static final int CURRENT_VERSION = 6;
+    private static final int CURRENT_VERSION = 5;
 
     private String dbPath = "";
 
@@ -65,11 +65,14 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.createTable(connectionSource, Deck.class);
             TableUtils.createTable(connectionSource, Tag.class);
-            TableUtils.createTable(connectionSource, UserStatistics.class);
-            TableUtils.createTable(connectionSource, User.class);
-            TableUtils.createTable(connectionSource, AchievementPoint.class);
             TableUtils.createTable(connectionSource, DailyPoints.class);
             TableUtils.createTable(connectionSource, DeckPoints.class);
+            TableUtils.createTable(connectionSource, AchievementPoint.class);
+            TableUtils.createTable(connectionSource, UserStatistics.class);
+            TableUtils.createTable(connectionSource, User.class);
+
+
+
 
             database.setVersion(CURRENT_VERSION);
 
@@ -97,6 +100,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
             try {
                 TableUtils.createTable(connectionSource, User.class);
                 TableUtils.createTable(connectionSource, UserStatistics.class);
+
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
@@ -121,25 +125,17 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 oldVersion = 4;
             }
         }
-        if(oldVersion <= 5){
+        if(oldVersion <= 5) {
             try {
                 TableUtils.createTable(connectionSource, DailyPoints.class);
+                TableUtils.createTable(connectionSource, DeckPoints.class);
+                database.execSQL("alter table achievementpoints add column deckpoints_id");
                 database.execSQL("alter table achievementpoints add column dailypoints_id");
 
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 oldVersion = 5;
-            }
-        }
-        if(oldVersion <= 6) {
-            try {
-                TableUtils.createTable(connectionSource, DeckPoints.class);
-                database.execSQL("alter table achievementpoints add column deckpoints_id");
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                oldVersion = 6;
             }
         }
 

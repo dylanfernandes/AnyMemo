@@ -17,7 +17,7 @@ import java.util.List;
  */
 
 @DatabaseTable(tableName = "deckpoints", daoClass = DeckPointsDaoImpl.class)
-public class DeckPoints extends PointGoruping{
+public class DeckPoints extends PointGrouping{
 
     @DatabaseField(defaultValue = "", width = 8192)
     private String deckName;

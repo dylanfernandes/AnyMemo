@@ -1,10 +1,12 @@
 package org.liberty.android.fantastischmemo.entity;
 
 import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,7 +14,7 @@ import java.util.List;
  * Created by dylanfernandes on 2018-04-14.
  */
 
-public abstract class PointGoruping {
+public abstract class PointGrouping {
     @DatabaseField(generatedId = true)
     private Integer id;
 
@@ -26,9 +28,10 @@ public abstract class PointGoruping {
         return id;
     }
 
-    public PointGoruping () {
+    public PointGrouping () {
         sum = 0;
     }
+
     public void setId(Integer id) {
         this.id = id;
     }
