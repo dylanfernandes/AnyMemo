@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.liberty.android.fantastischmemo.R;
@@ -44,6 +45,11 @@ public class PointStatisticActivity extends BaseActivity {
         pointsRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         pointsRecyclerView.setLayoutManager(linearLayoutManager);
+
+        RadioButton tagButton = (RadioButton) findViewById(R.id.per_tag);
+        RadioButton deckButton = (RadioButton) findViewById(R.id.per_deck);
+        RadioButton dayButton = (RadioButton) findViewById(R.id.per_day);
+
 
         AchievementPoint pointee = new AchievementPoint();
         pointee.setCreationDate(new Date());
