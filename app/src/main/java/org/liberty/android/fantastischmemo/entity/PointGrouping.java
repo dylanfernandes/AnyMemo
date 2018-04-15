@@ -2,11 +2,12 @@ package org.liberty.android.fantastischmemo.entity;
 
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,7 +29,8 @@ public abstract class PointGrouping {
         return id;
     }
 
-    public PointGrouping () {
+
+    public PointGrouping() {
         sum = 0;
     }
 
