@@ -21,9 +21,9 @@ public class TagPointsTest {
 
     @Test
     public void testGetSetDeckName() {
-        TagPoints dp = new TagPoints();
+        TagPoints tp = new TagPoints();
         String tn = "tag";
-        dp.setTagName(tn);
-        assertEquals(tn, dp.getTagName());
+        tp.setTagName(tn);
+        assertEquals(tn, tp.getTagName());
     }
 }

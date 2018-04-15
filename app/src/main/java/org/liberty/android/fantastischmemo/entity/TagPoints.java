@@ -10,7 +10,7 @@ import org.liberty.android.fantastischmemo.dao.TagPointsDaoImpl;
  */
 
 @DatabaseTable(tableName = "tagpoints", daoClass = TagPointsDaoImpl.class)
-public class TagPoints extends PointGoruping {
+public class TagPoints extends PointGrouping {
 
     @DatabaseField(defaultValue = "", width = 8192)
     private String tagName;
