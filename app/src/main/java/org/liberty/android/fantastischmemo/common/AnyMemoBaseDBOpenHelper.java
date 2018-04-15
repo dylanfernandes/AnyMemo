@@ -52,10 +52,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private AchievementPointDao apDao = null;
 
-
     private DailyPointsDao dailyPointsDao = null;
-
-    private DeckPointsDao dpDao = null;
 
     private DeckPointsDao deckPointsDao = null;
 
