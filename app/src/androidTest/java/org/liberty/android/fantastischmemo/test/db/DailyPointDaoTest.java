@@ -32,7 +32,7 @@ public class DailyPointDaoTest extends AbstractExistingBaseDBTest {
     public void setup() {
         dpDao = centralDbHelper.getDailyPointsDao();
         achPointsDao = centralDbHelper.getAchievementPointDao();
-        //set deckPoints
+        //set dailyPoints
         dp = new DailyPoints();
         dp.setId(1);
 
@@ -93,7 +93,7 @@ public class DailyPointDaoTest extends AbstractExistingBaseDBTest {
         int initialSum;
         addPointsToDailyPoints();
         initialSum = a1.getValue() + a2.getValue();
-        //check if sum is updated in deckPoints object after adding points to it
+        //check if sum is updated in dailyPoints object after adding points to it
         assertEquals(initialSum, (int)dp.getSum());
     }
 
