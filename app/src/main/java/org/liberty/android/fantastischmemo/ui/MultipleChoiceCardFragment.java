@@ -150,21 +150,12 @@ public class MultipleChoiceCardFragment extends BaseFragment {
 
         try{
             tagList = tagDao.queryForAll();
-
-            List<DeckPoints> deckPointsList = deckPointDao.queryForEq("deckName", deckName);
-            if (deckPointsList.size() == 0) {
-                deckPoint = new DeckPoints(deckName);
-                deckPointDao.create(deckPoint);
-            }
-            else{
-                deckPoint = deckPointsList.get(0);
-            }
-
-            dailyPoint = dailyPointDao.createOrReturn();
-
         }catch (SQLException e){
             e.printStackTrace();
         }
+
+            deckPoint = deckPointDao.createOrReturn(deckName);
+            dailyPoint = dailyPointDao.createOrReturn();
 
         if (activity instanceof StudyActivity) {
             changeCardTask = ((StudyActivity) activity).getOnCardCahngedListenerRunnable(answerCard);
@@ -186,28 +177,20 @@ public class MultipleChoiceCardFragment extends BaseFragment {
         achPoint.setDeckPoints(deckPoint);
         achPoint.setDailyPoints(dailyPoint);
 
-        try {
+        for(Tag tag: tagList){
 
-            for(Tag tag: tagList){
-                List<TagPoints> tagPointsList = tagPointDao.queryForEq("tagName", tag.getName());
-                if (tagPointsList.size() == 0) {
-                    TagPoints tagPoint = new TagPoints(tag.getName());
-                    tagPointDao.create(tagPoint);
-                }
-                else{
-                    tagPoint = tagPointsList.get(0);
-                }
+            tagPoint = tagPointDao.createOrReturn(tag.getName());
 
-                achPoint.setTagPoints(tagPoint);
+            achPoint.setTagPoints(tagPoint);
 
+            try {
                 achPointDao.create(achPoint);
-
-                tagPointDao.update(tagPoint);
-                tagPointDao.refresh(tagPoint);
+            }catch (SQLException e){
+                e.printStackTrace();
             }
 
-        }catch (SQLException e){
-            e.printStackTrace();
+            tagPointDao.update(tagPoint);
+            tagPointDao.refresh(tagPoint);
         }
 
         dailyPointDao.update(dailyPoint);
