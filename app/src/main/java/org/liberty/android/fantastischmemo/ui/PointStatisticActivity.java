@@ -45,6 +45,7 @@ public class PointStatisticActivity extends BaseActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         pointsRecyclerView.setLayoutManager(linearLayoutManager);
 
+
         AchievementPoint pointee = new AchievementPoint();
         pointee.setCreationDate(new Date());
         pointee.setValue(5);

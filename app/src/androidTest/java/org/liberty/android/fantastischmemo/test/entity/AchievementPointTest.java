@@ -1,16 +1,17 @@
 package org.liberty.android.fantastischmemo.test.entity;
+
 import org.junit.Test;
 import org.liberty.android.fantastischmemo.entity.AchievementPoint;
-import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.DeckPoints;
+
 import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.entity.TagPoints;
+
 
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
 /**
  * Created by dylanfernandes on 2018-03-02.
  */

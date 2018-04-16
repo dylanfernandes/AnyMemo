@@ -1,13 +1,14 @@
 package org.liberty.android.fantastischmemo.test.db;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.Before;
 import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
-import org.liberty.android.fantastischmemo.dao.DeckPointsDao;
+import org.liberty.android.fantastischmemo.dao.DailyPointsDao;
 import org.liberty.android.fantastischmemo.entity.AchievementPoint;
-import org.liberty.android.fantastischmemo.entity.DeckPoints;
+import org.liberty.android.fantastischmemo.entity.DailyPoints;
 import org.liberty.android.fantastischmemo.test.AbstractExistingBaseDBTest;
+
 
 import java.sql.SQLException;
 import java.util.List;
@@ -15,23 +16,26 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 
 /**
- * Created by dylanfernandes on 2018-04-13.
+ * Created by Paul on 2018-04-13.
  */
 
-public class DeckPointsDaoTest extends AbstractExistingBaseDBTest {
-    private DeckPointsDao dpDao;
+public class DailyPointDaoTest extends AbstractExistingBaseDBTest {
+
+    private DailyPointsDao dpDao;
     private AchievementPointDao achPointsDao;
-    private DeckPoints dp;
+    private DailyPoints dp;
+    private DailyPoints dp2;
     private AchievementPoint a1;
     private AchievementPoint a2;
 
     @Before
     public void setup() {
-        dpDao = centralDbHelper.getDeckPointsDao();
+        dpDao = centralDbHelper.getDailyPointsDao();
         achPointsDao = centralDbHelper.getAchievementPointDao();
-        //set deckPoints
-        dp = new DeckPoints();
+        //set dailyPoints
+        dp = new DailyPoints();
         dp.setId(1);
+
         //set achievement points
         a1 = new AchievementPoint();
         a2 = new AchievementPoint();
@@ -39,12 +43,11 @@ public class DeckPointsDaoTest extends AbstractExistingBaseDBTest {
         a2.setValue(2);
     }
 
-    //setup relationship between points and deckPoints in database
-    public void addPointsToDeckPoints() {
-        dpDao.create(dp);
+    public void addPointsToDailyPoints() {
+      dp = dpDao.createOrReturn();
+      a1.setDailyPoints(dp);
+      a2.setDailyPoints(dp);
 
-        a1.setDeckPoints(dp);
-        a2.setDeckPoints(dp);
         try {
             achPointsDao.create(a1);
             achPointsDao.create(a2);
@@ -57,19 +60,25 @@ public class DeckPointsDaoTest extends AbstractExistingBaseDBTest {
     }
 
     @Test
-    public void testAddDeckPoints() throws Exception {
+    public void testAddDailyPoints() throws Exception {
         dpDao.create(dp);
         assertEquals(true, dpDao.idExists(1));
     }
 
-    //Adding achievement points to deck points dependent on ORM in other to have right relationship in DB
     @Test
-    public void testAddPointsToDeckPoints() throws Exception {
+    public void testExistingDailyPoints() {
+        dp = dpDao.createOrReturn();
+        dp2 = dpDao.createOrReturn();
+        assertEquals(dp.getId(), dp2.getId());
+    }
+
+    @Test
+    public void testAddPointsToDailyPoints() throws Exception {
         List<AchievementPoint> pointList;
         AchievementPoint newA1;
         AchievementPoint newA2;
 
-        addPointsToDeckPoints();
+        addPointsToDailyPoints();
         pointList = dp.getPoints();
 
         newA1 = pointList.get(0);
@@ -79,13 +88,14 @@ public class DeckPointsDaoTest extends AbstractExistingBaseDBTest {
         Assert.assertEquals(a2.getValue(), newA2.getValue());
     }
 
-    //Getting Sum dependent on ORM in other to have right relationship in DB
     @Test
-    public void testGetSumFromDeckPoints() {
+    public void testGetSumFromDailyPoints() {
         int initialSum;
-        addPointsToDeckPoints();
+        addPointsToDailyPoints();
         initialSum = a1.getValue() + a2.getValue();
-        //check if sum is updated in deckPoints object after adding points to it
+        //check if sum is updated in dailyPoints object after adding points to it
         assertEquals(initialSum, (int)dp.getSum());
     }
+
+
 }
