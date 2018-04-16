@@ -16,22 +16,21 @@ import java.util.Date;
 @DatabaseTable(tableName = "dailypoints", daoClass = DailyPointsDaoImpl.class)
 public class DailyPoints extends PointGrouping {
 
+
     @DatabaseField(defaultValue = "")
     private String time;
+
 
     public DailyPoints() {
         setTime();
     }
 
     public String getTime() {
-
         return time;
     }
 
     private void setTime() {
         this.time = DayDateUtil.getDayDateString();
     }
-
-
 
 }

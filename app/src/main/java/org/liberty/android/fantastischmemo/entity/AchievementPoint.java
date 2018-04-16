@@ -84,7 +84,6 @@ public class AchievementPoint implements Serializable, VersionableDomainObject{
         this.deckPoints = deckP;
     }
 
-
     public DailyPoints getDailyPoints() { return dailyPoints; }
 
     public void setDailyPoints(DailyPoints dailyPoints) {this.dailyPoints = dailyPoints; }

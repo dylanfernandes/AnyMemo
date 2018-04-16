@@ -1,11 +1,8 @@
 package org.liberty.android.fantastischmemo.utils;
 
-
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
 
 /**
  * Created by Paul on 2018-04-15.
@@ -22,6 +19,5 @@ public class DayDateUtil {
         Date time = cal.getTime();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
         return dateFormat.format(time);
-
     }
 }

@@ -6,7 +6,6 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,7 +26,6 @@ public abstract class PointGrouping {
     public Integer getId() {
         return id;
     }
-
 
     public PointGrouping () {
         sum = 0;

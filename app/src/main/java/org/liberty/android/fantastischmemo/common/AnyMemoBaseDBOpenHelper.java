@@ -136,7 +136,6 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 database.execSQL("alter table achievementpoints add column deckpoints_id");
                 database.execSQL("alter table achievementpoints add column dailypoints_id");
                 database.execSQL("alter table achievementpoints add column tagpoints_id");
-
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
