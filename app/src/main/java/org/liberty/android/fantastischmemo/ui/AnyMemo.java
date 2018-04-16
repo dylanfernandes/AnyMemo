@@ -168,14 +168,26 @@ public class AnyMemo extends BaseActivity {
 
     }
 
+    private void registerAccountIfNoneExist(){
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
+        userDao = baseHelper.getUserDao();
+        userlist = userDao.queryForAll();
+
+        if(userlist.size() == 0){
+            AccountRegisterFragment df = new AccountRegisterFragment();
+            Bundle b = new Bundle();
+            df.setArguments(b);
+            df.show(getSupportFragmentManager(), "AccountRegisterDialog");
+        }
+    }
+
     private void verifyDailyPoints() {
         baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
         userDao = baseHelper.getUserDao();
         statsDao = baseHelper.getUserStatisticsDao();
         achPointsDao = baseHelper.getAchievementPointDao();
 
-        //implemented until user creation upon login is completed
-        user = userDao.createOrReturn("Blob1");
+        user = userDao.returnFirstUser();
         stats = statsDao.createOrReturn(user);
         AchievementPoint recent = stats.getLatestPoint();
         Date now = new Date();
@@ -190,20 +202,6 @@ public class AnyMemo extends BaseActivity {
                 e.printStackTrace();
             }
             showToast(dp.getValue().toString(), getLayoutInflater(), getApplicationContext(), findViewById(android.R.id.content), R.drawable.ic_trophy, "Daily Points Earned: ");
-        }
-    }
-
-    private void registerAccountIfNoneExist(){
-        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
-        userDao = baseHelper.getUserDao();
-        userlist = userDao.queryForAll();
-
-        if(userlist.size() == 0){
-            AccountRegisterFragment df = new AccountRegisterFragment();
-            Bundle b = new Bundle();
-            b.putString(AccountRegisterFragment.EXTRA_DBPATH, dbPath);
-            df.setArguments(b);
-            df.show(getSupportFragmentManager(), "AccountRegisterDialog");
         }
     }
 
@@ -260,7 +258,18 @@ public class AnyMemo extends BaseActivity {
             getIntent().setAction(null);
         }
 
-        verifyDailyPoints();
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
+        userDao = baseHelper.getUserDao();
+        userlist = userDao.queryForAll();
+
+        if(userlist.size() == 0){
+            AccountRegisterFragment df = new AccountRegisterFragment();
+            Bundle b = new Bundle();
+            df.setArguments(b);
+            df.show(getSupportFragmentManager(), "AccountRegisterDialog");
+        }else {
+            verifyDailyPoints();
+        }
     }
 
     /**
@@ -309,7 +318,6 @@ public class AnyMemo extends BaseActivity {
                                 if(userlist.size() == 0){
                                     AccountRegisterFragment df = new AccountRegisterFragment();
                                     Bundle b = new Bundle();
-                                    b.putString(AccountRegisterFragment.EXTRA_DBPATH, dbPath);
                                     df.setArguments(b);
                                     df.show(getSupportFragmentManager(), "AccountRegisterDialog");
                                 }else {
