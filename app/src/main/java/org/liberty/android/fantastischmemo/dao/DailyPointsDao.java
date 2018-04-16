@@ -10,4 +10,5 @@ import org.liberty.android.fantastischmemo.entity.DailyPoints;
 
 public interface DailyPointsDao extends HelperDao<DailyPoints, Integer> {
     DailyPoints createOrReturn();
+    DailyPoints createOrReturn(DailyPoints dp);
 }
