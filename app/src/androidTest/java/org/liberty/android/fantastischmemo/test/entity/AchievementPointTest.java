@@ -2,7 +2,9 @@ package org.liberty.android.fantastischmemo.test.entity;
 import org.junit.Test;
 import org.liberty.android.fantastischmemo.entity.AchievementPoint;
 import org.liberty.android.fantastischmemo.entity.Deck;
+import org.liberty.android.fantastischmemo.entity.DeckPoints;
 import org.liberty.android.fantastischmemo.entity.Tag;
+import org.liberty.android.fantastischmemo.entity.TagPoints;
 
 import java.util.Date;
 
@@ -29,30 +31,27 @@ public class AchievementPointTest {
     }
 
     @Test
-    public void testGetSetTag(){
-        Tag t = new Tag("test");
-        Tag insertedTag;
-        p.setTag(t);
-        insertedTag = p.getTag();
-        assertEquals(t.getName(),insertedTag.getName());
-        assertEquals(t,insertedTag);
-    }
-
-    @Test
     public void testGetSetValue(){
         p.setValue(1);
         assertEquals(1,(int)p.getValue());
     }
 
     @Test
-    public void testGetSetDeck(){
-        Deck d = new Deck();
-        Deck insertedDeck;
-        d.setName("test");
-        p.setDeck(d);
-        insertedDeck = p.getDeck();
-        assertEquals(d.getName(), insertedDeck.getName());
-        assertEquals(d,insertedDeck);
+    public void testGetSetDeckPoints(){
+        DeckPoints d = new DeckPoints();
+        String deckName = "Test";
+        d.setDeckName(deckName);
+        p.setDeckPoints(d);
+        assertEquals(deckName,p.getDeckPoints().getDeckName());
+    }
+
+    @Test
+    public void testGetSetTagPoints(){
+        TagPoints tag = new TagPoints();
+        String tagName = "Test";
+        tag.setTagName(tagName);
+        p.setTagPoints(tag);
+        assertEquals(tagName,p.getTagPoints().getTagName());
     }
 
 }

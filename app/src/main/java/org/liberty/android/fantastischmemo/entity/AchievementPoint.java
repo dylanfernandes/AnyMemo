@@ -26,11 +26,11 @@ public class AchievementPoint implements Serializable, VersionableDomainObject{
     @DatabaseField(foreign=true)
     private UserStatistics stats;
 
-    @DatabaseField(foreign = true)
-    private Tag tag;
+    @DatabaseField(foreign=true)
+    private DeckPoints deckPoints;
 
-    @DatabaseField(foreign = true)
-    private Deck deck;
+    @DatabaseField(foreign=true)
+    private TagPoints tagPoints;
 
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
     private Date creationDate;
@@ -72,22 +72,21 @@ public class AchievementPoint implements Serializable, VersionableDomainObject{
         this.stats = stats;
     }
 
-    public Tag getTag() {
-        return tag;
+    public DeckPoints getDeckPoints() {
+        return deckPoints;
     }
 
-    public void setTag(Tag tag) {
-        this.tag = tag;
+    public void setDeckPoints(DeckPoints deckP) {
+        this.deckPoints = deckP;
     }
 
-    public Deck getDeck() {
-        return deck;
+    public TagPoints getTagPoints() {
+        return tagPoints;
     }
 
-    public void setDeck(Deck deck) {
-        this.deck = deck;
+    public void setTagPoints(TagPoints tagP) {
+        this.tagPoints = tagP;
     }
-
 
     @Override
     public Date getCreationDate() {
