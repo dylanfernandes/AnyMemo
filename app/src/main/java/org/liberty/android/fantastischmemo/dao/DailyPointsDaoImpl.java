@@ -2,7 +2,6 @@ package org.liberty.android.fantastischmemo.dao;
 
 import org.liberty.android.fantastischmemo.entity.DailyPoints;
 import org.liberty.android.fantastischmemo.utils.DayDateUtil;
-import org.liberty.android.fantastischmemo.dao.DailyPointsDao;
 
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -32,7 +31,7 @@ public class DailyPointsDaoImpl extends AbstractHelperDaoImpl<DailyPoints, Integ
 
         try {
             QueryBuilder<DailyPoints, Integer> qb = queryBuilder();
-            PreparedQuery<DailyPoints> pq = qb.where().eq("time", DayDateUtil.getDayDate()).prepare();
+            PreparedQuery<DailyPoints> pq = qb.where().eq("time", DayDateUtil.getDayDateString()).prepare();
             DailyPoints dailyPoints = queryForFirst(pq);
             if(dailyPoints != null) {
                 return dailyPoints;
@@ -48,5 +47,6 @@ public class DailyPointsDaoImpl extends AbstractHelperDaoImpl<DailyPoints, Integ
         }
 
     }
+
 
 }

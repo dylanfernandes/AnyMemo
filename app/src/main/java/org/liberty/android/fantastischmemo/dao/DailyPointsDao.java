@@ -1,7 +1,7 @@
 package org.liberty.android.fantastischmemo.dao;
 
 
-import com.j256.ormlite.dao.Dao;
+import java.util.Date;
 import org.liberty.android.fantastischmemo.entity.DailyPoints;
 
 /**
