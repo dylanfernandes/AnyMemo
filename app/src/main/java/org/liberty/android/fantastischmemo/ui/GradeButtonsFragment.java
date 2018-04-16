@@ -197,9 +197,8 @@ public class GradeButtonsFragment extends BaseFragment {
         onGradeButtonClickListener.onGradeButtonClick(grade);
     }
     private void allocatePoints(){
-        String dbPath = AMEnv.CENTRAL_DB_NAME;
         AnyMemoBaseDBOpenHelper baseHelper;
-        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(getActivity(), dbPath);
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
         UserDao userDao = baseHelper.getUserDao();
         UserStatisticsDao statsDao = baseHelper.getUserStatisticsDao();
         AchievementPointDao achPointsDao = baseHelper.getAchievementPointDao();

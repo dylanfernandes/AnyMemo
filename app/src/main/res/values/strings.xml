@@ -493,4 +493,11 @@
     <string name="current_login_streak">Current login streak</string>
     <string name="view_statistic">View statistic</string>
     <string name="updating_database">Updating database...</string>
+    <string name="edit_account">Edit Account</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="account_register">Register</string>
+    <string name="confirm">Confirm</string>
+    <string name="delete_account_message">Account deleted</string>
+    <string name="unable_to_register">Unable to register</string>
+    <string name="empty_field">At least one required field is empty</string>
 </resources>
