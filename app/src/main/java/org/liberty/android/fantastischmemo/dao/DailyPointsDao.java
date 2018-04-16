@@ -1,7 +1,7 @@
 package org.liberty.android.fantastischmemo.dao;
 
 
-import com.j256.ormlite.dao.Dao;
+import java.util.Date;
 import org.liberty.android.fantastischmemo.entity.DailyPoints;
 
 /**
@@ -10,5 +10,4 @@ import org.liberty.android.fantastischmemo.entity.DailyPoints;
 
 public interface DailyPointsDao extends HelperDao<DailyPoints, Integer> {
     DailyPoints createOrReturn();
-    DailyPoints createOrReturn(DailyPoints dp);
 }

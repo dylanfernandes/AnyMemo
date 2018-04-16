@@ -31,7 +31,7 @@ public class DailyPointsDaoImpl extends AbstractHelperDaoImpl<DailyPoints, Integ
 
         try {
             QueryBuilder<DailyPoints, Integer> qb = queryBuilder();
-            PreparedQuery<DailyPoints> pq = qb.where().eq("time", DayDateUtil.getDayDate()).prepare();
+            PreparedQuery<DailyPoints> pq = qb.where().eq("time", DayDateUtil.getDayDateString()).prepare();
             DailyPoints dailyPoints = queryForFirst(pq);
             if(dailyPoints != null) {
                 return dailyPoints;
@@ -48,25 +48,5 @@ public class DailyPointsDaoImpl extends AbstractHelperDaoImpl<DailyPoints, Integ
 
     }
 
-    public DailyPoints createOrReturn(DailyPoints dpObject) {
-
-        try {
-            QueryBuilder<DailyPoints, Integer> qb = queryBuilder();
-            PreparedQuery<DailyPoints> pq = qb.where().eq("time", dpObject.getTime()).prepare();
-            DailyPoints dailyPoints = queryForFirst(pq);
-            if(dailyPoints != null) {
-                return dailyPoints;
-            }
-            DailyPoints newDailyPoints = new DailyPoints();
-            create(newDailyPoints);
-            // Create new one and it should exist
-            dailyPoints = queryForFirst(pq);
-            assert dailyPoints != null : "Statistics creation failed. The query is still null!";
-            return dailyPoints;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
 
 }

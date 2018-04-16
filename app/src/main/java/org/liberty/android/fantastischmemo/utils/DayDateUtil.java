@@ -1,9 +1,11 @@
 package org.liberty.android.fantastischmemo.utils;
 
 
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
+
 
 /**
  * Created by Paul on 2018-04-15.
@@ -11,14 +13,15 @@ import java.util.TimeZone;
 
 public class DayDateUtil {
 
-    public static Date getDayDate() {
+    public static String getDayDateString() {
         Calendar cal = Calendar.getInstance();
         cal.clear();
         Calendar currentTime = Calendar.getInstance();
         currentTime.setTime(new Date());
         cal.set(currentTime.get(Calendar.YEAR), currentTime.get(Calendar.MONTH), currentTime.get(Calendar.DAY_OF_MONTH));
         Date time = cal.getTime();
-        return time;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
+        return dateFormat.format(time);
 
     }
 }
