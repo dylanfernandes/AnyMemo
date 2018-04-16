@@ -182,16 +182,17 @@ public class MultipleChoiceCardFragment extends BaseFragment {
             tagPoint = tagPointDao.createOrReturn(tag.getName());
 
             achPoint.setTagPoints(tagPoint);
-
-            try {
-                achPointDao.create(achPoint);
-            }catch (SQLException e){
-                e.printStackTrace();
-            }
-
-            tagPointDao.update(tagPoint);
-            tagPointDao.refresh(tagPoint);
         }
+
+        try {
+            achPointDao.create(achPoint);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        tagPointDao.update(tagPoint);
+        tagPointDao.refresh(tagPoint);
+
 
         dailyPointDao.update(dailyPoint);
         dailyPointDao.refresh(dailyPoint);
