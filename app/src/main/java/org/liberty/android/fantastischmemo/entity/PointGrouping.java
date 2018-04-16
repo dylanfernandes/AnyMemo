@@ -28,6 +28,7 @@ public abstract class PointGrouping {
         return id;
     }
 
+
     public PointGrouping () {
         sum = 0;
     }

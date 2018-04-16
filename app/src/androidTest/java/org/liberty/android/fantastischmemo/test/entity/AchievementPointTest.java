@@ -4,6 +4,10 @@ import org.junit.Test;
 import org.liberty.android.fantastischmemo.entity.AchievementPoint;
 import org.liberty.android.fantastischmemo.entity.DeckPoints;
 
+import org.liberty.android.fantastischmemo.entity.Tag;
+import org.liberty.android.fantastischmemo.entity.TagPoints;
+
+
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
@@ -40,6 +44,15 @@ public class AchievementPointTest {
         d.setDeckName(deckName);
         p.setDeckPoints(d);
         assertEquals(deckName,p.getDeckPoints().getDeckName());
+    }
+
+    @Test
+    public void testGetSetTagPoints(){
+        TagPoints tag = new TagPoints();
+        String tagName = "Test";
+        tag.setTagName(tagName);
+        p.setTagPoints(tag);
+        assertEquals(tagName,p.getTagPoints().getTagName());
     }
 
 }
