@@ -16,7 +16,7 @@ import java.util.Date;
 @DatabaseTable(tableName = "dailypoints", daoClass = DailyPointsDaoImpl.class)
 public class DailyPoints extends PointGrouping {
 
-    @DatabaseField(version = true, format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
+    @DatabaseField(unique = true, version = true, format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
     private Date time;
 
     public DailyPoints() {
