@@ -12,6 +12,7 @@ import org.liberty.android.fantastischmemo.dao.DeckPointsDaoImpl;
 @DatabaseTable(tableName = "deckpoints", daoClass = DeckPointsDaoImpl.class)
 public class DeckPoints extends PointGrouping {
 
+
     @DatabaseField(defaultValue = "", width = 8192)
     private String deckName;
 
