@@ -17,6 +17,10 @@ public class TagPoints extends PointGrouping {
 
     public TagPoints() {}
 
+    public TagPoints(String name){
+        tagName = name;
+    }
+
     public String getTagName() {
         return tagName;
     }

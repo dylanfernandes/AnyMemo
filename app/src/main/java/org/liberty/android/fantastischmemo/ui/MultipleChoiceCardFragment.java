@@ -143,13 +143,15 @@ public class MultipleChoiceCardFragment extends BaseFragment {
         try{
             tagList = tagDao.queryForAll();
 
-            List<DeckPoints> deckPoints = deckPointDao.queryForEq("deckName", deckName);
-            if (deckPoints.size() == 0) {
+            List<DeckPoints> deckPointsList = deckPointDao.queryForEq("deckName", deckName);
+            if (deckPointsList.size() == 0) {
                 deckPoint = new DeckPoints(deckName);
                 deckPointDao.create(deckPoint);
             }
-            else
-                deckPoint = deckPoints.get(0);
+            else{
+                deckPoint = deckPointsList.get(0);
+            }
+
 
         }catch (SQLException e){
             e.printStackTrace();
@@ -177,9 +179,14 @@ public class MultipleChoiceCardFragment extends BaseFragment {
             achPointDao.create(achPointDeck);
 
             for(Tag tag: tagList){
-                TagPoints tagPoint = new TagPoints();
-                tagPoint.setTagName(tag.getName());
-                tagPointDao.createIfNotExists(tagPoint);
+                List<TagPoints> tagPointsList = tagPointDao.queryForEq("tagName", tag.getName());
+                if (tagPointsList.size() == 0) {
+                    TagPoints tagPoint = new TagPoints(tag.getName());
+                    tagPointDao.create(tagPoint);
+                }
+                else{
+                    tagPoint = tagPointsList.get(0);
+                }
 
                 AchievementPoint achPointTag = new AchievementPoint();
                 achPointTag.setTagPoints(tagPoint);
