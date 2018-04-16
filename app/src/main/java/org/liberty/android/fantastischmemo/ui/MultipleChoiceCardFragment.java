@@ -25,11 +25,13 @@ import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseFragment;
 import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
+import org.liberty.android.fantastischmemo.dao.DailyPointsDao;
 import org.liberty.android.fantastischmemo.dao.DeckPointsDao;
 import org.liberty.android.fantastischmemo.dao.TagDao;
 import org.liberty.android.fantastischmemo.dao.TagPointsDao;
 import org.liberty.android.fantastischmemo.entity.AchievementPoint;
 import org.liberty.android.fantastischmemo.entity.Card;
+import org.liberty.android.fantastischmemo.entity.DailyPoints;
 import org.liberty.android.fantastischmemo.entity.DeckPoints;
 import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.entity.TagPoints;
@@ -57,6 +59,8 @@ public class MultipleChoiceCardFragment extends BaseFragment {
     private AchievementPointDao achPointDao;
     private TagPoints tagPoint;
     private TagPointsDao tagPointDao;
+    private DailyPoints dailyPoint;
+    private DailyPointsDao dailyPointDao;
     private String deckName;
     private List<Tag> tagList;
 
@@ -136,9 +140,10 @@ public class MultipleChoiceCardFragment extends BaseFragment {
         baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
         deckName = FilenameUtils.getName(dbPath);
 
-        deckPointDao = baseHelper.getDeckPointsDao();
         achPointDao = baseHelper.getAchievementPointDao();
+        deckPointDao = baseHelper.getDeckPointsDao();
         tagPointDao = baseHelper.getTagPointsDao();
+        dailyPointDao = baseHelper.getDailyPointsDao();
 
         try{
             tagList = tagDao.queryForAll();
@@ -151,7 +156,6 @@ public class MultipleChoiceCardFragment extends BaseFragment {
             else{
                 deckPoint = deckPointsList.get(0);
             }
-
 
         }catch (SQLException e){
             e.printStackTrace();
