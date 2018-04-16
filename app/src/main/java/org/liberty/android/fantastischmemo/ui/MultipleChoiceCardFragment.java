@@ -37,7 +37,9 @@ import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.entity.TagPoints;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MultipleChoiceCardFragment extends BaseFragment {
@@ -145,6 +147,9 @@ public class MultipleChoiceCardFragment extends BaseFragment {
         tagPointDao = baseHelper.getTagPointsDao();
         dailyPointDao = baseHelper.getDailyPointsDao();
 
+        Date cDate = new Date();
+        String fDate = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
+
         try{
             tagList = tagDao.queryForAll();
 
@@ -155,6 +160,15 @@ public class MultipleChoiceCardFragment extends BaseFragment {
             }
             else{
                 deckPoint = deckPointsList.get(0);
+            }
+
+            List<DailyPoints> dailyPointsList = dailyPointDao.queryForEq("time", fDate);
+            if (dailyPointsList.size() == 0) {
+                dailyPoint = new DailyPoints();
+                dailyPointDao.create(dailyPoint);
+            }
+            else{
+                dailyPoint = dailyPointsList.get(0);
             }
 
         }catch (SQLException e){
@@ -177,10 +191,11 @@ public class MultipleChoiceCardFragment extends BaseFragment {
     }
 
     private void doCorrectAnswer() {
-        AchievementPoint achPointDeck = new AchievementPoint();
-        achPointDeck.setDeckPoints(deckPoint);
+        AchievementPoint achPoint = new AchievementPoint();
+        achPoint.setDeckPoints(deckPoint);
+        achPoint.setDailyPoints(dailyPoint);
+
         try {
-            achPointDao.create(achPointDeck);
 
             for(Tag tag: tagList){
                 List<TagPoints> tagPointsList = tagPointDao.queryForEq("tagName", tag.getName());
@@ -192,8 +207,9 @@ public class MultipleChoiceCardFragment extends BaseFragment {
                     tagPoint = tagPointsList.get(0);
                 }
 
-                AchievementPoint achPointTag = new AchievementPoint();
-                achPointTag.setTagPoints(tagPoint);
+                achPoint.setTagPoints(tagPoint);
+
+                achPointDao.create(achPoint);
 
                 tagPointDao.update(tagPoint);
                 tagPointDao.refresh(tagPoint);
@@ -202,6 +218,9 @@ public class MultipleChoiceCardFragment extends BaseFragment {
         }catch (SQLException e){
             e.printStackTrace();
         }
+
+        dailyPointDao.update(dailyPoint);
+        dailyPointDao.refresh(dailyPoint);
 
         deckPointDao.update(deckPoint);
         deckPointDao.refresh(deckPoint);
