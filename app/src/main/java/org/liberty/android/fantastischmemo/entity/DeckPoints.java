@@ -19,6 +19,10 @@ public class DeckPoints extends PointGrouping {
     public DeckPoints() {
     }
 
+    public DeckPoints(String name){
+        deckName = name;
+    }
+
     public String getDeckName() { return deckName; }
 
 
