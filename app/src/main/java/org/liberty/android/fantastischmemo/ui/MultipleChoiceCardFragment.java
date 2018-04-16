@@ -147,8 +147,6 @@ public class MultipleChoiceCardFragment extends BaseFragment {
         tagPointDao = baseHelper.getTagPointsDao();
         dailyPointDao = baseHelper.getDailyPointsDao();
 
-        Date cDate = new Date();
-        String fDate = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
 
         try{
             tagList = tagDao.queryForAll();
@@ -162,14 +160,7 @@ public class MultipleChoiceCardFragment extends BaseFragment {
                 deckPoint = deckPointsList.get(0);
             }
 
-            List<DailyPoints> dailyPointsList = dailyPointDao.queryForEq("time", fDate);
-            if (dailyPointsList.size() == 0) {
-                dailyPoint = new DailyPoints();
-                dailyPointDao.create(dailyPoint);
-            }
-            else{
-                dailyPoint = dailyPointsList.get(0);
-            }
+            dailyPoint = dailyPointDao.createOrReturn();
 
         }catch (SQLException e){
             e.printStackTrace();

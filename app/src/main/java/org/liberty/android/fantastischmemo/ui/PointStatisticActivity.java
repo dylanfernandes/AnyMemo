@@ -67,48 +67,6 @@ public class PointStatisticActivity extends BaseActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         pointsRecyclerView.setLayoutManager(linearLayoutManager);
 
-        //set-up addition of points for user
-        User user = userDao.returnFirstUser();
-        UserStatistics stats = userStatisticsDao.createOrReturn(user);
-
-        //one AchievementPoint
-        AchievementPoint pointee = new AchievementPoint();
-        pointee.setTime(new Date());
-        pointee.setValue(5);
-        pointee.setStats(stats);
-
-        //second AchievmentPoint
-        AchievementPoint ap = new AchievementPoint();
-        ap.setValue(10);
-        ap.setTime(new Date());
-        ap.setStats(stats);
-
-        //create groupPoint objects
-        DailyPoints dailyPoints = dailyPointDao.createOrReturn();
-        DeckPoints deckPoints = deckPointsDao.createOrReturn("German");
-        TagPoints tagPoints = tagPointsDao.createOrReturn("hard");
-
-        //attach AchievementPoints
-        pointee.setDailyPoints(dailyPoints);
-        ap.setDailyPoints(dailyPoints);
-        pointee.setDeckPoints(deckPoints);
-        ap.setDeckPoints(deckPoints);
-        pointee.setTagPoints(tagPoints);
-        ap.setTagPoints(tagPoints);
-
-        try {
-            pointDao.create(pointee);
-            pointDao.create(ap);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        //update DB with new relations
-        dailyPointDao.update(dailyPoints);
-        deckPointsDao.update(deckPoints);
-        tagPointsDao.update(tagPoints);
-
-
         final RadioGroup pointDisplays = (RadioGroup) findViewById(R.id.point_display);
 
         pointDisplays.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
