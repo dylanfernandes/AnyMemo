@@ -67,6 +67,7 @@ public class PointStatisticActivity extends BaseActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         pointsRecyclerView.setLayoutManager(linearLayoutManager);
 
+
         //set-up addition of points for user
         User user = userDao.returnFirstUser();
         UserStatistics stats = userStatisticsDao.createOrReturn(user);
