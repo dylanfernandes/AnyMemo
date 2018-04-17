@@ -37,7 +37,7 @@ public class AchievementTagPointsJoin {
     public void setJoin(AchievementPoint achievementPoint, TagPoints tagPoints) {
         this.tagPoints = tagPoints;
         this.achievementPoint = achievementPoint;
-        tagPoints.increment(achievementPoint.getValue());
+        tagPoints.increment(1);
     }
 
     public AchievementPoint getAchievementPoint() {
