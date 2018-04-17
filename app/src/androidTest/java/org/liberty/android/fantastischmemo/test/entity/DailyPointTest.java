@@ -25,7 +25,7 @@ public class DailyPointTest {
 
     @Test
     public void setGetTimeTest() {
-        Date now = DayDateUtil.getDayDate();
+        String now = DayDateUtil.getDayDateString();
         assertEquals(now, dp.getTime());
     }
 

@@ -18,6 +18,8 @@ import org.liberty.android.fantastischmemo.dao.TagPointsDao;
 import org.liberty.android.fantastischmemo.dao.UserDao;
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.dao.DailyPointsDao;
+import org.liberty.android.fantastischmemo.dao.AchievementTagPointsJoinDao;
+import org.liberty.android.fantastischmemo.entity.AchievementTagPointsJoin;
 import org.liberty.android.fantastischmemo.entity.DailyPoints;
 import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.DeckPoints;
@@ -38,7 +40,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private final String TAG = getClass().getSimpleName();
 
-    private static final int CURRENT_VERSION = 5;
+    private static final int CURRENT_VERSION = 6;
 
     private String dbPath = "";
 
@@ -58,6 +60,8 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private TagPointsDao tagPointsDao = null;
 
+    private AchievementTagPointsJoinDao achievementTagPointsJoinDao = null;
+
 
 
     private boolean isReleased = false;
@@ -76,6 +80,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, UserStatistics.class);
             TableUtils.createTable(connectionSource, User.class);
             TableUtils.createTable(connectionSource, TagPoints.class);
+            TableUtils.createTable(connectionSource, AchievementTagPointsJoin.class);
 
             database.setVersion(CURRENT_VERSION);
 
@@ -135,12 +140,20 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 TableUtils.createTable(connectionSource, TagPoints.class);
                 database.execSQL("alter table achievementpoints add column deckpoints_id");
                 database.execSQL("alter table achievementpoints add column dailypoints_id");
-                database.execSQL("alter table achievementpoints add column tagpoints_id");
-
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 oldVersion = 5;
+            }
+        }
+        if(oldVersion <= 6) {
+            try {
+                TableUtils.createTable(connectionSource, AchievementTagPointsJoin.class);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                oldVersion = 6;
             }
         }
 
@@ -270,6 +283,16 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    public synchronized AchievementTagPointsJoinDao getAchievementTagPointsJoinDao() {
+        try {
+            if (achievementTagPointsJoinDao == null) {
+                achievementTagPointsJoinDao = getDao(AchievementTagPointsJoin.class);
+            }
+            return achievementTagPointsJoinDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     /*
      * Override the finalize in case the helper is not release.
      */

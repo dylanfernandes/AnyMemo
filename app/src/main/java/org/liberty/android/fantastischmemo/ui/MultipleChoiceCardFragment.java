@@ -181,7 +181,8 @@ public class MultipleChoiceCardFragment extends BaseFragment {
 
             tagPoint = tagPointDao.createOrReturn(tag.getName());
 
-            achPoint.setTagPoints(tagPoint);
+            //Emily to fix - Breaking because of new code
+//            achPoint.setTagPoints(tagPoint);
         }
 
         try {

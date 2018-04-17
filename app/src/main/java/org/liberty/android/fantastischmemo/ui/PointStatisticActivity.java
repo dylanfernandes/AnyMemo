@@ -18,18 +18,14 @@ import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
 import org.liberty.android.fantastischmemo.dao.UserDao;
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.dao.TagPointsDao;
-import org.liberty.android.fantastischmemo.entity.AchievementPoint;
 import org.liberty.android.fantastischmemo.entity.DailyPoints;
 import org.liberty.android.fantastischmemo.entity.DeckPoints;
-import org.liberty.android.fantastischmemo.entity.User;
 import org.liberty.android.fantastischmemo.entity.TagPoints;
 import org.liberty.android.fantastischmemo.dao.DailyPointsDao;
 import org.liberty.android.fantastischmemo.dao.DeckPointsDao;
-import org.liberty.android.fantastischmemo.entity.UserStatistics;
 
 
-import java.sql.SQLException;
-import java.util.Date;
+
 import java.util.List;
 import java.text.DateFormat;
 
