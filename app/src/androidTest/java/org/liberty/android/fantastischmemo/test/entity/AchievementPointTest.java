@@ -46,13 +46,4 @@ public class AchievementPointTest {
         assertEquals(deckName,p.getDeckPoints().getDeckName());
     }
 
-    @Test
-    public void testGetSetTagPoints(){
-        TagPoints tag = new TagPoints();
-        String tagName = "Test";
-        tag.setTagName(tagName);
-        p.setTagPoints(tag);
-        assertEquals(tagName,p.getTagPoints().getTagName());
-    }
-
 }

@@ -25,11 +25,13 @@ import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseFragment;
 import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
+import org.liberty.android.fantastischmemo.dao.AchievementTagPointsJoinDao;
 import org.liberty.android.fantastischmemo.dao.DailyPointsDao;
 import org.liberty.android.fantastischmemo.dao.DeckPointsDao;
 import org.liberty.android.fantastischmemo.dao.TagDao;
 import org.liberty.android.fantastischmemo.dao.TagPointsDao;
 import org.liberty.android.fantastischmemo.entity.AchievementPoint;
+import org.liberty.android.fantastischmemo.entity.AchievementTagPointsJoin;
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.DailyPoints;
 import org.liberty.android.fantastischmemo.entity.DeckPoints;
@@ -64,6 +66,7 @@ public class MultipleChoiceCardFragment extends BaseFragment {
     private DailyPoints dailyPoint;
     private DailyPointsDao dailyPointDao;
     private String deckName;
+    private AchievementTagPointsJoinDao tagJoinDao;
     private List<Tag> tagList;
 
     @Override
@@ -146,6 +149,7 @@ public class MultipleChoiceCardFragment extends BaseFragment {
         deckPointDao = baseHelper.getDeckPointsDao();
         tagPointDao = baseHelper.getTagPointsDao();
         dailyPointDao = baseHelper.getDailyPointsDao();
+        tagJoinDao = baseHelper.getAchievementTagPointsJoinDao();
 
 
         try{
@@ -154,8 +158,8 @@ public class MultipleChoiceCardFragment extends BaseFragment {
             e.printStackTrace();
         }
 
-            deckPoint = deckPointDao.createOrReturn(deckName);
-            dailyPoint = dailyPointDao.createOrReturn();
+        deckPoint = deckPointDao.createOrReturn(deckName);
+        dailyPoint = dailyPointDao.createOrReturn();
 
         if (activity instanceof StudyActivity) {
             changeCardTask = ((StudyActivity) activity).getOnCardCahngedListenerRunnable(answerCard);
@@ -177,28 +181,30 @@ public class MultipleChoiceCardFragment extends BaseFragment {
         achPoint.setDeckPoints(deckPoint);
         achPoint.setDailyPoints(dailyPoint);
 
-        for(Tag tag: tagList){
-
-            tagPoint = tagPointDao.createOrReturn(tag.getName());
-
-            achPoint.setTagPoints(tagPoint);
-        }
-
         try {
             achPointDao.create(achPoint);
         }catch (SQLException e){
             e.printStackTrace();
         }
 
-        tagPointDao.update(tagPoint);
-        tagPointDao.refresh(tagPoint);
-
-
         dailyPointDao.update(dailyPoint);
         dailyPointDao.refresh(dailyPoint);
 
         deckPointDao.update(deckPoint);
         deckPointDao.refresh(deckPoint);
+
+        for(Tag tag: tagList){
+            tagPoint = tagPointDao.createOrReturn(tag.getName());
+            AchievementTagPointsJoin tagJoin = new AchievementTagPointsJoin();
+            tagJoin.setJoin(achPoint, tagPoint);
+            try {
+                tagJoinDao.create(tagJoin);
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+            tagPointDao.update(tagPoint);
+            tagPointDao.refresh(tagPoint);
+        }
 
         Toast.makeText(MultipleChoiceCardFragment.this.getContext(), "Correct!"+(int)deckPoint.getSum(), Toast.LENGTH_SHORT).show();
     }
