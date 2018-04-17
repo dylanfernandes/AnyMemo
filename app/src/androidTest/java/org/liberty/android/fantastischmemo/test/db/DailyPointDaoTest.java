@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 
 /**
  * Created by Paul on 2018-04-13.
@@ -39,7 +40,7 @@ public class DailyPointDaoTest extends AbstractExistingBaseDBTest {
         //set achievement points
         a1 = new AchievementPoint();
         a2 = new AchievementPoint();
-        a1.setValue(1);
+        a1.setValue(3);
         a2.setValue(2);
     }
 
@@ -61,8 +62,10 @@ public class DailyPointDaoTest extends AbstractExistingBaseDBTest {
 
     @Test
     public void testAddDailyPoints() throws Exception {
+        assertFalse(dpDao.idExists(1));
         dpDao.create(dp);
         assertEquals(true, dpDao.idExists(1));
+        assertFalse(dpDao.idExists(3));
     }
 
     @Test
@@ -86,6 +89,9 @@ public class DailyPointDaoTest extends AbstractExistingBaseDBTest {
 
         Assert.assertEquals(a1.getValue(), newA1.getValue());
         Assert.assertEquals(a2.getValue(), newA2.getValue());
+        //verify value field wasn't set with default value
+        assertFalse(1 ==  newA1.getValue());
+        assertFalse(1 ==  newA2.getValue());
     }
 
     @Test
@@ -95,6 +101,8 @@ public class DailyPointDaoTest extends AbstractExistingBaseDBTest {
         initialSum = a1.getValue() + a2.getValue();
         //check if sum is updated in dailyPoints object after adding points to it
         assertEquals(initialSum, (int)dp.getSum());
+        //make sure sum was incremented
+        assertFalse(0 == dp.getSum() );
     }
 
 

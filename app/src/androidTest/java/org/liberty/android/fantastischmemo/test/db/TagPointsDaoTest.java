@@ -56,13 +56,13 @@ public class TagPointsDaoTest extends AbstractExistingBaseDBTest {
     }
 
     @Test
-    public void testAddDeckPoints() throws Exception {
+    public void testAddDTagPoints() throws Exception {
         tpDao.create(tp);
         assertEquals(true, tpDao.idExists(1));
     }
 
     @Test
-    public void testAddPointsToDeckPoints() throws Exception {
+    public void testAddPointsToTagPoints() throws Exception {
         List<AchievementPoint> pointList;
         AchievementPoint newA1;
         AchievementPoint newA2;
@@ -78,7 +78,7 @@ public class TagPointsDaoTest extends AbstractExistingBaseDBTest {
     }
 
     @Test
-    public void testGetSumFromDeckPoints() {
+    public void testGetSumFromTagPoints() {
         int initialSum;
         addPointsToTagPoints();
         initialSum = a1.getValue() + a2.getValue();

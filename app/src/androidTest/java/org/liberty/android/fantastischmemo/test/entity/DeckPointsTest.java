@@ -26,5 +26,6 @@ public class DeckPointsTest {
         dp.setDeckName(dn);
         assertEquals(dn, dp.getDeckName());
     }
+
     //adding achievement points and getting some tests are in DAO tests since they are dependent on ORM
 }
