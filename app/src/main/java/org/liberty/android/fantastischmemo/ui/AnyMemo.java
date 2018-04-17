@@ -66,10 +66,12 @@ import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
 import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
+import org.liberty.android.fantastischmemo.dao.DailyPointsDao;
 import org.liberty.android.fantastischmemo.dao.UserDao;
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.databinding.MainTabsBinding;
 import org.liberty.android.fantastischmemo.entity.AchievementPoint;
+import org.liberty.android.fantastischmemo.entity.DailyPoints;
 import org.liberty.android.fantastischmemo.entity.User;
 import org.liberty.android.fantastischmemo.entity.UserStatistics;
 import org.liberty.android.fantastischmemo.receiver.SetAlarmReceiver;
@@ -78,6 +80,7 @@ import org.liberty.android.fantastischmemo.ui.loader.MultipleLoaderManager;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.AboutUtil;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
+import org.liberty.android.fantastischmemo.utils.DayDateUtil;
 import org.liberty.android.fantastischmemo.utils.GenericDatabaseDialogUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListActionModeUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
@@ -88,8 +91,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.sql.SQLException;
+import java.util.Collection;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -105,7 +108,14 @@ public class AnyMemo extends BaseActivity {
 
     private MainTabsBinding binding;
 
+    //account registration
+    private String dbPath = AMEnv.CENTRAL_DB_NAME;
+    
+    private AnyMemoBaseDBOpenHelper baseHelper;
+    
     private UserDao userDao;
+    
+    Collection<User> userlist;
 
     private UserStatisticsDao statsDao;
 
@@ -115,9 +125,7 @@ public class AnyMemo extends BaseActivity {
 
     private UserStatistics stats;
 
-    private AnyMemoBaseDBOpenHelper baseHelper;
-
-    private String dbPath = AMEnv.CENTRAL_DB_NAME;
+    private DailyPointsDao dailyPointsDao;
 
     @Inject
     AMFileUtil amFileUtil;
@@ -145,13 +153,6 @@ public class AnyMemo extends BaseActivity {
         activityComponents().inject(this);
         disposables = new CompositeDisposable();
 
-        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper(AnyMemo.this, dbPath);
-        userDao = baseHelper.getUserDao();
-        statsDao = baseHelper.getUserStatisticsDao();
-        achPointsDao = baseHelper.getAchievementPointDao();
-
-        verifyDailyPoints();
-
         binding = DataBindingUtil.setContentView(this, R.layout.main_tabs);
 
         // Request storage permission
@@ -163,13 +164,22 @@ public class AnyMemo extends BaseActivity {
         } else {
             loadUiComponents();
         }
+
         recentListActionModeUtil.registerForActivity();
+
     }
 
     public static void setUpPointsAllocation(){
 
     }
+
     private void verifyDailyPoints() {
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
+        userDao = baseHelper.getUserDao();
+        statsDao = baseHelper.getUserStatisticsDao();
+        achPointsDao = baseHelper.getAchievementPointDao();
+        dailyPointsDao = baseHelper.getDailyPointsDao();
+
         //implemented until user creation upon login is completed
         user = userDao.createOrReturn("Blob1");
         stats = statsDao.createOrReturn(user);
@@ -179,13 +189,34 @@ public class AnyMemo extends BaseActivity {
             AchievementPoint dp = new AchievementPoint();
             dp.setValue(5);
             dp.setStats(stats);
+            DailyPoints dailyPoint = dailyPointsDao.createOrReturn();
+            dp.setDailyPoints(dailyPoint);
 
             try {
                 achPointsDao.create(dp);
+
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+
+            dailyPointsDao.update(dailyPoint);
+
+
             showToast(dp.getValue().toString(), getLayoutInflater(), getApplicationContext(), findViewById(android.R.id.content), R.drawable.ic_trophy, "Daily Points Earned: ");
+        }
+    }
+
+    private void registerAccountIfNoneExist(){
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
+        userDao = baseHelper.getUserDao();
+        userlist = userDao.queryForAll();
+
+        if(userlist.size() == 0){
+            AccountRegisterFragment df = new AccountRegisterFragment();
+            Bundle b = new Bundle();
+            b.putString(AccountRegisterFragment.EXTRA_DBPATH, dbPath);
+            df.setArguments(b);
+            df.show(getSupportFragmentManager(), "AccountRegisterDialog");
         }
     }
 
@@ -241,6 +272,8 @@ public class AnyMemo extends BaseActivity {
             // again when the screen is rotated
             getIntent().setAction(null);
         }
+
+        verifyDailyPoints();
     }
 
     /**
@@ -285,7 +318,16 @@ public class AnyMemo extends BaseActivity {
                                 tabLayout.getTabAt(3).select();
                                 break;
                             case R.id.account_tab_menu:
-                                startActivity(new Intent(tabLayout.getContext(), AccountPage.class));
+                                userlist = userDao.queryForAll();
+                                if(userlist.size() == 0){
+                                    AccountRegisterFragment df = new AccountRegisterFragment();
+                                    Bundle b = new Bundle();
+                                    b.putString(AccountRegisterFragment.EXTRA_DBPATH, dbPath);
+                                    df.setArguments(b);
+                                    df.show(getSupportFragmentManager(), "AccountRegisterDialog");
+                                }else {
+                                    startActivity(new Intent(tabLayout.getContext(), AccountPage.class));
+                                }
                                 break;
                             case R.id.option_tab_menu:
                                 startActivity(new Intent(tabLayout.getContext(), OptionScreen.class));
@@ -393,14 +435,15 @@ public class AnyMemo extends BaseActivity {
             editor.putString(AMPrefKeys.getRecentPathKey(0), AMEnv.DEFAULT_ROOT_PATH + AMEnv.DEFAULT_DB_NAME);
             editor.commit();
             try {
+                //set the filepath of french body parts db and call setupDatabase for creation
                 String dest = sdPath + "/" + AMEnv.DEFAULT_DB_NAME;
                 amFileUtil.copyFileFromAsset(AMEnv.DEFAULT_DB_NAME, new File(dest));
                 databaseUtil.setupDatabase(dest);
 
+                //set the filepath of the central db and call setupCentralDatabase for creation
                 String centralDbDest = AMEnv.HIDDEN_DB_FOLDER_PATH + AMEnv.CENTRAL_DB_NAME;
-                amFileUtil.copyFileFromAsset(AMEnv.CENTRAL_DB_NAME, new File(centralDbDest));
-                databaseUtil.setupDatabase(centralDbDest);
-                GenericDatabaseDialogUtil.addDeckToCentralDB(dest);
+                databaseUtil.setupCentralDatabase(centralDbDest);
+                GenericDatabaseDialogUtil.addDeckToCentralDB(dest); //add frenchbodyparts to the centraldb
 
                 InputStream in2 = getResources().getAssets().open(AMEnv.EMPTY_DB_NAME);
                 String emptyDbPath = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + AMEnv.EMPTY_DB_NAME;
@@ -411,6 +454,8 @@ public class AnyMemo extends BaseActivity {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            registerAccountIfNoneExist();
+
         }
         /* Detect an update */
         if (savedVersionCode != thisVersionCode) {
@@ -423,16 +468,13 @@ public class AnyMemo extends BaseActivity {
             }
 
             String centralDbDest = AMEnv.HIDDEN_DB_FOLDER_PATH + AMEnv.CENTRAL_DB_NAME;
+            databaseUtil.setupCentralDatabase(centralDbDest);
 
-            if (!new File(centralDbDest).exists()) {
-                try {
-                    amFileUtil.copyFileFromAsset(AMEnv.CENTRAL_DB_NAME, new File(centralDbDest));
-                    databaseUtil.setupDatabase(centralDbDest);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                databaseUtil.setupDatabase(centralDbDest);
+            if(firstTime != true) {
+               registerAccountIfNoneExist();
             }
+
+            AnyMemoBaseDBOpenHelperManager.releaseHelper(baseHelper);
 
             SharedPreferences.Editor editor = settings.edit();
             /* save new version number */

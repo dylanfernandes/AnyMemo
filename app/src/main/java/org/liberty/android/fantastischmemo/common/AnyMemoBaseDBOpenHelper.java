@@ -12,14 +12,21 @@ import com.j256.ormlite.table.TableUtils;
 
 import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
 import org.liberty.android.fantastischmemo.dao.DeckDao;
+import org.liberty.android.fantastischmemo.dao.DeckPointsDao;
 import org.liberty.android.fantastischmemo.dao.TagDao;
+import org.liberty.android.fantastischmemo.dao.TagPointsDao;
 import org.liberty.android.fantastischmemo.dao.UserDao;
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
+import org.liberty.android.fantastischmemo.dao.DailyPointsDao;
+import org.liberty.android.fantastischmemo.entity.DailyPoints;
 import org.liberty.android.fantastischmemo.entity.Deck;
+import org.liberty.android.fantastischmemo.entity.DeckPoints;
 import org.liberty.android.fantastischmemo.entity.Tag;
+import org.liberty.android.fantastischmemo.entity.TagPoints;
 import org.liberty.android.fantastischmemo.entity.User;
 import org.liberty.android.fantastischmemo.entity.UserStatistics;
 import org.liberty.android.fantastischmemo.entity.AchievementPoint;
+
 
 import java.sql.SQLException;
 
@@ -31,7 +38,7 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private final String TAG = getClass().getSimpleName();
 
-    private static final int CURRENT_VERSION = 4;
+    private static final int CURRENT_VERSION = 5;
 
     private String dbPath = "";
 
@@ -45,6 +52,14 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private AchievementPointDao apDao = null;
 
+    private DailyPointsDao dailyPointsDao = null;
+
+    private DeckPointsDao deckPointsDao = null;
+
+    private TagPointsDao tagPointsDao = null;
+
+
+
     private boolean isReleased = false;
 
     @Override
@@ -55,9 +70,14 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.createTable(connectionSource, Deck.class);
             TableUtils.createTable(connectionSource, Tag.class);
+            TableUtils.createTable(connectionSource, DailyPoints.class);
+            TableUtils.createTable(connectionSource, DeckPoints.class);
+            TableUtils.createTable(connectionSource, AchievementPoint.class);
             TableUtils.createTable(connectionSource, UserStatistics.class);
             TableUtils.createTable(connectionSource, User.class);
-            TableUtils.createTable(connectionSource, AchievementPoint.class);
+            TableUtils.createTable(connectionSource, TagPoints.class);
+
+            database.setVersion(CURRENT_VERSION);
 
         } catch (SQLException e) {
             throw new RuntimeException("Database creation error: " + e.toString());
@@ -69,35 +89,60 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         Log.v(TAG, "Old version" + oldVersion + " new version: " + newVersion);
         // Update possible card with null category field
-        if (oldVersion <= 2) {
+        if (oldVersion <= 1) {
             try {
                 database.execSQL("alter table decks add column dbPath VARCHAR");
                 TableUtils.createTable(connectionSource, Tag.class);
             } catch (SQLException e) {
                 Log.e(TAG, "Upgrading failed, the tags table might already exist.", e);
             } finally {
+                oldVersion = 1;
+            }
+        }
+        if (oldVersion <= 2) {
+            try {
+                TableUtils.createTable(connectionSource, User.class);
+                TableUtils.createTable(connectionSource, UserStatistics.class);
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
                 oldVersion = 2;
             }
         }
         if (oldVersion <= 3) {
             try {
-                TableUtils.createTable(connectionSource, User.class);
-                TableUtils.createTable(connectionSource, UserStatistics.class);
+                TableUtils.createTable(connectionSource, AchievementPoint.class);
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
                 oldVersion = 3;
             }
         }
-        if (oldVersion <= 4) {
+        if(oldVersion <= 4){
             try {
-                TableUtils.createTable(connectionSource, AchievementPoint.class);
-            } catch (SQLException e) {
-                e.printStackTrace();
+                database.execSQL("alter table achievementpoints add column stats_id");
+            } catch (Exception e) {
+
             } finally {
                 oldVersion = 4;
             }
         }
+        if(oldVersion <= 5) {
+            try {
+                TableUtils.createTable(connectionSource, DailyPoints.class);
+                TableUtils.createTable(connectionSource, DeckPoints.class);
+                TableUtils.createTable(connectionSource, TagPoints.class);
+                database.execSQL("alter table achievementpoints add column deckpoints_id");
+                database.execSQL("alter table achievementpoints add column dailypoints_id");
+                database.execSQL("alter table achievementpoints add column tagpoints_id");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                oldVersion = 5;
+            }
+        }
+
         database.setVersion(oldVersion);
     }
 
@@ -186,6 +231,39 @@ public class AnyMemoBaseDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 apDao = getDao(AchievementPoint.class);
             }
             return apDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public synchronized DailyPointsDao getDailyPointsDao() {
+        try {
+            if (dailyPointsDao == null) {
+                dailyPointsDao = getDao(DailyPoints.class);
+            }
+            return dailyPointsDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public synchronized DeckPointsDao getDeckPointsDao() {
+        try {
+            if (deckPointsDao == null) {
+                deckPointsDao = getDao(DeckPoints.class);
+            }
+            return deckPointsDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public synchronized TagPointsDao getTagPointsDao() {
+        try {
+            if (tagPointsDao == null) {
+                tagPointsDao = getDao(TagPoints.class);
+            }
+            return tagPointsDao;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

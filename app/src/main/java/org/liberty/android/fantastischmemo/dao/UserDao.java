@@ -14,6 +14,7 @@ public interface UserDao extends HelperDao<User, Integer> {
 
 
     User createOrReturn(String username);
+    public User returnFirstUser();
     void editName(String username, String name);
 
 }

@@ -14,6 +14,7 @@ import org.liberty.android.fantastischmemo.dao.AchievementPointDaoImpl;
 
 @DatabaseTable(tableName = "achievementpoints", daoClass = AchievementPointDaoImpl.class)
 public class AchievementPoint implements Serializable, VersionableDomainObject{
+
     @DatabaseField(generatedId = true)
     private Integer id;
 
@@ -27,10 +28,13 @@ public class AchievementPoint implements Serializable, VersionableDomainObject{
     private UserStatistics stats;
 
     @DatabaseField(foreign = true)
-    private Tag tag;
+    private DailyPoints dailyPoints;
 
-    @DatabaseField(foreign = true)
-    private Deck deck;
+    @DatabaseField(foreign=true)
+    private DeckPoints deckPoints;
+
+    @DatabaseField(foreign=true)
+    private TagPoints tagPoints;
 
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
     private Date creationDate;
@@ -72,20 +76,24 @@ public class AchievementPoint implements Serializable, VersionableDomainObject{
         this.stats = stats;
     }
 
-    public Tag getTag() {
-        return tag;
+    public DeckPoints getDeckPoints() {
+        return deckPoints;
     }
 
-    public void setTag(Tag tag) {
-        this.tag = tag;
+    public void setDeckPoints(DeckPoints deckP) {
+        this.deckPoints = deckP;
     }
 
-    public Deck getDeck() {
-        return deck;
+    public DailyPoints getDailyPoints() { return dailyPoints; }
+
+    public void setDailyPoints(DailyPoints dailyPoints) {this.dailyPoints = dailyPoints; }
+
+    public TagPoints getTagPoints() {
+        return tagPoints;
     }
 
-    public void setDeck(Deck deck) {
-        this.deck = deck;
+    public void setTagPoints(TagPoints tagP) {
+        this.tagPoints = tagP;
     }
 
 
