@@ -16,20 +16,21 @@ import java.util.Date;
 @DatabaseTable(tableName = "dailypoints", daoClass = DailyPointsDaoImpl.class)
 public class DailyPoints extends PointGrouping {
 
-    @DatabaseField(version = true, format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
-    private Date time;
+
+    @DatabaseField(defaultValue = "")
+    private String time;
+
 
     public DailyPoints() {
         setTime();
     }
 
-    public Date getTime() {
-
+    public String getTime() {
         return time;
     }
 
     private void setTime() {
-        this.time = DayDateUtil.getDayDate();
+        this.time = DayDateUtil.getDayDateString();
     }
 
 }

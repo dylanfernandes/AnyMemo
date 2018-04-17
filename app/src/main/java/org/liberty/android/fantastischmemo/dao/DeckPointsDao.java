@@ -10,5 +10,5 @@ import org.liberty.android.fantastischmemo.entity.User;
  */
 
 public interface DeckPointsDao extends HelperDao<DeckPoints, Integer> {
-
+    DeckPoints createOrReturn(String name);
 }

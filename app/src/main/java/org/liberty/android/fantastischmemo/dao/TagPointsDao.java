@@ -7,4 +7,5 @@ import org.liberty.android.fantastischmemo.entity.TagPoints;
  */
 
 public interface TagPointsDao extends HelperDao<TagPoints, Integer>  {
+    TagPoints createOrReturn(String tagName);
 }
