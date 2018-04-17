@@ -24,7 +24,6 @@ public class DailyPoints extends PointGrouping {
     }
 
     public String getTime() {
-
         return time;
     }
 

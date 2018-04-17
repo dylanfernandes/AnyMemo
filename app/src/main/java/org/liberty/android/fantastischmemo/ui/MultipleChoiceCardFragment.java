@@ -42,6 +42,13 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
+import org.liberty.android.fantastischmemo.common.BaseFragment;
+import org.liberty.android.fantastischmemo.entity.Card;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class MultipleChoiceCardFragment extends BaseFragment {
@@ -161,6 +168,9 @@ public class MultipleChoiceCardFragment extends BaseFragment {
         deckPoint = deckPointDao.createOrReturn(deckName);
         dailyPoint = dailyPointDao.createOrReturn();
 
+        answerCard = AnyMemoDBOpenHelperManager.getHelper(dbPath).getCardDao().getById(cardId);
+        choices = getMultipleChoices(dbPath);
+
         if (activity instanceof StudyActivity) {
             changeCardTask = ((StudyActivity) activity).getOnCardCahngedListenerRunnable(answerCard);
         } else if (activity instanceof QuizActivity) {
@@ -206,8 +216,10 @@ public class MultipleChoiceCardFragment extends BaseFragment {
             tagPointDao.refresh(tagPoint);
         }
 
-        Toast.makeText(MultipleChoiceCardFragment.this.getContext(), "Correct!"+(int)deckPoint.getSum(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(MultipleChoiceCardFragment.this.getContext(), "Correct!", Toast.LENGTH_SHORT).show();
     }
+
+
 
     private void doIncorrectAnswer() {
         Toast.makeText(MultipleChoiceCardFragment.this.getContext(), "Nope...", Toast.LENGTH_SHORT).show();
