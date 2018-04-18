@@ -1,19 +1,21 @@
 package org.liberty.android.fantastischmemo.entity;
 
 
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 
-
-import java.io.Serializable;
 import java.lang.Math;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
-
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDaoImpl;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -22,6 +24,7 @@ import java.util.List;
 
 @DatabaseTable(tableName = "userstatistics", daoClass = UserStatisticsDaoImpl.class)
 public class UserStatistics {
+
 
     //Attributes
     @DatabaseField(generatedId = true)
@@ -48,12 +51,14 @@ public class UserStatistics {
     @DatabaseField(defaultValue = "0")
     private Integer months = 0;
 
-    public List<AchievementPoint> points;
+    @ForeignCollectionField
+    private ForeignCollection<AchievementPoint> points;
 
     public final static long MILLIS_PER_DAY = 24*60*60*1000L;
 
 
-    public UserStatistics() {}
+    public UserStatistics() {
+    }
 
     //fake UserStatistics for AccountPage
     public UserStatistics(Integer longest, Integer current){
@@ -78,12 +83,45 @@ public class UserStatistics {
         this.lastLogin = lastLogin;
     }
 
-    public List<AchievementPoint> getPoints() {
-        return points;
+    public boolean hasPoints() {
+        Boolean hasP = false;
+        if(points == null)
+            return hasP;
+
+        try {
+             hasP = points.size() > 0;
+        }
+    catch(Exception e){
+        String message = e.getMessage();
+    }
+        return hasP;
     }
 
-    public void setPoints(List<AchievementPoint> points) {
-        this.points = points;
+    public AchievementPoint getLatestPoint() {
+        if(hasPoints()) {
+            return getLastElement(points);
+        }
+        return null;
+    }
+
+    private static <T> T getLastElement(final ForeignCollection<T> elements) {
+        final Iterator<T> itr = elements.iterator();
+        T lastElement = itr.next();
+
+        while(itr.hasNext()) {
+            lastElement=itr.next();
+        }
+
+        return lastElement;
+    }
+
+    public List<AchievementPoint> getPoints() {
+        Iterator<AchievementPoint> pointIterator = this.points.iterator();
+        List<AchievementPoint> pointList = new ArrayList<>();
+        while(pointIterator.hasNext()) {
+            pointList.add(pointIterator.next());
+        }
+        return pointList;
     }
 
     public Integer getMultiplier() {
@@ -174,7 +212,7 @@ public class UserStatistics {
 
     public void updateStreaks() {
         Date today = new Date();
-        if(checkStreak(today)) {
+        if(!checkStreak(today)) {
             streak = 0;
             longestStreak = 0;
             weeks = 0;
@@ -184,8 +222,23 @@ public class UserStatistics {
         }
     }
 
+    //returns true if streak is still active
+    //An active streak is defined as:
+    //  1)Less than 24 hours has passed between the last login
+    //  2)The most recent login is one a different day than the previous login
     public boolean checkStreak(Date date) {
-        return Math.abs(date.getTime() - lastLogin.getTime()) > MILLIS_PER_DAY;
+        Calendar recent = Calendar.getInstance();
+        Calendar last = Calendar.getInstance();
+        boolean differentDay;
+        boolean lessThanDay;
+
+        recent.setTime(date);
+        last.setTime(lastLogin);
+
+        differentDay = recent.get(Calendar.DAY_OF_YEAR) != last.get(Calendar.DAY_OF_YEAR);
+        lessThanDay = Math.abs(date.getTime() - lastLogin.getTime()) < MILLIS_PER_DAY;
+
+        return differentDay && lessThanDay;
     }
 
 }

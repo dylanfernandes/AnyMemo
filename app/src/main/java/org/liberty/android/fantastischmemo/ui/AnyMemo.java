@@ -21,6 +21,7 @@ package org.liberty.android.fantastischmemo.ui;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -46,8 +47,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,8 +62,16 @@ import org.liberty.android.fantastischmemo.BuildConfig;
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
+import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
+import org.liberty.android.fantastischmemo.dao.UserDao;
+import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.databinding.MainTabsBinding;
+import org.liberty.android.fantastischmemo.entity.AchievementPoint;
+import org.liberty.android.fantastischmemo.entity.User;
+import org.liberty.android.fantastischmemo.entity.UserStatistics;
 import org.liberty.android.fantastischmemo.receiver.SetAlarmReceiver;
 import org.liberty.android.fantastischmemo.service.AnyMemoService;
 import org.liberty.android.fantastischmemo.ui.loader.MultipleLoaderManager;
@@ -74,7 +86,9 @@ import org.liberty.android.fantastischmemo.widget.AnyMemoWidgetProvider;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.sql.SQLException;
+import java.util.Collection;
 
 import javax.inject.Inject;
 
@@ -90,6 +104,23 @@ public class AnyMemo extends BaseActivity {
     private CompositeDisposable disposables;
 
     private MainTabsBinding binding;
+
+    //account registration
+    private String dbPath = AMEnv.CENTRAL_DB_NAME;
+    
+    private AnyMemoBaseDBOpenHelper baseHelper;
+    
+    private UserDao userDao;
+    
+    Collection<User> userlist;
+
+    private UserStatisticsDao statsDao;
+
+    private AchievementPointDao achPointsDao;
+
+    private User user;
+
+    private UserStatistics stats;
 
     @Inject
     AMFileUtil amFileUtil;
@@ -128,8 +159,71 @@ public class AnyMemo extends BaseActivity {
         } else {
             loadUiComponents();
         }
+
         recentListActionModeUtil.registerForActivity();
+
     }
+
+    public static void setUpPointsAllocation(){
+
+    }
+
+    private void verifyDailyPoints() {
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
+        userDao = baseHelper.getUserDao();
+        statsDao = baseHelper.getUserStatisticsDao();
+        achPointsDao = baseHelper.getAchievementPointDao();
+
+        //implemented until user creation upon login is completed
+        user = userDao.createOrReturn("Blob1");
+        stats = statsDao.createOrReturn(user);
+        AchievementPoint recent = stats.getLatestPoint();
+        Date now = new Date();
+        if(recent == null || stats.checkStreak(now)) {
+            AchievementPoint dp = new AchievementPoint();
+            dp.setValue(5);
+            dp.setStats(stats);
+
+            try {
+                achPointsDao.create(dp);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            showToast(dp.getValue().toString(), getLayoutInflater(), getApplicationContext(), findViewById(android.R.id.content), R.drawable.ic_trophy, "Daily Points Earned: ");
+        }
+    }
+
+    private void registerAccountIfNoneExist(){
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
+        userDao = baseHelper.getUserDao();
+        userlist = userDao.queryForAll();
+
+        if(userlist.size() == 0){
+            AccountRegisterFragment df = new AccountRegisterFragment();
+            Bundle b = new Bundle();
+            b.putString(AccountRegisterFragment.EXTRA_DBPATH, dbPath);
+            df.setArguments(b);
+            df.show(getSupportFragmentManager(), "AccountRegisterDialog");
+        }
+    }
+
+    //used to show functionality, will be integrated into other tasks os story
+    public static void showToast(String points, LayoutInflater inflate, Context con, View v, int ressource, String message) {
+        LayoutInflater inflater = inflate;
+        View layout = inflater.inflate(R.layout.custom_toast,
+                (ViewGroup) v.findViewById(R.id.toast_layout_root));
+
+        ImageView image = (ImageView) layout.findViewById(R.id.image);
+        image.setImageResource(ressource);
+        TextView text = (TextView) layout.findViewById(R.id.text);
+        text.setText(message + points);
+
+        Toast toast = new Toast(con);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(layout);
+        toast.show();
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -165,6 +259,8 @@ public class AnyMemo extends BaseActivity {
             // again when the screen is rotated
             getIntent().setAction(null);
         }
+
+        verifyDailyPoints();
     }
 
     /**
@@ -209,7 +305,16 @@ public class AnyMemo extends BaseActivity {
                                 tabLayout.getTabAt(3).select();
                                 break;
                             case R.id.account_tab_menu:
-                                startActivity(new Intent(tabLayout.getContext(), AccountPage.class));
+                                userlist = userDao.queryForAll();
+                                if(userlist.size() == 0){
+                                    AccountRegisterFragment df = new AccountRegisterFragment();
+                                    Bundle b = new Bundle();
+                                    b.putString(AccountRegisterFragment.EXTRA_DBPATH, dbPath);
+                                    df.setArguments(b);
+                                    df.show(getSupportFragmentManager(), "AccountRegisterDialog");
+                                }else {
+                                    startActivity(new Intent(tabLayout.getContext(), AccountPage.class));
+                                }
                                 break;
                             case R.id.option_tab_menu:
                                 startActivity(new Intent(tabLayout.getContext(), OptionScreen.class));
@@ -336,6 +441,8 @@ public class AnyMemo extends BaseActivity {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            registerAccountIfNoneExist();
+
         }
         /* Detect an update */
         if (savedVersionCode != thisVersionCode) {
@@ -349,6 +456,12 @@ public class AnyMemo extends BaseActivity {
 
             String centralDbDest = AMEnv.HIDDEN_DB_FOLDER_PATH + AMEnv.CENTRAL_DB_NAME;
             databaseUtil.setupCentralDatabase(centralDbDest);
+
+            if(firstTime != true) {
+               registerAccountIfNoneExist();
+            }
+
+            AnyMemoBaseDBOpenHelperManager.releaseHelper(baseHelper);
 
             SharedPreferences.Editor editor = settings.edit();
             /* save new version number */
