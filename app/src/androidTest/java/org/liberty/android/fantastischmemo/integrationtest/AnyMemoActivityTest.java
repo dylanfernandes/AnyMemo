@@ -6,6 +6,7 @@ import android.support.test.rule.ActivityTestRule;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.liberty.android.fantastischmemo.ui.AnyMemo;
@@ -22,6 +23,7 @@ public class AnyMemoActivityTest {
         testHelper.markNotFirstTime();
     }
 
+    @Ignore
     @Test
     public void test() {}
 
