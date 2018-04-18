@@ -20,7 +20,7 @@ public class TagPointsTest {
     }
 
     @Test
-    public void testGetSetDeckName() {
+    public void testGetSetTagName() {
         TagPoints tp = new TagPoints();
         String tn = "tag";
         tp.setTagName(tn);

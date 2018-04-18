@@ -1,5 +1,6 @@
 package org.liberty.android.fantastischmemo.test.db;
 
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +14,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 
 /**
  * Created by dylanfernandes on 2018-04-13.
@@ -35,7 +37,7 @@ public class DeckPointsDaoTest extends AbstractExistingBaseDBTest {
         //set achievement points
         a1 = new AchievementPoint();
         a2 = new AchievementPoint();
-        a1.setValue(1);
+        a1.setValue(3);
         a2.setValue(2);
     }
 
@@ -58,8 +60,10 @@ public class DeckPointsDaoTest extends AbstractExistingBaseDBTest {
 
     @Test
     public void testAddDeckPoints() throws Exception {
+        assertFalse(dpDao.idExists(1));
         dpDao.create(dp);
         assertEquals(true, dpDao.idExists(1));
+        assertFalse(dpDao.idExists(2));
     }
 
     //Adding achievement points to deck points dependent on ORM in other to have right relationship in DB
@@ -75,8 +79,11 @@ public class DeckPointsDaoTest extends AbstractExistingBaseDBTest {
         newA1 = pointList.get(0);
         newA2 = pointList.get(1);
 
-        Assert.assertEquals(a1.getValue(), newA1.getValue());
-        Assert.assertEquals(a2.getValue(), newA2.getValue());
+        assertEquals(a1.getValue(), newA1.getValue());
+        assertEquals(a2.getValue(), newA2.getValue());
+        //verify value field wasn't set with default value
+        assertFalse(1 ==  newA1.getValue());
+        assertFalse(1 ==  newA2.getValue());
     }
 
     //Getting Sum dependent on ORM in other to have right relationship in DB
@@ -87,5 +94,8 @@ public class DeckPointsDaoTest extends AbstractExistingBaseDBTest {
         initialSum = a1.getValue() + a2.getValue();
         //check if sum is updated in deckPoints object after adding points to it
         assertEquals(initialSum, (int)dp.getSum());
+        //make sure sum was incremented
+        assertFalse(0 == dp.getSum() );
     }
+
 }
