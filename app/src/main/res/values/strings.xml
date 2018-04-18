@@ -500,4 +500,5 @@
     <string name="delete_account_message">Account deleted</string>
     <string name="unable_to_register">Unable to register</string>
     <string name="empty_field">At least one required field is empty</string>
+    <string name="continue_text">continue</string>
 </resources>

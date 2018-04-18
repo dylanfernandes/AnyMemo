@@ -39,9 +39,14 @@ import android.widget.Toast;
 
 import com.google.common.base.Strings;
 
+import org.apache.commons.io.FilenameUtils;
 import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
+import org.liberty.android.fantastischmemo.dao.DeckPointsDao;
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
+import org.liberty.android.fantastischmemo.entity.DeckPoints;
 import org.liberty.android.fantastischmemo.entity.Option;
 import org.liberty.android.fantastischmemo.entity.Setting;
 import org.liberty.android.fantastischmemo.modules.AppComponents;
@@ -362,9 +367,16 @@ public class QuizActivity extends QACardActivity {
 
     /* Called when all quiz is completed */
     private void showCompleteAllDialog() {
+        AnyMemoBaseDBOpenHelper centralDbHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
+        DeckPointsDao deckPointsDao = centralDbHelper.getDeckPointsDao();
+        String deckName = FilenameUtils.getName(getDbPath());
+        DeckPoints deckPoint = deckPointsDao.createOrReturn(deckName);
+        int points = deckPoint.getSum();
+
+        String message = "Congratulations, you have completed the quiz with " + points + " points";
         new AlertDialog.Builder(this)
             .setTitle(R.string.quiz_completed_text)
-            .setMessage(R.string.quiz_complete_summary)
+            .setMessage(message)
             .setPositiveButton(R.string.back_menu_text, flushAndQuitListener)
             .setCancelable(false)
             .show();
@@ -383,7 +395,7 @@ public class QuizActivity extends QACardActivity {
             .setTitle(R.string.quiz_completed_text)
             .setView(view)
             .setPositiveButton(R.string.review_text, null)
-            .setNegativeButton(R.string.cancel_text, flushAndQuitListener)
+            .setNegativeButton(R.string.continue_text, displayNextDialogListener)
             .setCancelable(false)
             .show();
     }
@@ -394,10 +406,19 @@ public class QuizActivity extends QACardActivity {
         new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                showCompleteAllDialog();
                 dialog.dismiss();
                 finish();
             }
         };
+
+    private DialogInterface.OnClickListener displayNextDialogListener =
+            new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    showCompleteAllDialog();
+                }
+            };
 
     public ChangeCardTask getChangeCardTask(QuizActivity activity, Card updatedCard) {
         return new ChangeCardTask(activity, updatedCard);
