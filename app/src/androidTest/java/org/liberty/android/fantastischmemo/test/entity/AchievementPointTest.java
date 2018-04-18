@@ -53,14 +53,4 @@ public class AchievementPointTest {
         verify(d).getDeckName();
     }
 
-    @Test
-    public void testGetSetTagPoints(){
-        TagPoints tag = mock(TagPoints.class);
-        String tagName = "Test";
-        when(tag.getTagName()).thenReturn(tagName);
-        p.setTagPoints(tag);
-        assertEquals(tagName,p.getTagPoints().getTagName());
-        verify(tag).getTagName();
-    }
-
 }

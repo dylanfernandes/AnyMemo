@@ -201,7 +201,7 @@ public class CardPlayerActivity extends QACardActivity {
                 /* Double sided card, show front */
                 displayCard(false);
             } else {
-                /* Single sided, show both answer and questjion. */
+                /* Single sided, show both answer and question. */
                 displayCard(true);
             }
         }

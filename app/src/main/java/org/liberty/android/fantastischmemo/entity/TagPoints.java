@@ -10,12 +10,32 @@ import org.liberty.android.fantastischmemo.dao.TagPointsDaoImpl;
  */
 
 @DatabaseTable(tableName = "tagpoints", daoClass = TagPointsDaoImpl.class)
-public class TagPoints extends PointGrouping {
+public class TagPoints {
+
+    @DatabaseField(generatedId = true)
+    private Integer id;
 
     @DatabaseField(defaultValue = "", width = 8192)
     private String tagName;
 
-    public TagPoints() {}
+    @DatabaseField(defaultValue = "0")
+    private Integer sum;
+
+    public TagPoints() {sum=0;}
+
+    public TagPoints(String name){
+        tagName = name;
+        sum=0;
+    }
+
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
 
     public String getTagName() {
         return tagName;
@@ -24,5 +44,14 @@ public class TagPoints extends PointGrouping {
     public void setTagName(String tagName) {
         this.tagName = tagName;
     }
+
+    public void increment(Integer points) {
+        sum += points;
+    }
+
+    public Integer getSum(){
+        return sum;
+    }
+
 
 }

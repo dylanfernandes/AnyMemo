@@ -1,10 +1,16 @@
 package org.liberty.android.fantastischmemo.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.j256.ormlite.field.ForeignCollectionField;
 
 import org.liberty.android.fantastischmemo.dao.AchievementPointDaoImpl;
 
@@ -32,9 +38,6 @@ public class AchievementPoint implements Serializable, VersionableDomainObject{
 
     @DatabaseField(foreign=true)
     private DeckPoints deckPoints;
-
-    @DatabaseField(foreign=true)
-    private TagPoints tagPoints;
 
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
     private Date creationDate;
@@ -87,14 +90,6 @@ public class AchievementPoint implements Serializable, VersionableDomainObject{
     public DailyPoints getDailyPoints() { return dailyPoints; }
 
     public void setDailyPoints(DailyPoints dailyPoints) {this.dailyPoints = dailyPoints; }
-
-    public TagPoints getTagPoints() {
-        return tagPoints;
-    }
-
-    public void setTagPoints(TagPoints tagP) {
-        this.tagPoints = tagP;
-    }
 
 
     @Override
