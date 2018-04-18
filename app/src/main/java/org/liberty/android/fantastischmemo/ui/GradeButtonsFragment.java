@@ -32,36 +32,42 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.common.base.Strings;
 
 import org.liberty.android.fantastischmemo.R;
-import org.liberty.android.fantastischmemo.common.AMEnv;
-import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
-import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
+
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseFragment;
 import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
 import org.liberty.android.fantastischmemo.dao.CardDao;
 import org.liberty.android.fantastischmemo.dao.LearningDataDao;
-import org.liberty.android.fantastischmemo.dao.UserDao;
-import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.entity.AchievementPoint;
+import org.liberty.android.fantastischmemo.entity.AchievementTagPointsJoin;
 import org.liberty.android.fantastischmemo.entity.Card;
+import org.liberty.android.fantastischmemo.entity.DailyPoints;
+import org.liberty.android.fantastischmemo.entity.DeckPoints;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.entity.Option;
-import org.liberty.android.fantastischmemo.entity.User;
-import org.liberty.android.fantastischmemo.entity.UserStatistics;
 import org.liberty.android.fantastischmemo.scheduler.Scheduler;
 import org.liberty.android.fantastischmemo.utils.AMDateUtil;
+import org.liberty.android.fantastischmemo.dao.TagPointsDao;
+import org.liberty.android.fantastischmemo.entity.TagPoints;
+import org.liberty.android.fantastischmemo.dao.DailyPointsDao;
+import org.liberty.android.fantastischmemo.dao.DeckPointsDao;
+import org.liberty.android.fantastischmemo.entity.Tag;
+import org.liberty.android.fantastischmemo.dao.AchievementTagPointsJoinDao;
+import org.apache.commons.io.FilenameUtils;
+import org.liberty.android.fantastischmemo.dao.TagDao;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
+
+
 
 import java.sql.SQLException;
-
+import java.util.List;
 import javax.inject.Inject;
 
 
@@ -88,6 +94,30 @@ public class GradeButtonsFragment extends BaseFragment {
     private CardDao cardDao;
 
     private LearningDataDao learningDataDao;
+
+    private DeckPoints deckPoint;
+
+    private DeckPointsDao deckPointDao;
+
+    private AchievementPointDao achPointDao;
+
+    private TagPoints tagPoint;
+
+    private TagPointsDao tagPointDao;
+
+    private DailyPoints dailyPoint;
+
+    private DailyPointsDao dailyPointDao;
+
+    private String deckName;
+
+    private AchievementTagPointsJoinDao tagJoinDao;
+
+    private List<Tag> tagList;
+
+    private TagDao tagDao;
+
+    private AnyMemoBaseDBOpenHelper baseHelper;
 
     private OnCardChangedListener onCardChangedListener;
 
@@ -130,6 +160,27 @@ public class GradeButtonsFragment extends BaseFragment {
         learningDataDao = dbOpenHelper.getLearningDataDao();
 
         option = appComponents().option();
+
+        tagDao = dbOpenHelper.getTagDao();
+
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
+        deckName = FilenameUtils.getName(dbPath);
+
+        achPointDao = baseHelper.getAchievementPointDao();
+        deckPointDao = baseHelper.getDeckPointsDao();
+        tagPointDao = baseHelper.getTagPointsDao();
+        dailyPointDao = baseHelper.getDailyPointsDao();
+        tagJoinDao = baseHelper.getAchievementTagPointsJoinDao();
+
+
+        try{
+            tagList = tagDao.queryForAll();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        deckPoint = deckPointDao.createOrReturn(deckName);
+        dailyPoint = dailyPointDao.createOrReturn();
 
     }
 
@@ -196,28 +247,40 @@ public class GradeButtonsFragment extends BaseFragment {
     public void gradeCurrentCard(int grade) {
         onGradeButtonClickListener.onGradeButtonClick(grade);
     }
-    private void allocatePoints(){
-        AnyMemoBaseDBOpenHelper baseHelper;
-        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
-        UserDao userDao = baseHelper.getUserDao();
-        UserStatisticsDao statsDao = baseHelper.getUserStatisticsDao();
-        AchievementPointDao achPointsDao = baseHelper.getAchievementPointDao();
-        //implemented until user creation upon login is completed
-        User user = userDao.createOrReturn("Test");
-        UserStatistics stats = statsDao.createOrReturn(user);
+    private void doCorrectAnswer() {
+        AchievementPoint achPoint = new AchievementPoint();
+        achPoint.setValue(1);
+        achPoint.setDeckPoints(deckPoint);
+        achPoint.setDailyPoints(dailyPoint);
 
-        AchievementPoint dp = new AchievementPoint();
-        dp.setValue(1);
-        dp.setStats(stats);
+        try {
+            achPointDao.create(achPoint);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
 
+        dailyPointDao.update(dailyPoint);
+        dailyPointDao.refresh(dailyPoint);
+
+        deckPointDao.update(deckPoint);
+        deckPointDao.refresh(deckPoint);
+
+        for(Tag tag: tagList){
+            tagPoint = tagPointDao.createOrReturn(tag.getName());
+            AchievementTagPointsJoin tagJoin = new AchievementTagPointsJoin();
+            tagJoin.setJoin(achPoint, tagPoint);
             try {
-                achPointsDao.create(dp);
-            } catch (SQLException e) {
+                tagJoinDao.create(tagJoin);
+            }catch (SQLException e){
                 e.printStackTrace();
             }
-            AnyMemo.showToast(dp.getValue().toString(),getActivity().getLayoutInflater(),getActivity(),getView(), R.drawable.ic_tick_inside_circle, "Points Earned: ");
-    }
+            tagPointDao.update(tagPoint);
+            tagPointDao.refresh(tagPoint);
+        }
 
+        AnyMemo.showToast(achPoint.getValue().toString(),getActivity().getLayoutInflater(),getActivity(),getView(), R.drawable.ic_tick_inside_circle, "Points Earned: ");
+
+    }
 
     private void setButtonOnClickListener(final Button button, final int grade) {
         button.setOnClickListener(new View.OnClickListener() {
@@ -225,7 +288,7 @@ public class GradeButtonsFragment extends BaseFragment {
                 //button id for "remember" button
                 if(grade == 5)
                 {
-                    allocatePoints();
+                    doCorrectAnswer();
                 }
                 onGradeButtonClickListener.onGradeButtonClick(grade);
             }

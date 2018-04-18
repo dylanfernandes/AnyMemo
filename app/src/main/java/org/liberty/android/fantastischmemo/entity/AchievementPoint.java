@@ -1,10 +1,16 @@
 package org.liberty.android.fantastischmemo.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.j256.ormlite.field.ForeignCollectionField;
 
 import org.liberty.android.fantastischmemo.dao.AchievementPointDaoImpl;
 
@@ -14,6 +20,7 @@ import org.liberty.android.fantastischmemo.dao.AchievementPointDaoImpl;
 
 @DatabaseTable(tableName = "achievementpoints", daoClass = AchievementPointDaoImpl.class)
 public class AchievementPoint implements Serializable, VersionableDomainObject{
+
     @DatabaseField(generatedId = true)
     private Integer id;
 
@@ -27,10 +34,10 @@ public class AchievementPoint implements Serializable, VersionableDomainObject{
     private UserStatistics stats;
 
     @DatabaseField(foreign = true)
-    private Tag tag;
+    private DailyPoints dailyPoints;
 
-    @DatabaseField(foreign = true)
-    private Deck deck;
+    @DatabaseField(foreign=true)
+    private DeckPoints deckPoints;
 
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType= DataType.DATE_STRING)
     private Date creationDate;
@@ -72,21 +79,17 @@ public class AchievementPoint implements Serializable, VersionableDomainObject{
         this.stats = stats;
     }
 
-    public Tag getTag() {
-        return tag;
+    public DeckPoints getDeckPoints() {
+        return deckPoints;
     }
 
-    public void setTag(Tag tag) {
-        this.tag = tag;
+    public void setDeckPoints(DeckPoints deckP) {
+        this.deckPoints = deckP;
     }
 
-    public Deck getDeck() {
-        return deck;
-    }
+    public DailyPoints getDailyPoints() { return dailyPoints; }
 
-    public void setDeck(Deck deck) {
-        this.deck = deck;
-    }
+    public void setDailyPoints(DailyPoints dailyPoints) {this.dailyPoints = dailyPoints; }
 
 
     @Override

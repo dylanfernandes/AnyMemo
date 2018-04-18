@@ -66,10 +66,12 @@ import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
 import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
+import org.liberty.android.fantastischmemo.dao.DailyPointsDao;
 import org.liberty.android.fantastischmemo.dao.UserDao;
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
 import org.liberty.android.fantastischmemo.databinding.MainTabsBinding;
 import org.liberty.android.fantastischmemo.entity.AchievementPoint;
+import org.liberty.android.fantastischmemo.entity.DailyPoints;
 import org.liberty.android.fantastischmemo.entity.User;
 import org.liberty.android.fantastischmemo.entity.UserStatistics;
 import org.liberty.android.fantastischmemo.receiver.SetAlarmReceiver;
@@ -78,6 +80,7 @@ import org.liberty.android.fantastischmemo.ui.loader.MultipleLoaderManager;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.AboutUtil;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
+import org.liberty.android.fantastischmemo.utils.DayDateUtil;
 import org.liberty.android.fantastischmemo.utils.GenericDatabaseDialogUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListActionModeUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
@@ -121,6 +124,8 @@ public class AnyMemo extends BaseActivity {
     private User user;
 
     private UserStatistics stats;
+
+    private DailyPointsDao dailyPointsDao;
 
     @Inject
     AMFileUtil amFileUtil;
@@ -168,31 +173,6 @@ public class AnyMemo extends BaseActivity {
 
     }
 
-    private void verifyDailyPoints() {
-        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
-        userDao = baseHelper.getUserDao();
-        statsDao = baseHelper.getUserStatisticsDao();
-        achPointsDao = baseHelper.getAchievementPointDao();
-
-        //implemented until user creation upon login is completed
-        user = userDao.createOrReturn("Blob1");
-        stats = statsDao.createOrReturn(user);
-        AchievementPoint recent = stats.getLatestPoint();
-        Date now = new Date();
-        if(recent == null || stats.checkStreak(now)) {
-            AchievementPoint dp = new AchievementPoint();
-            dp.setValue(5);
-            dp.setStats(stats);
-
-            try {
-                achPointsDao.create(dp);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            showToast(dp.getValue().toString(), getLayoutInflater(), getApplicationContext(), findViewById(android.R.id.content), R.drawable.ic_trophy, "Daily Points Earned: ");
-        }
-    }
-
     private void registerAccountIfNoneExist(){
         baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
         userDao = baseHelper.getUserDao();
@@ -201,9 +181,40 @@ public class AnyMemo extends BaseActivity {
         if(userlist.size() == 0){
             AccountRegisterFragment df = new AccountRegisterFragment();
             Bundle b = new Bundle();
-            b.putString(AccountRegisterFragment.EXTRA_DBPATH, dbPath);
             df.setArguments(b);
             df.show(getSupportFragmentManager(), "AccountRegisterDialog");
+        }
+    }
+
+    private void verifyDailyPoints() {
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
+        userDao = baseHelper.getUserDao();
+        statsDao = baseHelper.getUserStatisticsDao();
+        achPointsDao = baseHelper.getAchievementPointDao();
+        dailyPointsDao = baseHelper.getDailyPointsDao();
+
+        user = userDao.returnFirstUser();
+        stats = statsDao.createOrReturn(user);
+        AchievementPoint recent = stats.getLatestPoint();
+        Date now = new Date();
+        if(recent == null || stats.checkStreak(now)) {
+            AchievementPoint dp = new AchievementPoint();
+            dp.setValue(5);
+            dp.setStats(stats);
+            DailyPoints dailyPoint = dailyPointsDao.createOrReturn();
+            dp.setDailyPoints(dailyPoint);
+
+            try {
+                achPointsDao.create(dp);
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            dailyPointsDao.update(dailyPoint);
+
+
+            showToast(dp.getValue().toString(), getLayoutInflater(), getApplicationContext(), findViewById(android.R.id.content), R.drawable.ic_trophy, "Daily Points Earned: ");
         }
     }
 
@@ -260,7 +271,18 @@ public class AnyMemo extends BaseActivity {
             getIntent().setAction(null);
         }
 
-        verifyDailyPoints();
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
+        userDao = baseHelper.getUserDao();
+        userlist = userDao.queryForAll();
+
+        if(userlist.size() == 0){
+            AccountRegisterFragment df = new AccountRegisterFragment();
+            Bundle b = new Bundle();
+            df.setArguments(b);
+            df.show(getSupportFragmentManager(), "AccountRegisterDialog");
+        }else {
+            verifyDailyPoints();
+        }
     }
 
     /**
@@ -309,7 +331,6 @@ public class AnyMemo extends BaseActivity {
                                 if(userlist.size() == 0){
                                     AccountRegisterFragment df = new AccountRegisterFragment();
                                     Bundle b = new Bundle();
-                                    b.putString(AccountRegisterFragment.EXTRA_DBPATH, dbPath);
                                     df.setArguments(b);
                                     df.show(getSupportFragmentManager(), "AccountRegisterDialog");
                                 }else {
