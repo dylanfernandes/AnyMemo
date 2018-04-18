@@ -42,7 +42,7 @@ public class MultipleChoiceUITest {
     @Rule
     public ActivityTestRule<AnyMemo> mActivityTestRule = new ActivityTestRule<>(AnyMemo.class);
 
-    @Ignoregit
+    @Ignore
     @Test
     public void multipleChoiceUITest() {
         ViewInteraction appCompatButton2 = onView(
