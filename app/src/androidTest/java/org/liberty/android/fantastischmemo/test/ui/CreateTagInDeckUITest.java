@@ -11,6 +11,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
 import org.hamcrest.Matcher;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +49,7 @@ public class CreateTagInDeckUITest extends AbstractExistingDBTest {
             true,   // initialTouchMode
             false); // Lazy launching
 
+    @Ignore
     @Test
     public void testCreateNewTag() {
         Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
