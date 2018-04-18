@@ -1,4 +1,4 @@
-package org.liberty.android.fantastischmemo.ui;
+package org.liberty.android.fantastischmemo.test.ui;
 
 
 import android.support.test.espresso.DataInteraction;
@@ -18,6 +18,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.ui.AnyMemo;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -42,15 +43,6 @@ public class MultipleChoiceUITest {
 
     @Test
     public void multipleChoiceUITest() {
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(android.R.id.button1), withText("OK"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                3)));
-        appCompatButton.perform(scrollTo(), click());
-
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.recent_item_more_button), withText("MORE"),
                         childAtPosition(
@@ -164,16 +156,6 @@ public class MultipleChoiceUITest {
                         3),
                         isDisplayed()));
         button4.check(matches(isDisplayed()));
-
-        ViewInteraction button5 = onView(
-                allOf(childAtPosition(
-                        allOf(withId(R.id.multiple_choice_grid),
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
-                                        2)),
-                        3),
-                        isDisplayed()));
-        button5.check(matches(isDisplayed()));
 
     }
 
