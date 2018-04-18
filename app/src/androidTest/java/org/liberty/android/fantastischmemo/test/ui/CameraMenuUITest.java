@@ -40,6 +40,7 @@ public class CameraMenuUITest {
     @Rule
     public ActivityTestRule<AnyMemo> mActivityTestRule = new ActivityTestRule<>(AnyMemo.class);
 
+    @Ignore
     @Test
     public void cameraMenuUITest() {
         ViewInteraction appCompatButton2 = onView(
