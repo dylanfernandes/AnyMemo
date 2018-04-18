@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -219,13 +220,21 @@ public class AnyMemo extends BaseActivity {
     }
 
     //used to show functionality, will be integrated into other tasks os story
-    public static void showToast(String points, LayoutInflater inflate, Context con, View v, int ressource, String message) {
+    public static void showToast(String points, LayoutInflater inflate, Context con, View v, int resource, String message) {
+        showToast(points, inflate, con, v, resource, message, -1);
+    }
+
+    public static void showToast(String points, LayoutInflater inflate, Context con, View v, int resource, String message, int color) {
         LayoutInflater inflater = inflate;
         View layout = inflater.inflate(R.layout.custom_toast,
                 (ViewGroup) v.findViewById(R.id.toast_layout_root));
 
+        if (color != -1) {
+            layout.setBackgroundColor(color);
+        }
+
         ImageView image = (ImageView) layout.findViewById(R.id.image);
-        image.setImageResource(ressource);
+        image.setImageResource(resource);
         TextView text = (TextView) layout.findViewById(R.id.text);
         text.setText(message + points);
 

@@ -1,6 +1,7 @@
 package org.liberty.android.fantastischmemo.ui;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -216,13 +217,13 @@ public class MultipleChoiceCardFragment extends BaseFragment {
             tagPointDao.refresh(tagPoint);
         }
 
-        Toast.makeText(MultipleChoiceCardFragment.this.getContext(), "Correct!", Toast.LENGTH_SHORT).show();
+        AnyMemo.showToast("1", getActivity().getLayoutInflater(), getActivity(), getView(), R.drawable.ic_tick_inside_circle, "Points Earned: ");
     }
 
 
 
     private void doIncorrectAnswer() {
-        Toast.makeText(MultipleChoiceCardFragment.this.getContext(), "Nope...", Toast.LENGTH_SHORT).show();
+        AnyMemo.showToast("", getActivity().getLayoutInflater(), getActivity(), getView(), R.drawable.ic_x, "Incorrect", Color.RED);
     }
 
     private List<Choice> getMultipleChoices(String dbPath) {
