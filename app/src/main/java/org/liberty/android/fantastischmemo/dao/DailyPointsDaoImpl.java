@@ -2,7 +2,6 @@ package org.liberty.android.fantastischmemo.dao;
 
 import org.liberty.android.fantastischmemo.entity.DailyPoints;
 import org.liberty.android.fantastischmemo.utils.DayDateUtil;
-import org.liberty.android.fantastischmemo.dao.DailyPointsDao;
 
 
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -51,5 +50,6 @@ public class DailyPointsDaoImpl extends AbstractHelperDaoImpl<DailyPoints, Integ
         }
 
     }
+
 
 }

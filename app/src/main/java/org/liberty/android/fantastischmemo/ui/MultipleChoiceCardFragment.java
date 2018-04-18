@@ -13,6 +13,36 @@ import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.Toast;
 
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
+
+import org.apache.commons.io.FilenameUtils;
+import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.common.AMEnv;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
+import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
+import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
+import org.liberty.android.fantastischmemo.common.BaseFragment;
+import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
+import org.liberty.android.fantastischmemo.dao.AchievementTagPointsJoinDao;
+import org.liberty.android.fantastischmemo.dao.DailyPointsDao;
+import org.liberty.android.fantastischmemo.dao.DeckPointsDao;
+import org.liberty.android.fantastischmemo.dao.TagDao;
+import org.liberty.android.fantastischmemo.dao.TagPointsDao;
+import org.liberty.android.fantastischmemo.entity.AchievementPoint;
+import org.liberty.android.fantastischmemo.entity.AchievementTagPointsJoin;
+import org.liberty.android.fantastischmemo.entity.Card;
+import org.liberty.android.fantastischmemo.entity.DailyPoints;
+import org.liberty.android.fantastischmemo.entity.DeckPoints;
+import org.liberty.android.fantastischmemo.entity.Tag;
+import org.liberty.android.fantastischmemo.entity.TagPoints;
+
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseFragment;
@@ -31,6 +61,20 @@ public class MultipleChoiceCardFragment extends BaseFragment {
     private List<Choice> choices;
 
     private Runnable changeCardTask;
+
+    private AnyMemoBaseDBOpenHelper baseHelper;
+    private AnyMemoDBOpenHelper helper;
+    private TagDao tagDao;
+    private DeckPoints deckPoint;
+    private DeckPointsDao deckPointDao;
+    private AchievementPointDao achPointDao;
+    private TagPoints tagPoint;
+    private TagPointsDao tagPointDao;
+    private DailyPoints dailyPoint;
+    private DailyPointsDao dailyPointDao;
+    private String deckName;
+    private AchievementTagPointsJoinDao tagJoinDao;
+    private List<Tag> tagList;
 
     @Override
     public void onCreate(@Nullable Bundle bundle) {
@@ -99,6 +143,31 @@ public class MultipleChoiceCardFragment extends BaseFragment {
 
         int cardId = getArguments().getInt(ARGUMENT_KEY_CARD_ID);
         String dbPath = getArguments().getString(ARGUMENT_KEY_DB_PATH);
+        helper = AnyMemoDBOpenHelperManager.getHelper(dbPath);
+        answerCard = helper.getCardDao().getById(cardId);
+        choices = getMultipleChoices(dbPath);
+
+        tagDao = helper.getTagDao();
+
+        baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
+        deckName = FilenameUtils.getName(dbPath);
+
+        achPointDao = baseHelper.getAchievementPointDao();
+        deckPointDao = baseHelper.getDeckPointsDao();
+        tagPointDao = baseHelper.getTagPointsDao();
+        dailyPointDao = baseHelper.getDailyPointsDao();
+        tagJoinDao = baseHelper.getAchievementTagPointsJoinDao();
+
+
+        try{
+            tagList = tagDao.queryForAll();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        deckPoint = deckPointDao.createOrReturn(deckName);
+        dailyPoint = dailyPointDao.createOrReturn();
+
         answerCard = AnyMemoDBOpenHelperManager.getHelper(dbPath).getCardDao().getById(cardId);
         choices = getMultipleChoices(dbPath);
 
@@ -118,12 +187,41 @@ public class MultipleChoiceCardFragment extends BaseFragment {
     }
 
     private void doCorrectAnswer() {
-        // TODO: Implement functionality
+        AchievementPoint achPoint = new AchievementPoint();
+        achPoint.setDeckPoints(deckPoint);
+        achPoint.setDailyPoints(dailyPoint);
+
+        try {
+            achPointDao.create(achPoint);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        dailyPointDao.update(dailyPoint);
+        dailyPointDao.refresh(dailyPoint);
+
+        deckPointDao.update(deckPoint);
+        deckPointDao.refresh(deckPoint);
+
+        for(Tag tag: tagList){
+            tagPoint = tagPointDao.createOrReturn(tag.getName());
+            AchievementTagPointsJoin tagJoin = new AchievementTagPointsJoin();
+            tagJoin.setJoin(achPoint, tagPoint);
+            try {
+                tagJoinDao.create(tagJoin);
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+            tagPointDao.update(tagPoint);
+            tagPointDao.refresh(tagPoint);
+        }
+
         Toast.makeText(MultipleChoiceCardFragment.this.getContext(), "Correct!", Toast.LENGTH_SHORT).show();
     }
 
+
+
     private void doIncorrectAnswer() {
-        // TODO: Implement functionality
         Toast.makeText(MultipleChoiceCardFragment.this.getContext(), "Nope...", Toast.LENGTH_SHORT).show();
     }
 
