@@ -12,6 +12,9 @@
             android:id="@+id/editor_menu_image"
             android:title="@string/edit_menu_image_text" />
     <item
+            android:id="@+id/editor_menu_new_image"
+            android:title="@string/edit_menu_new_image_text" />
+    <item
             android:id="@+id/add_existing_audio"
             android:title="@string/add_existing_audio_text" />
     <item

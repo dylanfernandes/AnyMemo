@@ -30,6 +30,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
 import android.text.ClipboardManager;
 import android.util.Log;
@@ -713,9 +714,13 @@ public abstract class QACardActivity extends BaseActivity {
                 }
 
                 // Display the image in an image viewer
-                Uri uri = Uri.parse("file://" + imageFiles.get(0).getAbsolutePath());
+                Uri uri = FileProvider.getUriForFile(getApplicationContext(),
+                        getApplicationContext().getPackageName() + ".provider",
+                        imageFiles.get(0));
+                        //Uri.parse("file://" + imageFiles.get(0).getAbsolutePath());
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(uri, "image/*");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(intent);
                 return true;
             }
