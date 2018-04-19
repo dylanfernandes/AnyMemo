@@ -118,7 +118,16 @@ public class StudyActivity extends QACardActivity {
 
         startInit();
     }
-    
+
+    public Runnable getOnCardCahngedListenerRunnable(final Card updatedCard) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                changeCard(updatedCard);
+            }
+        };
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -655,6 +664,21 @@ public class StudyActivity extends QACardActivity {
                 }
             }
         };
+
+    public void changeCard(Card updatedCard) {
+        // Dequeue card and update the queue
+        queueManager.update(updatedCard);
+
+        Card nextCard = queueManager.dequeue();
+        queueManager.remove(nextCard);
+
+        if (nextCard == null) {
+            showNoItemDialog();
+        } else {
+            setCurrentCard(nextCard);
+            displayCard(false);
+        }
+    }
 
     private String getActivityTitleString() {
         StringBuilder sb = new StringBuilder();

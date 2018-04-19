@@ -245,6 +245,7 @@
     <string name="card_style">Card style</string>
     <string name="card_style_double">Double sided</string>
     <string name="card_style_single">Single sided</string>
+    <string name="card_style_multiple_choice">Multiple choice</string>
     <string name="settings_field1">Customize card field1</string>
     <string name="settings_field2">Customize card field2</string>
     <string name="left_text">Left</string>
@@ -493,6 +494,7 @@
     <string name="current_login_streak">Current login streak</string>
     <string name="view_statistic">View statistic</string>
     <string name="updating_database">Updating database...</string>
+    <string name="invalid_rating_given">Invalid rating</string>
     <string name="edit_account">Edit Account</string>
     <string name="delete_account">Delete Account</string>
     <string name="account_register">Register</string>
@@ -500,4 +502,5 @@
     <string name="delete_account_message">Account deleted</string>
     <string name="unable_to_register">Unable to register</string>
     <string name="empty_field">At least one required field is empty</string>
+    <string name="continue_text">continue</string>
 </resources>

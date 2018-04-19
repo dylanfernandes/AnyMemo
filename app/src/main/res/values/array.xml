@@ -144,6 +144,7 @@
 
     <string-array name="fb_dialog_list">
         <item>@string/tags_text</item>
+        <item>@string/update_rating_text</item>
         <item>@string/delete_text</item>
         <item>@string/clone_text</item>
         <item>@string/rename_text</item>
@@ -241,11 +242,13 @@
     <string-array name="card_style_list">
         <item>@string/card_style_single</item>
         <item>@string/card_style_double</item>
+        <item>@string/card_style_multiple_choice</item>
     </string-array>
 
     <string-array name="card_style_list_values">
         <item>SINGLE_SIDED</item>
         <item>DOUBLE_SIDED</item>
+        <item>MULTIPLE_CHOICE</item>
     </string-array>
 
     <string-array name="card_field_list">
@@ -308,4 +311,5 @@
         <item>HardestFirst</item>
     </string-array>
     <string name="au_english_text">English (AU)</string>
+    <string name="update_rating_text">Update Deck Rating</string>
 </resources>

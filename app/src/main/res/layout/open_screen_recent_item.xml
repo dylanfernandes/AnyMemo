@@ -47,6 +47,17 @@
                 android:ellipsize="marquee"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
+            <RatingBar
+            android:id="@+id/deck_rating"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="45dp"
+            android:max="5"
+            android:numStars="5"
+            android:rating="0.0"
+            android:stepSize=".0" />
         </LinearLayout>
         <Button
             android:id="@+id/recent_item_more_button"
@@ -54,6 +65,7 @@
             android:layout_height="wrap_content"
             android:text="@string/more_text"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
+
     </LinearLayout>
     <View
         android:id="@+id/selected_overlay"

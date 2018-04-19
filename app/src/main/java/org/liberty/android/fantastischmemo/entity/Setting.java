@@ -116,7 +116,8 @@ public class Setting implements Serializable, VersionableDomainObject {
 
     public static enum CardStyle {
         SINGLE_SIDED,
-        DOUBLE_SIDED
+        DOUBLE_SIDED,
+        MULTIPLE_CHOICE
     }
 
     public static enum CardField {

@@ -32,9 +32,7 @@ public class AccountRegisterFragment extends BaseDialogFragment {
     private EditText nameInput;
     private Button confirm;
 
-    public static String EXTRA_DBPATH = "dbpath";
     private AnyMemoBaseDBOpenHelper baseDBOpenHelper;
-    private String dbPath = AMEnv.CENTRAL_DB_NAME;
     private UserDao userDao;
     private UserStatisticsDao userStatDao;
 
@@ -50,13 +48,10 @@ public class AccountRegisterFragment extends BaseDialogFragment {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Bundle args = this.getArguments();
-        dbPath = args.getString(EXTRA_DBPATH);
         baseDBOpenHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
         userDao = baseDBOpenHelper.getUserDao();
         userStatDao = baseDBOpenHelper.getUserStatisticsDao();
         setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-
-
     }
 
     @Override

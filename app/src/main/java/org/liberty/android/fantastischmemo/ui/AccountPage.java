@@ -17,10 +17,23 @@ import org.liberty.android.fantastischmemo.common.AMEnv;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
+import org.liberty.android.fantastischmemo.dao.AchievementPointDao;
+import org.liberty.android.fantastischmemo.dao.AchievementTagPointsJoinDao;
+import org.liberty.android.fantastischmemo.dao.DailyPointsDao;
+import org.liberty.android.fantastischmemo.dao.DeckPointsDao;
+import org.liberty.android.fantastischmemo.dao.TagPointsDao;
 import org.liberty.android.fantastischmemo.dao.UserDao;
 import org.liberty.android.fantastischmemo.dao.UserStatisticsDao;
+import org.liberty.android.fantastischmemo.entity.AchievementPoint;
+import org.liberty.android.fantastischmemo.entity.AchievementTagPointsJoin;
+import org.liberty.android.fantastischmemo.entity.DailyPoints;
+import org.liberty.android.fantastischmemo.entity.DeckPoints;
+import org.liberty.android.fantastischmemo.entity.TagPoints;
 import org.liberty.android.fantastischmemo.entity.User;
 import org.liberty.android.fantastischmemo.entity.UserStatistics;
+
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by Emily on 2018-03-15.
@@ -39,6 +52,16 @@ public class AccountPage extends BaseActivity{
     private UserStatistics userStat;
     private UserDao userDao;
     private UserStatisticsDao userStatDao;
+    private List<AchievementPoint> achPointList;
+    private AchievementPointDao achPointDao;
+    private List<AchievementTagPointsJoin> achPointJoinList;
+    private AchievementTagPointsJoinDao achPointJoinDao;
+    private List<TagPoints> tagPointList;
+    private TagPointsDao tagPointDao;
+    private List<DeckPoints> deckPointList;
+    private DeckPointsDao deckPointDao;
+    private List<DailyPoints> dailyPointList;
+    private DailyPointsDao dailyPointDao;
     private AnyMemoBaseDBOpenHelper baseHelper;
 
     @Override
@@ -50,6 +73,12 @@ public class AccountPage extends BaseActivity{
         baseHelper = AnyMemoBaseDBOpenHelperManager.getHelper();
         userDao = baseHelper.getUserDao();
         userStatDao = baseHelper.getUserStatisticsDao();
+        achPointDao = baseHelper.getAchievementPointDao();
+        achPointJoinDao = baseHelper.getAchievementTagPointsJoinDao();
+        deckPointDao = baseHelper.getDeckPointsDao();
+        tagPointDao = baseHelper.getTagPointsDao();
+        dailyPointDao = baseHelper.getDailyPointsDao();
+
 
         user = userDao.returnFirstUser();
         userStat = userStatDao.createOrReturn(user);
@@ -94,6 +123,36 @@ public class AccountPage extends BaseActivity{
                 return true;
             }
             case R.id.delete_account:{
+                try{
+                    achPointList = achPointDao.queryForAll();
+                    for(AchievementPoint ap: achPointList){
+                        achPointDao.delete(ap);
+                    }
+
+                    achPointJoinList = achPointJoinDao.queryForAll();
+                    for(AchievementTagPointsJoin atpj: achPointJoinList){
+                        achPointJoinDao.delete(atpj);
+                    }
+
+                    deckPointList = deckPointDao.queryForAll();
+                    for(DeckPoints deckp: deckPointList){
+                        deckPointDao.delete(deckp);
+                    }
+
+                    tagPointList = tagPointDao.queryForAll();
+                    for(TagPoints tp: tagPointList){
+                        tagPointDao.delete(tp);
+                    }
+
+                    dailyPointList = dailyPointDao.queryForAll();
+                    for(DailyPoints dailyp: dailyPointList){
+                        dailyPointDao.delete(dailyp);
+                    }
+
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+
                 userDao.delete(user);
                 Toast.makeText(this, R.string.delete_account_message, Toast.LENGTH_LONG)
                         .show();
