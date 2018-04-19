@@ -144,6 +144,7 @@
 
     <string-array name="fb_dialog_list">
         <item>@string/tags_text</item>
+        <item>@string/update_rating_text</item>
         <item>@string/delete_text</item>
         <item>@string/clone_text</item>
         <item>@string/rename_text</item>
@@ -310,4 +311,5 @@
         <item>HardestFirst</item>
     </string-array>
     <string name="au_english_text">English (AU)</string>
+    <string name="update_rating_text">Update Deck Rating</string>
 </resources>

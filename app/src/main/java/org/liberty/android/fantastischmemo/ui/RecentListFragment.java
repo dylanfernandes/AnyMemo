@@ -46,14 +46,19 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import org.apache.commons.io.FilenameUtils;
 import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelper;
+import org.liberty.android.fantastischmemo.common.AnyMemoBaseDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseFragment;
 import org.liberty.android.fantastischmemo.dao.CardDao;
+import org.liberty.android.fantastischmemo.dao.DeckDao;
+import org.liberty.android.fantastischmemo.entity.Deck;
 import org.liberty.android.fantastischmemo.entity.Tag;
 import org.liberty.android.fantastischmemo.ui.helper.SelectableAdapter;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
@@ -129,10 +134,14 @@ public class RecentListFragment extends BaseFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-
         if (recentListAdapter != null && !isVisibleToUser) {
             recentListAdapter.stopActionMode();
         }
+        else{
+            getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+        }
+
+
     }
 
     @Override
@@ -199,6 +208,7 @@ public class RecentListFragment extends BaseFragment {
         public String dbName;
         public String dbPath;
         public String dbInfo;
+        public double dbRating;
         public int index;
     }
 
@@ -246,7 +256,7 @@ public class RecentListFragment extends BaseFragment {
                 @Override
                 public List<RecentItem> loadInBackground() {
                     loadedVersion = recentListVersion.get();
-                    return loadRecentItemsWithDetails();
+                    return loadRecentItemsWithRatings();
                 }
             };
             loader.forceLoad();
@@ -300,10 +310,12 @@ public class RecentListFragment extends BaseFragment {
                     break;
                 }
                 AnyMemoDBOpenHelper helper = AnyMemoDBOpenHelperManager.getHelper(getContext(), ri.dbPath);
-                CardDao dao = helper.getCardDao();
-                ri.dbInfo = context.getString(R.string.stat_total) + dao.getTotalCount(null) + " " +
-                        getContext().getString(R.string.stat_new) + dao.getNewCardCount(null) + " " +
-                        getContext().getString(R.string.stat_scheduled)+ dao.getScheduledCardCount(null);
+                CardDao cardDao = helper.getCardDao();
+
+                ri.dbInfo = context.getString(R.string.stat_total) + cardDao.getTotalCount(null) + " " +
+                        getContext().getString(R.string.stat_new) + cardDao.getNewCardCount(null) + " " +
+                        getContext().getString(R.string.stat_scheduled)+ cardDao.getScheduledCardCount(null);
+
                 ril.set(ri.index, ri);
                 AnyMemoDBOpenHelperManager.releaseHelper(helper);
             } catch (Exception e) {
@@ -311,6 +323,28 @@ public class RecentListFragment extends BaseFragment {
             }
         }
 
+        return ril;
+    }
+
+    private List<RecentItem> loadRecentItemsWithRatings() {
+        final List<RecentItem> ril = loadRecentItemsWithDetails();
+        for (final RecentItem ri : ril){
+            try {
+                Context context = getContext();
+                if (context == null) {
+                    break;
+                }
+                AnyMemoBaseDBOpenHelper helperCentral = AnyMemoBaseDBOpenHelperManager.getHelper();
+                final DeckDao deckDao = helperCentral.getDeckDao();
+                Deck deck = deckDao.createOrReturn(ri.dbName);
+                ri.dbRating = deck.getRating();
+
+                ril.set(ri.index, ri);
+                AnyMemoBaseDBOpenHelperManager.releaseHelper(helperCentral);
+            } catch (Exception e) {
+                Log.e(TAG, "Recent list throws exception (Usually can be safely ignored)", e);
+            }
+        }
         return ril;
     }
 
@@ -330,6 +364,7 @@ public class RecentListFragment extends BaseFragment {
         public static class ViewHolder extends RecyclerView.ViewHolder {
             private TextView filenameView;
             private TextView infoView;
+            private RatingBar ratingBar;
             private Button moreButton;
             private View selectedOverlay;
 
@@ -337,6 +372,7 @@ public class RecentListFragment extends BaseFragment {
                 super(view);
                 filenameView = (TextView)view.findViewById(R.id.recent_item_filename);
                 infoView = (TextView)view.findViewById(R.id.recent_item_info);
+                ratingBar = (RatingBar)view.findViewById(R.id.deck_rating);
                 moreButton = (Button)view.findViewById(R.id.recent_item_more_button);
                 selectedOverlay = (View) view.findViewById(R.id.selected_overlay);
             }
@@ -344,6 +380,7 @@ public class RecentListFragment extends BaseFragment {
             public void setItem(RecentItem item) {
                 filenameView.setText(item.dbName);
                 infoView.setText(item.dbInfo);
+                ratingBar.setRating((float)item.dbRating);
             }
         }
 

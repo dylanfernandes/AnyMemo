@@ -118,6 +118,12 @@ dependencies {
     androidTestCompile 'com.android.support:support-annotations:25.3.1'
 
     annotationProcessor 'com.google.dagger:dagger-compiler:2.8'
+    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'design'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    }
 }
 
 static def getBuildString () {
